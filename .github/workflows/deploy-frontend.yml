@@ -4,7 +4,6 @@ on:
 
 jobs:
   cargo-build:
-    name: vercel cloudflare
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
