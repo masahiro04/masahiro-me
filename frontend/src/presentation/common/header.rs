@@ -85,7 +85,7 @@ pub fn header() -> Html {
           <Image class="w-6 h-6 flex-none" source="/images/github.svg" />
           <a
             class="absolute inset-0"
-            href="https://github.com/masahiro04/nextjs_wordpress"
+            href="https://github.com/masahiro04/masahiro-me"
             target="_blank"
             rel="noreferrer"
           ></a>
