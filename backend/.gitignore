@@ -1,0 +1,8 @@
+backend/target
+**/*.rs.bk
+backend/wasm-pack.log
+backend/build/
+backend/dist/
+backend/.env
+backend/.dev.vars
+backend/wrangler.toml
