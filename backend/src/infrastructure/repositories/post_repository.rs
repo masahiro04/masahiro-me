@@ -62,6 +62,49 @@ impl<'a> PostRepository<'a> {
     }
 }
 
+async fn posts_converver<'a>(
+    posts_from_api: Vec<PostFromApi>,
+    categories: Vec<Category>,
+    media_repository: MediaRepository<'a>,
+) -> Vec<Post> {
+    let categories_arc = Arc::new(categories);
+    let post_futures = posts_from_api.into_iter().map(|post| async {
+        let date_string = post.date.clone();
+        let date = worker::js_sys::Date::new(&JsValue::from_str(&date_string));
+        let year = date.get_full_year();
+        let month = date.get_month() + 1; // JavaScriptの月は0から始まるため、1を足す
+        let day = date.get_date();
+        let formatted_date = format!("{}/{:02}/{:02}", year, month, day);
+        let categories = Arc::clone(&categories_arc)
+            .to_vec()
+            .into_iter()
+            .filter(|category| *&post.categories.contains(category.id()))
+            .map(|category| category.clone())
+            .collect::<Vec<Category>>();
+        let excerpt = extract_text_from_html(&post.excerpt.rendered);
+        let featured_media = match &media_repository
+            .find_one(&post.featured_media.to_string())
+            .await
+        {
+            Ok(media) => media.source_url().to_string(),
+            Err(_) => "".to_string(),
+        };
+        Post::new(
+            post.title.rendered,
+            post.slug,
+            formatted_date,
+            excerpt,
+            post.content.rendered,
+            categories,
+            vec![],
+            featured_media,
+        )
+        .unwrap()
+    });
+    let posts = join_all(post_futures).await;
+    posts
+}
+
 #[async_trait(?Send)]
 impl<'b> IPostRepository for PostRepository<'b> {
     async fn find_all<'a>(&'a self, per_page: &'a str, offset: &'a str) -> Result<Vec<Post>> {
@@ -90,42 +133,8 @@ impl<'b> IPostRepository for PostRepository<'b> {
             Err(_) => Vec::new(),
         };
         // スレッド間共有(wasmでスレッドはないけど、async closureでデータを共有するために利用してる)
-        let categories_arc = Arc::new(categories);
         let media_repository = MediaRepository::new(self.api_url.clone(), self.env);
-        let post_futures = posts_from_api.into_iter().map(|post| async {
-            let date_string = post.date.clone();
-            let date = worker::js_sys::Date::new(&JsValue::from_str(&date_string));
-            let year = date.get_full_year();
-            let month = date.get_month() + 1; // JavaScriptの月は0から始まるため、1を足す
-            let day = date.get_date();
-            let formatted_date = format!("{}/{:02}/{:02}", year, month, day);
-            let categories = Arc::clone(&categories_arc)
-                .to_vec()
-                .into_iter()
-                .filter(|category| *&post.categories.contains(category.id()))
-                .map(|category| category.clone())
-                .collect::<Vec<Category>>();
-            let excerpt = extract_text_from_html(&post.excerpt.rendered);
-            let featured_media = match &media_repository
-                .find_one(&post.featured_media.to_string())
-                .await
-            {
-                Ok(media) => media.source_url().to_string(),
-                Err(_) => "".to_string(),
-            };
-            Post::new(
-                post.title.rendered,
-                post.slug,
-                formatted_date,
-                excerpt,
-                post.content.rendered,
-                categories,
-                vec![],
-                featured_media,
-            )
-            .unwrap()
-        });
-        let posts = join_all(post_futures).await;
+        let posts = posts_converver(posts_from_api, categories, media_repository).await;
         Ok(posts)
     }
 
@@ -149,43 +158,8 @@ impl<'b> IPostRepository for PostRepository<'b> {
             Ok(categories) => categories,
             Err(_) => Vec::new(),
         };
-        // スレッド間共有(wasmでスレッドはないけど、async closureでデータを共有するために利用してる)
-        let categories_arc = Arc::new(categories);
         let media_repository = MediaRepository::new(self.api_url.clone(), self.env);
-        let post_futures = posts_from_api.into_iter().map(|post| async {
-            let date_string = post.date.clone();
-            let date = worker::js_sys::Date::new(&JsValue::from_str(&date_string));
-            let year = date.get_full_year();
-            let month = date.get_month() + 1; // JavaScriptの月は0から始まるため、1を足す
-            let day = date.get_date();
-            let formatted_date = format!("{}/{:02}/{:02}", year, month, day);
-            let categories = Arc::clone(&categories_arc)
-                .to_vec()
-                .into_iter()
-                .filter(|category| *&post.categories.contains(category.id()))
-                .map(|category| category.clone())
-                .collect::<Vec<Category>>();
-            let excerpt = extract_text_from_html(&post.excerpt.rendered);
-            let featured_media = match &media_repository
-                .find_one(&post.featured_media.to_string())
-                .await
-            {
-                Ok(media) => media.source_url().to_string(),
-                Err(_) => "".to_string(),
-            };
-            Post::new(
-                post.title.rendered,
-                post.slug,
-                formatted_date,
-                excerpt,
-                post.content.rendered,
-                categories,
-                vec![],
-                featured_media,
-            )
-            .unwrap()
-        });
-        let posts = join_all(post_futures).await;
+        let posts = posts_converver(posts_from_api, categories, media_repository).await;
         Ok(posts)
     }
 
@@ -235,43 +209,19 @@ impl<'b> IPostRepository for PostRepository<'b> {
         if posts_from_api.is_empty() {
             return Ok(None);
         }
-        let post_from_api = posts_from_api.first().unwrap();
         let category_repository = CategoryRepository::new(self.api_url.clone(), self.env);
         let categories = match category_repository.find_all().await {
             Ok(categories) => categories,
             Err(_) => Vec::new(),
         };
+
         let media_repository = MediaRepository::new(self.api_url.clone(), self.env);
-        let date_string = post_from_api.date.clone();
-        let date = worker::js_sys::Date::new(&JsValue::from_str(&date_string));
-        let year = date.get_full_year();
-        let month = date.get_month() + 1; // JavaScriptの月は0から始まるため、1を足す
-        let day = date.get_date();
-        let formatted_date = format!("{}/{:02}/{:02}", year, month, day);
-        let categories = categories
-            .into_iter()
-            .filter(|category| *&post_from_api.categories.contains(category.id()))
-            .map(|category| category.clone())
-            .collect::<Vec<Category>>();
-        let excerpt = extract_text_from_html(&post_from_api.excerpt.rendered);
-        let featured_media = match &media_repository
-            .find_one(&post_from_api.featured_media.to_string())
-            .await
-        {
-            Ok(media) => media.source_url().to_string(),
-            Err(_) => "".to_string(),
-        };
-        let post = Post::new(
-            post_from_api.title.rendered.clone(),
-            post_from_api.slug.clone(),
-            formatted_date,
-            excerpt,
-            post_from_api.content.rendered.clone(),
-            categories,
-            vec![],
-            featured_media,
-        )
-        .unwrap();
-        Ok(Some(post))
+        let posts = posts_converver(posts_from_api, categories, media_repository).await;
+        let post = posts
+            .first()
+            .map(|post| post.clone())
+            .map(|post| Some(post))
+            .unwrap_or(None);
+        Ok(post)
     }
 }

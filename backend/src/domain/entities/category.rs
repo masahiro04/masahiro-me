@@ -12,6 +12,9 @@ impl Category {
     pub fn new(id: i32, name: String) -> Result<Self> {
         Ok(Self { id, name })
     }
+    pub fn reconstruct(id: i32, name: String) -> Self {
+        Self { id, name }
+    }
     pub fn id(&self) -> &i32 {
         &self.id
     }

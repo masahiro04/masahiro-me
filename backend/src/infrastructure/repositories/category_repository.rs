@@ -47,7 +47,7 @@ impl<'a> ICategoryRepository for CategoryRepository<'a> {
         let categories = categories_from_api
             .iter()
             .map(|category_from_api| {
-                Category::new(category_from_api.id, category_from_api.name.clone()).unwrap()
+                Category::reconstruct(category_from_api.id, category_from_api.name.clone())
             })
             .collect::<Vec<Category>>();
         Ok(categories)

@@ -43,7 +43,7 @@ impl<'a> IMediaRepository for MediaRepository<'a> {
                 }
             }
         };
-        let media = Media::new(media_from_api.source_url, media_from_api.alt_text).unwrap();
+        let media = Media::reconstruct(media_from_api.source_url, media_from_api.alt_text);
         Ok(media)
     }
 }

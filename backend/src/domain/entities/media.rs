@@ -14,6 +14,12 @@ impl Media {
             alt_text,
         })
     }
+    pub fn reconstruct(source_url: String, alt_text: String) -> Self {
+        Self {
+            source_url,
+            alt_text,
+        }
+    }
     pub fn source_url(&self) -> &str {
         &self.source_url
     }

@@ -36,6 +36,27 @@ impl Post {
             featured_media,
         })
     }
+    pub fn reconstruct(
+        title: String,
+        slug: String,
+        date: String,
+        excerpt: String,
+        content: String,
+        categories: Vec<Category>,
+        tags: Vec<String>,
+        featured_media: String,
+    ) -> Self {
+        Self {
+            title,
+            slug,
+            date,
+            excerpt,
+            content,
+            categories,
+            tags,
+            featured_media,
+        }
+    }
     pub fn title(&self) -> &str {
         &self.title
     }
