@@ -1,31 +1,23 @@
+use super::types::category_from_api::CategoryFromApi;
 use crate::{
     domain::{
         entities::category::Category, repositories::category_repository::ICategoryRepository,
     },
     infrastructure::{api::ApiClient, kv::KvClient},
 };
-use serde::{Deserialize, Serialize};
 use std::io::Result;
 use worker::{async_trait::async_trait, Env};
-
-#[derive(Deserialize, Serialize, Clone, Debug, PartialEq)]
-pub struct CategoryFromApi {
-    pub id: i32,
-    pub name: String,
-}
 
 #[derive(Clone)]
 pub struct CategoryRepository<'a> {
     api_url: String,
     env: &'a Env,
 }
-
 impl<'a> CategoryRepository<'a> {
     pub fn new(api_url: String, env: &'a Env) -> Self {
         Self { api_url, env }
     }
 }
-
 #[async_trait(?Send)]
 impl<'a> ICategoryRepository for CategoryRepository<'a> {
     async fn find_all(&self) -> Result<Vec<Category>> {

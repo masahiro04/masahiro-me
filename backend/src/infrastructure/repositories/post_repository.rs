@@ -1,110 +1,31 @@
 use crate::domain::{
     repositories::category_repository::ICategoryRepository,
-    repositories::media_repository::IMediaRepository,
     repositories::post_repository::IPostRepository,
 };
 use crate::infrastructure::api::ApiClient;
 use crate::infrastructure::kv::KvClient;
+use crate::infrastructure::repositories::converter::posts_from_api_to_posts_converter::posts_from_api_to_posts_converver;
+use crate::infrastructure::repositories::types::post_from_api::PostFromApi;
 use crate::{
-    domain::entities::{category::Category, post::Post},
+    domain::entities::post::Post,
     infrastructure::repositories::{
         category_repository::CategoryRepository, media_repository::MediaRepository,
     },
 };
 use async_trait::async_trait;
-use futures::future::join_all;
-use html2text::from_read;
-use scraper::{Html, Selector};
-use serde::{Deserialize, Serialize};
 use std::io::Result;
-use std::sync::Arc;
-use worker::wasm_bindgen::JsValue;
 use worker::Env;
-
-pub fn extract_text_from_html(html: &str) -> String {
-    // NOTE: htmlを扱うたえにHTMLを生成
-    let document = Html::parse_document(html);
-    let body_selector = Selector::parse("body").unwrap();
-    if let Some(body_element) = document.select(&body_selector).next() {
-        let body_html = body_element.inner_html();
-        let mut text = from_read(body_html.as_bytes(), 80);
-        text.retain(|c| c != '\n');
-        text
-    } else {
-        String::new()
-    }
-}
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct RenderedContent {
-    pub rendered: String,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct PostFromApi {
-    pub slug: String,
-    pub date: String,
-    pub title: RenderedContent,
-    pub content: RenderedContent,
-    pub excerpt: RenderedContent,
-    pub categories: Vec<i32>,
-    pub featured_media: i32,
-}
 
 #[derive(Clone)]
 pub struct PostRepository<'a> {
     api_url: String,
     env: &'a Env,
 }
-
 impl<'a> PostRepository<'a> {
     pub fn new(api_url: String, env: &'a Env) -> Self {
         Self { api_url, env }
     }
 }
-
-async fn posts_converver<'a>(
-    posts_from_api: Vec<PostFromApi>,
-    categories: Vec<Category>,
-    media_repository: MediaRepository<'a>,
-) -> Vec<Post> {
-    let categories_arc = Arc::new(categories);
-    let post_futures = posts_from_api.into_iter().map(|post| async {
-        let date_string = post.date.clone();
-        let date = worker::js_sys::Date::new(&JsValue::from_str(&date_string));
-        let year = date.get_full_year();
-        let month = date.get_month() + 1; // JavaScriptの月は0から始まるため、1を足す
-        let day = date.get_date();
-        let formatted_date = format!("{}/{:02}/{:02}", year, month, day);
-        let categories = Arc::clone(&categories_arc)
-            .to_vec()
-            .into_iter()
-            .filter(|category| *&post.categories.contains(category.id()))
-            .map(|category| category.clone())
-            .collect::<Vec<Category>>();
-        let excerpt = extract_text_from_html(&post.excerpt.rendered);
-        let featured_media = match &media_repository
-            .find_one(&post.featured_media.to_string())
-            .await
-        {
-            Ok(media) => media.source_url().to_string(),
-            Err(_) => "".to_string(),
-        };
-        Post::new(
-            post.title.rendered,
-            post.slug,
-            formatted_date,
-            excerpt,
-            post.content.rendered,
-            categories,
-            vec![],
-            featured_media,
-        )
-        .unwrap()
-    });
-    let posts = join_all(post_futures).await;
-    posts
-}
-
 #[async_trait(?Send)]
 impl<'b> IPostRepository for PostRepository<'b> {
     async fn find_all<'a>(&'a self, per_page: &'a str, offset: &'a str) -> Result<Vec<Post>> {
@@ -134,7 +55,8 @@ impl<'b> IPostRepository for PostRepository<'b> {
         };
         // スレッド間共有(wasmでスレッドはないけど、async closureでデータを共有するために利用してる)
         let media_repository = MediaRepository::new(self.api_url.clone(), self.env);
-        let posts = posts_converver(posts_from_api, categories, media_repository).await;
+        let posts =
+            posts_from_api_to_posts_converver(posts_from_api, categories, media_repository).await;
         Ok(posts)
     }
 
@@ -159,7 +81,8 @@ impl<'b> IPostRepository for PostRepository<'b> {
             Err(_) => Vec::new(),
         };
         let media_repository = MediaRepository::new(self.api_url.clone(), self.env);
-        let posts = posts_converver(posts_from_api, categories, media_repository).await;
+        let posts =
+            posts_from_api_to_posts_converver(posts_from_api, categories, media_repository).await;
         Ok(posts)
     }
 
@@ -216,7 +139,8 @@ impl<'b> IPostRepository for PostRepository<'b> {
         };
 
         let media_repository = MediaRepository::new(self.api_url.clone(), self.env);
-        let posts = posts_converver(posts_from_api, categories, media_repository).await;
+        let posts =
+            posts_from_api_to_posts_converver(posts_from_api, categories, media_repository).await;
         let post = posts
             .first()
             .map(|post| post.clone())
