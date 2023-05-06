@@ -1,3 +1,4 @@
+use super::cors::cors;
 use crate::{
     log_request,
     usecase::exe::{fetch_posts_usecase, fetch_related_posts_usecase},
@@ -26,11 +27,6 @@ pub async fn handle_get_posts_request(req: Request, ctx: RouteContext<()>) -> Re
         Some(_offset) => _offset,
         None => "0",
     };
-    let cors = Cors::new()
-        .with_origins(vec!["*".to_string()].iter())
-        .with_max_age(86400)
-        .with_allowed_headers(vec!["*".to_string()])
-        .with_methods(vec![Method::Get, Method::Options, Method::Head]);
 
     let kv_namespace = String::from("BLOG_CONTENT");
     let kv = &ctx.env.kv(&kv_namespace);
@@ -46,7 +42,10 @@ pub async fn handle_get_posts_request(req: Request, ctx: RouteContext<()>) -> Re
     if category_ids.is_empty() {
         let posts = fetch_posts_usecase(store, per_page, offset).await.unwrap();
         let json_string = serde_json::to_string(&posts).unwrap();
-        let mut res = Response::ok(json_string).unwrap().with_cors(&cors).unwrap();
+        let mut res = Response::ok(json_string)
+            .unwrap()
+            .with_cors(&cors())
+            .unwrap();
         res.headers_mut()
             .set("content-type", "application/json")
             .unwrap();
@@ -56,7 +55,10 @@ pub async fn handle_get_posts_request(req: Request, ctx: RouteContext<()>) -> Re
         .await
         .unwrap();
     let json_string = serde_json::to_string(&posts).unwrap();
-    let mut res = Response::ok(json_string).unwrap().with_cors(&cors).unwrap();
+    let mut res = Response::ok(json_string)
+        .unwrap()
+        .with_cors(&cors())
+        .unwrap();
     res.headers_mut()
         .set("content-type", "application/json")
         .unwrap();
