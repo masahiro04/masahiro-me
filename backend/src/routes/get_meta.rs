@@ -20,7 +20,17 @@ pub async fn handle_get_meta_request(req: Request, ctx: RouteContext<()>) -> Res
         .with_allowed_headers(vec!["*".to_string()])
         .with_methods(vec![Method::Get, Method::Options, Method::Head]);
 
-    let result = match fetch_post_usecase(&ctx.env, &slug).await {
+    let kv_namespace = String::from("BLOG_CONTENT");
+    let kv = &ctx.env.kv(&kv_namespace);
+    let store = match kv {
+        Ok(s) => s,
+        Err(e) => {
+            eprintln!("Failed to retrieve KV store: {}", e);
+            std::process::exit(1);
+        }
+    };
+
+    let result = match fetch_post_usecase(store, &slug).await {
         Ok(post) => post,
         Err(_) => return Response::error("Not found", 404),
     };

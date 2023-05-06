@@ -1,28 +1,16 @@
-use worker::Env;
-
+use worker::kv::KvStore;
 use worker::*;
 
-static CACHE_KEY: &str = "BLOG_CONTENT";
-static CACHE_TTL: u64 = 86_400; // 24 hours
-
 pub struct KvClient<'a> {
-    env: &'a Env,
+    store: &'a KvStore,
 }
 
 impl<'a> KvClient<'a> {
-    pub fn new(env: &'a Env) -> Self {
-        Self { env }
+    pub fn new(store: &'a KvStore) -> Self {
+        Self { store }
     }
     pub async fn put(&self, key: &str, data: String) -> Result<()> {
-        let cache = match self.env.kv(CACHE_KEY) {
-            Ok(cache) => cache,
-            Err(e) => {
-                console_log!("{}", "cache not found".to_string());
-                eprintln!("Failed to retrieve KV store: {}", e);
-                std::process::exit(1);
-            }
-        };
-        let builder = match cache.put(&key, data) {
+        let builder = match self.store.put(&key, data) {
             Ok(_builder) => _builder,
             Err(e) => {
                 console_log!("{}", e.to_string());
@@ -30,7 +18,8 @@ impl<'a> KvClient<'a> {
                 std::process::exit(1);
             }
         };
-        match builder.expiration_ttl(CACHE_TTL).execute().await {
+        // 24 hours
+        match builder.expiration_ttl(86_400).execute().await {
             Ok(_val) => Ok(()),
             Err(e) => {
                 eprintln!("{}", e);
@@ -39,18 +28,8 @@ impl<'a> KvClient<'a> {
             }
         }
     }
-
     pub async fn get(&self, key: &str) -> Option<Response> {
-        let cache = match self.env.kv(CACHE_KEY) {
-            Ok(cache) => cache,
-            Err(e) => {
-                console_log!("cache not found {}", e.to_string());
-                // eprintln!("Failed to retrieve KV store: {}", e);
-                // std::process::exit(1);
-                return None;
-            }
-        };
-        cache
+        self.store
             .get(&key)
             .text()
             .await

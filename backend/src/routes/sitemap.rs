@@ -3,7 +3,18 @@ use worker::*;
 
 pub async fn handle_get_sitemap_request(req: Request, ctx: RouteContext<()>) -> Result<Response> {
     log_request(&req);
-    let slugs = fetch_slugs_usecase(&ctx.env).await.unwrap();
+
+    let kv_namespace = String::from("BLOG_CONTENT");
+    let kv = &ctx.env.kv(&kv_namespace);
+    let store = match kv {
+        Ok(s) => s,
+        Err(e) => {
+            eprintln!("Failed to retrieve KV store: {}", e);
+            std::process::exit(1);
+        }
+    };
+
+    let slugs = fetch_slugs_usecase(store).await.unwrap();
     let mut sitemap = String::new();
     sitemap.push_str("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
     sitemap.push_str("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">");

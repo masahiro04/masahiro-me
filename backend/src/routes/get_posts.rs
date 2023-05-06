@@ -31,11 +31,20 @@ pub async fn handle_get_posts_request(req: Request, ctx: RouteContext<()>) -> Re
         .with_max_age(86400)
         .with_allowed_headers(vec!["*".to_string()])
         .with_methods(vec![Method::Get, Method::Options, Method::Head]);
+
+    let kv_namespace = String::from("BLOG_CONTENT");
+    let kv = &ctx.env.kv(&kv_namespace);
+    let store = match kv {
+        Ok(s) => s,
+        Err(e) => {
+            eprintln!("Failed to retrieve KV store: {}", e);
+            std::process::exit(1);
+        }
+    };
+
     // TODO: related postsは /related_posts として作成しても良さそうだと思った
     if category_ids.is_empty() {
-        let posts = fetch_posts_usecase(&ctx.env, per_page, offset)
-            .await
-            .unwrap();
+        let posts = fetch_posts_usecase(store, per_page, offset).await.unwrap();
         let json_string = serde_json::to_string(&posts).unwrap();
         let mut res = Response::ok(json_string).unwrap().with_cors(&cors).unwrap();
         res.headers_mut()
@@ -43,7 +52,7 @@ pub async fn handle_get_posts_request(req: Request, ctx: RouteContext<()>) -> Re
             .unwrap();
         return Ok(res);
     };
-    let posts = fetch_related_posts_usecase(&ctx.env, &category_ids)
+    let posts = fetch_related_posts_usecase(store, &category_ids)
         .await
         .unwrap();
     let json_string = serde_json::to_string(&posts).unwrap();
