@@ -42,7 +42,7 @@ pub fn header() -> Html {
     let is_current_path = |paths: Vec<String>| -> bool {
         match &location {
             Some(lo) => {
-                let pathname = lo.pathname();
+                let pathname = lo.path();
                 let splited_route = pathname.split('/').collect::<Vec<&str>>();
                 let contains_any = splited_route
                     .iter()

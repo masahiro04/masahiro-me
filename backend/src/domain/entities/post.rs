@@ -15,27 +15,6 @@ pub struct Post {
 }
 
 impl Post {
-    pub fn new(
-        title: String,
-        slug: String,
-        date: String,
-        excerpt: String,
-        content: String,
-        categories: Vec<Category>,
-        tags: Vec<String>,
-        featured_media: String,
-    ) -> Result<Self, Error> {
-        Ok(Self {
-            title,
-            slug,
-            date,
-            excerpt,
-            content,
-            categories,
-            tags,
-            featured_media,
-        })
-    }
     pub fn reconstruct(
         title: String,
         slug: String,

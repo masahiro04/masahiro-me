@@ -1,3 +1,3 @@
-pub mod api;
-pub mod kv;
+mod api;
+mod kv;
 pub mod repositories;

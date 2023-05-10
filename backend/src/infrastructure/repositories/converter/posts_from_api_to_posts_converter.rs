@@ -34,7 +34,7 @@ pub async fn posts_from_api_to_posts_converver<'a>(
             Ok(media) => media.source_url().to_string(),
             Err(_) => "".to_string(),
         };
-        Post::new(
+        Post::reconstruct(
             post.title.rendered,
             post.slug,
             formatted_date,
@@ -44,7 +44,6 @@ pub async fn posts_from_api_to_posts_converver<'a>(
             vec![],
             featured_media,
         )
-        .unwrap()
     });
     let posts = join_all(post_futures).await;
     posts
