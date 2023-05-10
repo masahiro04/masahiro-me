@@ -25,14 +25,14 @@ wasm-logger = "0.2.0"
 log = "0.4.17"
 wee_alloc = "0.4.5"
 reqwest = { version = "0.11", features = ["json"] }
-wasm-bindgen = "0.2"
+wasm-bindgen = "0.2.85"
 wasm-bindgen-futures = "0.4"
 gloo = "0.8.0"
 async-trait = "0.1.68"
 async-std = { version = "1.10", features = ["attributes"] }
-# tokio = { version = "1.27.0", features = ["full"] }
-# [target.'cfg(target_arch = "wasm32")'.dependencies]
+
 app = { path = "../app" }
+
 
 [profile.release]
 lto = true
