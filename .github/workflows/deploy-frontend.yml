@@ -28,28 +28,38 @@ jobs:
           node-version: '16.18.1'
           # cache: yarn
       - run: |
-          cd frontend
+          cd frontend/runner
           yarn install --frozen-lockfile
 
       - name: Create Tailwind css file
         run: |
-          cd frontend
+          cd frontend/runner
           yarn create:tailwind
 
       - name: Build yew app
         run: |
-          cd frontend
+          cd frontend/runner
           trunk build --release -d ./dist
 
       - name: Copy _redirects file
         run: |
-          cd frontend
+          cd frontend/runner
           cp _redirects ./dist/_redirects
 
       - name: Copy functions file
         run: |
           cd frontend
-          cp -r functions ./dist/functions
+          # cp -r functions ./dist/functions
+          cp -r middlewares/src runner/dist/functions
+
+      # - name: SSR server
+      #   run: |
+      #     cd frontend
+      #     # cp -r functions ./dist/functions
+      #     cp ssr/pkg/ssr.js runner/dist/ssr.js
+      #     cp ssr/pkg/ssr_bg.wasm runner/dist/ssr_bg.wasm
+      #     cp ssr/pkg/ssr_bg.wasm.d.ts runner/dist/ssr_bg.wasm.d.ts
+      #     cp runner/_worker.js runner/dist/_worker.js
 
       - name: Install Wrangler CLI
         run: npm install -g wrangler

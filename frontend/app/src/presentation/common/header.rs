@@ -1,7 +1,7 @@
 use crate::presentation::{image::Image, link::Link};
 use crate::routes::RootRoutes;
 use yew::prelude::*;
-use yew_router::prelude::{use_location, Location};
+use yew_router::prelude::use_location;
 
 struct Item {
     name: String,

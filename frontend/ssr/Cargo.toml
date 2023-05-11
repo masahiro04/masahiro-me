@@ -37,6 +37,9 @@ js-sys = "0.3.62"
 
 app = { path = "../app" }
 
+[lib]
+crate-type = ["cdylib"]
+
 
 [profile.release]
 lto = true

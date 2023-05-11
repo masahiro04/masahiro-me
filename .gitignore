@@ -4,6 +4,7 @@ frontend/ssr/target
 frontend/target
 frontend/app/node_modules
 frontend/runner/node_modules
+frontend/middlewares/node_modules
 Cargo.lock
 frontend/dist/
 frontend/.env

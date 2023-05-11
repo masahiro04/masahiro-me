@@ -1,4 +1,4 @@
-use yew;
+use yew::{self, function_component, html, Html};
 
 use app::app::App;
 
@@ -12,12 +12,18 @@ macro_rules! console_log {
     }
 }
 
+#[function_component(Appp)]
+pub fn app() -> Html {
+    html! {
+    <div>{ "aaa" }</div>
+    }
+}
+
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 fn main() {
     wasm_logger::init(wasm_logger::Config::default());
-    // yew::ServerRenderer::<App>::new();
-    // yew::Renderer::<App>::new().hydrate();
+    // yew::Renderer::<Appp>::new().hydrate();
     yew::Renderer::<App>::new().render();
 }
 

@@ -5,7 +5,6 @@ mod pages;
 mod presentation;
 mod routes;
 mod usecase;
-use yew;
 
 // use app::App;
 //
