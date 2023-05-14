@@ -17,17 +17,17 @@ pub struct LinkProps {
 
 #[function_component(Link)]
 pub fn link(props: &LinkProps) -> Html {
+    let navigator = use_navigator().unwrap();
     let onclick_callback = match props.onclick.clone() {
         Some(callback) => callback,
         None => {
-            let history = use_history().unwrap();
-            let history = history.clone();
+            let history = navigator.clone();
             let target = props.href.clone();
             let out_href = props.out_href.clone();
 
             match target {
                 Some(target) => Callback::from(move |_| {
-                    history.push(target.clone());
+                    history.push(&target);
                 }),
                 None => Callback::from(move |_| {
                     web_sys::window()

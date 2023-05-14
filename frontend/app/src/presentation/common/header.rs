@@ -1,7 +1,7 @@
 use crate::presentation::{image::Image, link::Link};
 use crate::routes::RootRoutes;
 use yew::prelude::*;
-use yew_router::prelude::{use_location, Location};
+use yew_router::prelude::use_location;
 
 struct Item {
     name: String,
@@ -42,7 +42,7 @@ pub fn header() -> Html {
     let is_current_path = |paths: Vec<String>| -> bool {
         match &location {
             Some(lo) => {
-                let pathname = lo.pathname();
+                let pathname = lo.path();
                 let splited_route = pathname.split('/').collect::<Vec<&str>>();
                 let contains_any = splited_route
                     .iter()

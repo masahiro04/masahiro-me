@@ -19,7 +19,7 @@ pub enum RootRoutes {
     NotFound,
 }
 
-fn switch(routes: &RootRoutes) -> Html {
+fn switch(routes: RootRoutes) -> Html {
     match routes {
         RootRoutes::Pages { page } => html! {<Pages page={page.clone()} />},
         RootRoutes::PostDetail { slug } => html! {<PostDetail slug={slug.clone()} />},
@@ -34,7 +34,7 @@ pub fn route_outlet() -> Html {
     html! {
         <BrowserRouter>
             <BaseLayout>
-                <Switch<RootRoutes> render={Switch::render(switch)} />
+                <Switch<RootRoutes> render={switch} />
             </BaseLayout>
         </BrowserRouter>
     }

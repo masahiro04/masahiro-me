@@ -1,3 +1,17 @@
+// export const handleSsr: PagesFunction = async (_) => {
+//   const html = 'aaa';
+//   return new Response(html, {
+//     status: 200,
+//     headers: {
+//       'content-type': 'text/plain;charset=UTF-8'
+//     }
+//   });
+// };
+//
+// export const onRequest: PagesFunction[] = [handleSsr];
+//
+//
+
 const handleReverseProxy: PagesFunction = async (context) => {
   const originalUrl = context.request.url;
   const url = new URL(originalUrl);

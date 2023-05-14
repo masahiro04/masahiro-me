@@ -1,0 +1,40 @@
+[package]
+name = "runner"
+version = "0.1.0"
+authors = ["masahiro <stmhamachiii@gmail.com>"]
+edition = "2021"
+
+[dependencies]
+yew = { version = "0.20", features = ["ssr", "hydration", "csr"] }
+yew-router = "0.17.0"
+web-sys = { version = "0.3", features = [
+    "HtmlMetaElement",
+    "HtmlHeadElement",
+    "Document",
+    "Element",
+    "NodeList",
+    "DocumentFragment",
+    "HtmlTemplateElement",
+    "MediaQueryList" ] }
+once_cell = "1.8.0"
+serde = "1.0.126"
+serde_json = "1.0.64"
+lazy_static = "1.4.0"
+stylist = {version = "0.10", features = ["yew_integration"]}
+wasm-logger = "0.2.0"
+log = "0.4.17"
+wee_alloc = "0.4.5"
+reqwest = { version = "0.11", features = ["json"] }
+wasm-bindgen = "0.2.85"
+wasm-bindgen-futures = "0.4"
+gloo = "0.8.0"
+async-trait = "0.1.68"
+async-std = { version = "1.10", features = ["attributes"] }
+
+app = { path = "../app" }
+
+
+[profile.release]
+lto = true
+opt-level = 'z'
+codegen-units = 1

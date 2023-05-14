@@ -4,8 +4,8 @@ use yew_router::prelude::*;
 
 #[function_component(BackButton)]
 pub fn back_button() -> Html {
-    let history = use_history().unwrap();
-    let onclick = Callback::once(move |_| history.back());
+    let navigator = use_navigator().unwrap();
+    let onclick = Callback::from(move |_| navigator.back());
 
     html! {
         <div
