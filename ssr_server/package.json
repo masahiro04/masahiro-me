@@ -4,8 +4,11 @@
     "watch:tailwind": "tailwindcss -i ./assets/styles/base.css -o ./tailwind.css -w",
     "build:tailwind": "NODE_ENV=production tailwindcss -c ./tailwind.config.js -o ./tailwind.css --minify"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.1.4"
+  },
   "dependencies": {
+    "@cloudflare/workers-types": "^3.18.0",
     "@tailwindcss/typography": "^0.5.9",
     "tailwindcss": "^3.3.1"
   }
