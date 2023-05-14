@@ -65,7 +65,7 @@ jobs:
         run: npm install -g wrangler
       - name: Deploy pages
         run: |
-          cd frontend
+          cd frontend/runner
           wrangler pages publish dist --project-name ${{ secrets.CF_PAGES_PROJECT_NAME }}
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
