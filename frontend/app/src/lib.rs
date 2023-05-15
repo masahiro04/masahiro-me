@@ -1,23 +1,42 @@
-use yew::{self, function_component, html, Html};
+mod domain;
+mod infrastructure;
+mod pages;
+mod presentation;
+mod routes;
+mod usecase;
 
-use app::app::App;
+use crate::routes::RouteOutlet;
+use yew::prelude::*;
 
-extern crate lazy_static;
-// extern crate wee_alloc;
-
-#[macro_export]
-macro_rules! console_log {
-    ( $( $t:tt )* ) => {
-        web_sys::console::log_1(&format!( $( $t )* ).into());
+#[function_component(App)]
+pub fn app() -> Html {
+    let fallback = html! {<div>{"Loading..."}</div>};
+    html! {
+        <Suspense {fallback}>
+            <RouteOutlet />
+        </Suspense>
     }
 }
 
+// use app::App;
+//
+// extern crate lazy_static;
+// extern crate wee_alloc;
+//
+// #[macro_export]
+// macro_rules! console_log {
+//     ( $( $t:tt )* ) => {
+//         web_sys::console::log_1(&format!( $( $t )* ).into());
+//     }
+// }
+//
 // #[global_allocator]
 // static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 // fn main() {
 //     wasm_logger::init(wasm_logger::Config::default());
-//     yew::Renderer::<App>::new().hydrate();
-//     // yew::Renderer::<App>::new().render();
+//     // yew::ServerRenderer::<App>::new();
+//     // yew::Renderer::<App>::new().hydrate();
+//     yew::Renderer::<App>::new().render();
 // }
 
 // #[global_allocator]

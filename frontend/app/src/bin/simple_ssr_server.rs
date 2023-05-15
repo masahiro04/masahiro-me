@@ -1,7 +1,7 @@
 use std::error::Error;
 use std::path::PathBuf;
 
-use app::app::App;
+use app::App;
 use bytes::Bytes;
 use clap::Parser;
 use futures::stream::{self, Stream, StreamExt};
