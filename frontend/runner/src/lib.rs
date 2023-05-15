@@ -3,7 +3,7 @@ use yew::{self, function_component, html, Html};
 use app::app::App;
 
 extern crate lazy_static;
-extern crate wee_alloc;
+// extern crate wee_alloc;
 
 #[macro_export]
 macro_rules! console_log {
@@ -12,13 +12,13 @@ macro_rules! console_log {
     }
 }
 
-#[global_allocator]
-static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
-fn main() {
-    wasm_logger::init(wasm_logger::Config::default());
-    yew::Renderer::<App>::new().hydrate();
-    // yew::Renderer::<App>::new().render();
-}
+// #[global_allocator]
+// static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
+// fn main() {
+//     wasm_logger::init(wasm_logger::Config::default());
+//     yew::Renderer::<App>::new().hydrate();
+//     // yew::Renderer::<App>::new().render();
+// }
 
 // #[global_allocator]
 // static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;

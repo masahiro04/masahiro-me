@@ -34,6 +34,7 @@ pub fn PostIndex(props: &HomeProps) -> Html {
         PER_PAGE * (props.page - 1)
     };
     let has_next_page = use_state(|| posts.clone().len() == PER_PAGE as usize);
+<<<<<<< HEAD:app/src/pages/posts/index.rs
 
     {
         let set_posts = posts.clone();
@@ -51,6 +52,37 @@ pub fn PostIndex(props: &HomeProps) -> Html {
                 || ()
             },
             props.clone().page,
+=======
+    // {
+    //     let set_posts = posts.clone();
+    //     let set_is_loading = is_loading.clone();
+    //     use_effect_with_deps(
+    //         move |_| {
+    //             wasm_bindgen_futures::spawn_local(async move {
+    //                 match fetch_posts_usecase(PER_PAGE, offset).await {
+    //                     Ok(posts) => set_posts.set(posts),
+    //                     Err(e) => log::error!("Error: {}", e),
+    //                 }
+    //                 set_is_loading.set(false)
+    //             });
+    //             || {
+    //                 // ここで副作用のクリーンアップを行う
+    //                 // 例: イベントリスナーの削除など
+    //             }
+    //         },
+    //         props.clone().page,
+    //     );
+    // }
+    {
+        let set_has_next_page = has_next_page.clone();
+        let posts_len = posts.len();
+        use_effect_with_deps(
+            move |_| {
+                set_has_next_page.set(posts_len == PER_PAGE as usize);
+                || {} // Cleanup function (optional)
+            },
+            (posts_len,), // Dependencies tuple
+>>>>>>> 6786113 (wip: changes):frontend/app/src/pages/pages.rs
         );
     }
 
