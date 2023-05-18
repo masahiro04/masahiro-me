@@ -1,7 +1,9 @@
 use crate::pages::pages::Pages;
 use crate::pages::{about::About, not_found::NotFound, post::PostDetail, projects::Projects};
 use crate::presentation::layout::BaseLayout;
+use std::collections::HashMap;
 use yew::prelude::*;
+use yew_router::history::{AnyHistory, History, MemoryHistory};
 use yew_router::prelude::*;
 //
 #[derive(Clone, Routable, PartialEq)]
@@ -18,8 +20,7 @@ pub enum RootRoutes {
     #[at("/404")]
     NotFound,
 }
-//
-fn switch(routes: RootRoutes) -> Html {
+pub fn switch(routes: RootRoutes) -> Html {
     match routes {
         RootRoutes::Pages { page } => html! {<Pages page={page.clone()} />},
         RootRoutes::PostDetail { slug } => html! {<PostDetail slug={slug.clone()} />},
@@ -29,11 +30,22 @@ fn switch(routes: RootRoutes) -> Html {
     }
 }
 
-#[function_component(RouteOutlet)]
-pub fn route_outlet() -> Html {
+#[derive(Properties, PartialEq, Eq, Debug)]
+pub struct ServerAppProps {
+    pub url: AttrValue,
+    pub queries: HashMap<String, String>,
+}
+
+#[function_component]
+pub fn ServerApp(props: &ServerAppProps) -> Html {
+    let history = AnyHistory::from(MemoryHistory::new());
+    history
+        .push_with_query(&*props.url, &props.queries)
+        .unwrap();
+
     html! {
-        <BrowserRouter>
-                <>{"aaa"}</>
-        </BrowserRouter>
+        <Router history={history}>
+            <Switch<RootRoutes> render={switch} />
+        </Router>
     }
 }

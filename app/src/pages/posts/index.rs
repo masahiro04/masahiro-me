@@ -6,7 +6,11 @@ use crate::pages::{
     // shared::metadata::{insert_metadata, MetadataParams},
 };
 use crate::usecase::exe::*;
+<<<<<<< HEAD:app/src/pages/posts/index.rs
 use yew::platform::spawn_local;
+=======
+// use wasm_bindgen_futures;
+>>>>>>> 01ff5ba (wip: ssr):frontend/app/src/pages/pages.rs
 use yew::prelude::*;
 
 const PER_PAGE: i32 = 10;
