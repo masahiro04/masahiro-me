@@ -7,10 +7,13 @@ use crate::pages::{
 };
 use crate::usecase::exe::*;
 <<<<<<< HEAD:app/src/pages/posts/index.rs
+<<<<<<< HEAD:app/src/pages/posts/index.rs
 use yew::platform::spawn_local;
 =======
 // use wasm_bindgen_futures;
 >>>>>>> 01ff5ba (wip: ssr):frontend/app/src/pages/pages.rs
+=======
+>>>>>>> 5c2643c (feat: ssr):frontend/app/src/pages/pages.rs
 use yew::prelude::*;
 
 const PER_PAGE: i32 = 10;
@@ -39,18 +42,26 @@ pub fn PostIndex(props: &HomeProps) -> Html {
     };
     let has_next_page = use_state(|| posts.clone().len() == PER_PAGE as usize);
 <<<<<<< HEAD:app/src/pages/posts/index.rs
+<<<<<<< HEAD:app/src/pages/posts/index.rs
 
+=======
+>>>>>>> 5c2643c (feat: ssr):frontend/app/src/pages/pages.rs
     {
         let set_posts = posts.clone();
         let set_is_loading = is_loading.clone();
         use_effect_with_deps(
             move |_| {
+<<<<<<< HEAD:app/src/pages/posts/index.rs
                 let future = async move {
+=======
+                wasm_bindgen_futures::spawn_local(async move {
+>>>>>>> 5c2643c (feat: ssr):frontend/app/src/pages/pages.rs
                     match fetch_posts_usecase(PER_PAGE, offset).await {
                         Ok(posts) => set_posts.set(posts),
                         Err(e) => log::error!("Error: {}", e),
                     }
                     set_is_loading.set(false)
+<<<<<<< HEAD:app/src/pages/posts/index.rs
                 };
                 spawn_local(future);
                 || ()
@@ -77,6 +88,17 @@ pub fn PostIndex(props: &HomeProps) -> Html {
     //         props.clone().page,
     //     );
     // }
+=======
+                });
+                || {
+                    // ここで副作用のクリーンアップを行う
+                    // 例: イベントリスナーの削除など
+                }
+            },
+            props.clone().page,
+        );
+    }
+>>>>>>> 5c2643c (feat: ssr):frontend/app/src/pages/pages.rs
     {
         let set_has_next_page = has_next_page.clone();
         let posts_len = posts.len();

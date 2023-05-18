@@ -5,7 +5,14 @@ use std::collections::HashMap;
 use yew::prelude::*;
 use yew_router::history::{AnyHistory, History, MemoryHistory};
 use yew_router::prelude::*;
-//
+
+#[macro_export]
+macro_rules! console_log {
+    ( $( $t:tt )* ) => {
+        web_sys::console::log_1(&format!( $( $t )* ).into());
+    }
+}
+
 #[derive(Clone, Routable, PartialEq)]
 pub enum RootRoutes {
     #[at("/pages/:page")]
@@ -20,6 +27,7 @@ pub enum RootRoutes {
     #[at("/404")]
     NotFound,
 }
+
 pub fn switch(routes: RootRoutes) -> Html {
     match routes {
         RootRoutes::Pages { page } => html! {<Pages page={page.clone()} />},
@@ -47,5 +55,16 @@ pub fn ServerApp(props: &ServerAppProps) -> Html {
         <Router history={history}>
             <Switch<RootRoutes> render={switch} />
         </Router>
+    }
+}
+
+#[function_component(App)]
+pub fn app() -> Html {
+    html! {
+        <BrowserRouter>
+            <BaseLayout>
+                <Switch<RootRoutes> render={switch} />
+            </BaseLayout>
+        </BrowserRouter>
     }
 }

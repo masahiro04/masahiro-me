@@ -1,12 +1,16 @@
 [package]
-name = "app"
+name = "runner"
 version = "0.1.0"
 authors = ["masahiro <stmhamachiii@gmail.com>"]
 edition = "2021"
 
 [[bin]]
-name = "function_router"
-required-features = ["yew/csr"]
+name = "simple_ssr_hydrate"
+required-features = ["hydration"]
+
+[[bin]]
+name = "simple_ssr_server"
+required-features = ["ssr"]
 
 [dependencies]
 yew = { version = "0.20", features = ["ssr", "hydration", "csr"] }
@@ -51,6 +55,10 @@ env_logger = "0.10"
 clap = { version = "3.1.7", features = ["derive"] }
 hyper = { version = "0.14", features = ["server", "http1"] }
 jemallocator = "0.5"
+
+[features]
+hydration = ["yew/hydration"]
+ssr = ["yew/ssr"]
 
 [profile.release]
 lto = true
