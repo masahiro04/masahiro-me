@@ -16,8 +16,11 @@ use yew::platform::spawn_local;
 =======
 use lazy_static::__Deref;
 use std::rc::Rc;
+<<<<<<< HEAD:app/src/pages/posts/detail.rs
 use web_sys::console;
 >>>>>>> 5c2643c (feat: ssr):frontend/app/src/pages/post.rs
+=======
+>>>>>>> e8a253f (fix: not to show post page):frontend/app/src/pages/post.rs
 use yew::prelude::*;
 
 #[function_component(Loading)]
@@ -90,10 +93,11 @@ pub fn PostDetail(props: &PostProps) -> Html {
         use_effect_with_deps(
             move |_| {
                 let slug = slug.clone();
+                #[cfg(feature = "wasm")]
                 wasm_bindgen_futures::spawn_local(async move {
                     match fetch_post_usecase(slug).await {
                         Ok(post) => set_post.set(post),
-                        Err(e) => log::error!("Error: {}", e),
+                        Err(e) => console_log!("Error: {}", e),
                     }
                     set_is_loading.set(false)
                 });
@@ -122,10 +126,11 @@ pub fn PostDetail(props: &PostProps) -> Html {
                         .collect::<Vec<String>>()
                         .join(",");
 
+                    #[cfg(feature = "wasm")]
                     wasm_bindgen_futures::spawn_local(async move {
                         match fetch_related_posts_usecase(&category_ids).await {
                             Ok(posts) => set_related_posts.set(posts),
-                            Err(e) => log::error!("Error: {}", e),
+                            Err(e) => console_log!("Error: {}", e),
                         }
                         set_is_loading.set(false);
                     });

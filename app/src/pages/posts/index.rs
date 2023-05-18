@@ -1,3 +1,8 @@
+<<<<<<< HEAD:app/src/pages/posts/index.rs
+=======
+use super::utils::metadata::{insert_metadata, MetadataParams};
+use crate::console_log;
+>>>>>>> e8a253f (fix: not to show post page):frontend/app/src/pages/pages.rs
 use crate::domain::entities::post::Post;
 use crate::pages::{
     posts::shared::loading_post::LoadingPost,
@@ -52,13 +57,17 @@ pub fn PostIndex(props: &HomeProps) -> Html {
         use_effect_with_deps(
             move |_| {
 <<<<<<< HEAD:app/src/pages/posts/index.rs
+<<<<<<< HEAD:app/src/pages/posts/index.rs
                 let future = async move {
 =======
+=======
+                #[cfg(feature = "wasm")]
+>>>>>>> e8a253f (fix: not to show post page):frontend/app/src/pages/pages.rs
                 wasm_bindgen_futures::spawn_local(async move {
 >>>>>>> 5c2643c (feat: ssr):frontend/app/src/pages/pages.rs
                     match fetch_posts_usecase(PER_PAGE, offset).await {
                         Ok(posts) => set_posts.set(posts),
-                        Err(e) => log::error!("Error: {}", e),
+                        Err(e) => console_log!("Error: {}", e),
                     }
                     set_is_loading.set(false)
 <<<<<<< HEAD:app/src/pages/posts/index.rs
