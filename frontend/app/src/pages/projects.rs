@@ -31,7 +31,6 @@ pub fn projects() -> Html {
             })
             .collect::<Html>()
     };
-
     let render_past_works = || -> Html {
         past_works
             .into_iter()
@@ -44,11 +43,11 @@ pub fn projects() -> Html {
     };
     fn render_section(title: String, project_nodes: Html) -> Html {
         html! {
-            <div>
+            <div class="mb-3">
                 <div class="mb-3 font-semibold text-gray-700 text-lg sm:text-xl">
                     {title.clone()}
                 </div>
-                <div class="gap-8 gap-x-10 justify-center sm:columns-2">
+                <div class="gap-x-10 justify-center sm:columns-2">
                     {project_nodes}
                 </div>
             </div>

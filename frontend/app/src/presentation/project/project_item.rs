@@ -10,13 +10,17 @@ pub struct ProjectItemProps {
 #[function_component(ProjectItem)]
 pub fn project_item(props: &ProjectItemProps) -> Html {
     html! {
-    <div class="relative w-full group cursor-pointer mb-2 sm:mb-8">
-      <a href={props.url.clone()} target="_blank" rel="noreferrer">
-        <div class="break-inside-avoid-column py-3 bg-white rounded-md max-w-full px-6 bg-opacity-60 shadow-sm duration-500 group-hover:shadow-lg group-hover:scale-[1.01] group-hover:bg-opacity-90">
-          <div class="font-semibold text-gray-600 text-sm sm:text-base">{props.name.clone()}</div>
-          <div class="text-gray-500 font-thin text-sm duration-500 group-hover:text-gray-600">{props.technologies.clone()}</div>
+        <div class="group cursor-pointer mb-2">
+            <a href={props.url.clone()} target="_blank" rel="noreferrer">
+                <div class="break-inside-avoid-column py-3 bg-white rounded-md max-w-full px-6 bg-opacity-60 shadow-sm duration-500 group-hover:shadow-lg group-hover:scale-[1.01] group-hover:bg-opacity-90">
+                    <div class="font-semibold text-gray-600 text-sm sm:text-base">
+                        {props.name.clone()}
+                    </div>
+                    <div class="w-full text-gray-500 font-thin whitespace-pre-line text-sm duration-500 group-hover:text-gray-600">
+                        {props.technologies.clone()}
+                    </div>
+                </div>
+            </a>
         </div>
-      </a>
-    </div>
     }
 }
