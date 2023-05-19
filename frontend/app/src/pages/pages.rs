@@ -4,6 +4,7 @@ use crate::presentation::post::{
     loading_post::LoadingPost, pagination::Pagination, post_item::PostItem,
 };
 use crate::usecase::exe::*;
+use yew::platform::spawn_local;
 use yew::prelude::*;
 
 const PER_PAGE: i32 = 10;
@@ -36,17 +37,15 @@ pub fn pages(props: &HomeProps) -> Html {
         let set_is_loading = is_loading.clone();
         use_effect_with_deps(
             move |_| {
-                wasm_bindgen_futures::spawn_local(async move {
+                let future = async move {
                     match fetch_posts_usecase(PER_PAGE, offset).await {
                         Ok(posts) => set_posts.set(posts),
                         Err(e) => log::error!("Error: {}", e),
                     }
                     set_is_loading.set(false)
-                });
-                || {
-                    // ここで副作用のクリーンアップを行う
-                    // 例: イベントリスナーの削除など
-                }
+                };
+                spawn_local(future);
+                || ()
             },
             props.clone().page,
         );
@@ -57,9 +56,9 @@ pub fn pages(props: &HomeProps) -> Html {
         use_effect_with_deps(
             move |_| {
                 set_has_next_page.set(posts_len == PER_PAGE as usize);
-                || {} // Cleanup function (optional)
+                || ()
             },
-            (posts_len,), // Dependencies tuple
+            posts_len,
         );
     }
 
