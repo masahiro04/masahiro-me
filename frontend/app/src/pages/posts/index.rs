@@ -1,9 +1,12 @@
-use super::utils::metadata::{insert_metadata, MetadataParams};
 use crate::domain::entities::post::Post;
-use crate::presentation::post::{
-    loading_post::LoadingPost, pagination::Pagination, post_item::PostItem,
+use crate::pages::{
+    posts::shared::loading_post::LoadingPost,
+    posts::shared::pagination::Pagination,
+    posts::shared::post_item::PostItem,
+    shared::metadata::{insert_metadata, MetadataParams},
 };
 use crate::usecase::exe::*;
+use yew::platform::spawn_local;
 use yew::prelude::*;
 
 const PER_PAGE: i32 = 10;
@@ -21,8 +24,8 @@ pub struct HomeProps {
 }
 
 // TODO: paginationをクリックしたら、is_loadingな状態にする
-#[function_component(Pages)]
-pub fn pages(props: &HomeProps) -> Html {
+#[function_component]
+pub fn PostIndex(props: &HomeProps) -> Html {
     let posts = use_state(|| Vec::<Post>::new());
     let is_loading = use_state(|| true);
     let offset = if props.page == 1 {
@@ -36,42 +39,37 @@ pub fn pages(props: &HomeProps) -> Html {
         let set_is_loading = is_loading.clone();
         use_effect_with_deps(
             move |_| {
-                wasm_bindgen_futures::spawn_local(async move {
+                let future = async move {
                     match fetch_posts_usecase(PER_PAGE, offset).await {
                         Ok(posts) => set_posts.set(posts),
                         Err(e) => log::error!("Error: {}", e),
                     }
                     set_is_loading.set(false)
-                });
-                || {
-                    // ここで副作用のクリーンアップを行う
-                    // 例: イベントリスナーの削除など
-                }
+                };
+                spawn_local(future);
+                || ()
             },
             props.clone().page,
         );
     }
-    {
-        let set_has_next_page = has_next_page.clone();
-        let posts_len = posts.len();
-        use_effect_with_deps(
-            move |_| {
-                set_has_next_page.set(posts_len == PER_PAGE as usize);
-                || {} // Cleanup function (optional)
-            },
-            (posts_len,), // Dependencies tuple
-        );
-    }
 
-    {
-        let metadata_params = MetadataParams {
-            title: None,
-            keywords: None,
-            description: None,
-            image_url: None,
-        };
-        insert_metadata(metadata_params);
-    }
+    let set_has_next_page = has_next_page.clone();
+    let posts_len = posts.len();
+    use_effect_with_deps(
+        move |_| {
+            set_has_next_page.set(posts_len == PER_PAGE as usize);
+            || ()
+        },
+        posts_len,
+    );
+
+    let metadata_params = MetadataParams {
+        title: None,
+        keywords: None,
+        description: None,
+        image_url: None,
+    };
+    insert_metadata(metadata_params);
 
     html! {
         <>

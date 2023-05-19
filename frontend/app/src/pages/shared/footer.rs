@@ -1,4 +1,4 @@
-use crate::presentation::image::Image;
+use crate::pages::shared::image::Image;
 use yew::prelude::*;
 
 #[derive(Clone, PartialEq)]
@@ -38,8 +38,8 @@ struct FooterItemProps {
     item: Item,
 }
 
-#[function_component(FooterItem)]
-fn footer_item(props: &FooterItemProps) -> Html {
+#[function_component]
+fn FooterItem(props: &FooterItemProps) -> Html {
     let filename = format!("/images/{}.svg", props.item.clone().kind.to_str());
     let alt_text = format!("{}の画像", props.item.clone().kind.to_str());
     html! {
@@ -56,8 +56,8 @@ fn footer_item(props: &FooterItemProps) -> Html {
     }
 }
 
-#[function_component(Footer)]
-pub fn footer() -> Html {
+#[function_component]
+pub fn Footer() -> Html {
     let items: Vec<Item> = vec![
         Item {
             kind: FooterItemKind::GitHub,

@@ -1,6 +1,6 @@
 use yew::{self, function_component, html, Html};
 
-use app::app::App;
+use app::routes::App;
 
 extern crate lazy_static;
 extern crate wee_alloc;

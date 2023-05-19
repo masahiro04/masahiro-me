@@ -2,12 +2,12 @@ use super::{footer::Footer, header::Header};
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq)]
-pub struct BaseLayoutProps {
+pub struct LayoutProps {
     pub children: Children,
 }
 
-#[function_component(BaseLayout)]
-pub fn base_layout(props: &BaseLayoutProps) -> Html {
+#[function_component]
+pub fn Layout(props: &LayoutProps) -> Html {
     html! {
         <div class="flex flex-col min-h-screen w-full p-5 mx-auto sm:max-w-4xl sm:py-12">
             <div class="flex-grow">

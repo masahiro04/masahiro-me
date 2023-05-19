@@ -1,7 +1,7 @@
 use yew::prelude::*;
 
-#[function_component(LoadingPost)]
-pub fn loading_post() -> Html {
+#[function_component]
+pub fn LoadingPost() -> Html {
     html! {
         <div class="relative w-full cursor-pointer">
             <div class="py-3 bg-white rounded-md max-w-full bg-opacity-60 font-semibold text-transparent animate-pulse shadow-sm duration-500 px-3 sm:px-6 text-sm sm:text-base">

@@ -1,11 +1,12 @@
-use super::not_found::NotFound;
-use super::utils::metadata::{insert_metadata, MetadataParams};
 use crate::domain::entities::post::Post;
-use crate::presentation::common::back_button::BackButton;
-use crate::presentation::post::{categories::Categories, post_body::PostBody, post_item::PostItem};
+use crate::pages::{
+    not_found::NotFound,
+    posts::shared::{categories::Categories, post_body::PostBody, post_item::PostItem},
+    shared::back_button::BackButton,
+    shared::metadata::{insert_metadata, MetadataParams},
+};
 use crate::usecase::exe::{fetch_post_usecase, fetch_related_posts_usecase};
-use lazy_static::__Deref;
-use std::rc::Rc;
+use yew::platform::spawn_local;
 use yew::prelude::*;
 
 #[function_component(Loading)]
@@ -40,75 +41,12 @@ pub struct PostProps {
     pub slug: String,
 }
 
-#[function_component(PostDetail)]
-pub fn post_detail(props: &PostProps) -> Html {
+#[function_component]
+pub fn PostDetail(props: &PostProps) -> Html {
     let post: UseStateHandle<Option<Post>> = use_state(|| None);
     let related_posts: UseStateHandle<Vec<Post>> = use_state(|| vec![]);
     let is_loading = use_state(|| true);
     let slug = props.slug.clone();
-
-    {
-        let set_post = post.clone();
-        let set_is_loading = is_loading.clone();
-        use_effect_with_deps(
-            move |_| {
-                let slug = slug.clone();
-                wasm_bindgen_futures::spawn_local(async move {
-                    match fetch_post_usecase(slug).await {
-                        Ok(post) => set_post.set(post),
-                        Err(e) => log::error!("Error: {}", e),
-                    }
-                    set_is_loading.set(false)
-                });
-                || {
-                    // ここで副作用のクリーンアップを行う
-                    // 例: イベントリスナーの削除など
-                }
-            },
-            props.slug.clone(),
-        );
-    }
-
-    {
-        let set_related_posts = related_posts.clone();
-        let set_is_loading = is_loading.clone();
-        let post_clone = Rc::new(post.clone());
-        use_effect_with_deps(
-            move |post_ref: &Rc<UseStateHandle<Option<Post>>>| {
-                let post = post_ref.deref();
-                if let Some(post) = post.as_ref() {
-                    let category_ids = post
-                        .categories()
-                        .iter()
-                        .map(|category| format!("{}", category.id()))
-                        .collect::<Vec<String>>()
-                        .join(",");
-
-                    wasm_bindgen_futures::spawn_local(async move {
-                        match fetch_related_posts_usecase(&category_ids).await {
-                            Ok(posts) => set_related_posts.set(posts),
-                            Err(e) => log::error!("Error: {}", e),
-                        }
-                        set_is_loading.set(false);
-                    });
-                };
-
-                move || {
-                    // ここで副作用のクリーンアップを行う
-                    // 例: イベントリスナーの削除など
-                }
-            },
-            Rc::clone(&post_clone),
-        );
-    }
-
-    if *is_loading {
-        return html! { <Loading /> };
-    }
-
-    if post.is_none() {
-        return html! { <NotFound /> };
-    }
 
     let title = "".to_string();
     let title = if let Some(post) = &*post {
@@ -144,7 +82,50 @@ pub fn post_detail(props: &PostProps) -> Html {
         &featured_media
     };
 
-    // TODO: use_effectであれば一度だけレンダリングされると思う
+    {
+        let set_post = post.clone();
+        let set_is_loading = is_loading.clone();
+        use_effect_with_deps(
+            move |_| {
+                let future = async move {
+                    match fetch_post_usecase(slug).await {
+                        Ok(post) => set_post.set(post),
+                        Err(e) => log::error!("Error: {}", e),
+                    }
+                    set_is_loading.set(false)
+                };
+                spawn_local(future);
+                || ()
+            },
+            props.slug.clone(),
+        );
+    }
+
+    {
+        let set_related_posts = related_posts.clone();
+        let set_is_loading = is_loading.clone();
+        let category_ids = categories
+            .iter()
+            .map(|category| format!("{}", category.id()))
+            .collect::<Vec<String>>()
+            .join(",");
+
+        use_effect_with_deps(
+            move |_| {
+                let future = async move {
+                    match fetch_related_posts_usecase(&category_ids).await {
+                        Ok(posts) => set_related_posts.set(posts),
+                        Err(e) => log::error!("Error: {}", e),
+                    }
+                    set_is_loading.set(false);
+                };
+                spawn_local(future);
+                || ()
+            },
+            categories.clone(),
+        );
+    }
+
     {
         let category_names = categories
             .iter()
@@ -159,6 +140,14 @@ pub fn post_detail(props: &PostProps) -> Html {
             image_url: Some(&featured_media),
         };
         insert_metadata(metadata_params);
+    }
+
+    if *is_loading {
+        return html! { <Loading /> };
+    }
+
+    if post.is_none() {
+        return html! { <NotFound /> };
     }
 
     html! {

@@ -1,5 +1,5 @@
 use crate::domain::entities::category::Category;
-use crate::presentation::link::Link;
+use crate::pages::shared::link::Link;
 use crate::routes::RootRoutes;
 use yew::prelude::*;
 
@@ -34,7 +34,7 @@ pub fn categories(props: &CategoriesProps) -> Html {
              {props.categories.iter().map(|category| {
                  if props.is_link {
                      html! {
-                         <Link href={RootRoutes::Pages { page: 1 }}>
+                         <Link href={RootRoutes::PostIndex { page: 1 }}>
                              <CategoryItem name={category.name().to_string()} />
                          </Link>
                      }

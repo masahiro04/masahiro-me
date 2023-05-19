@@ -1,4 +1,4 @@
-use crate::presentation::{image::Image, link::Link};
+use crate::pages::shared::{image::Image, link::Link};
 use crate::routes::RootRoutes;
 use yew::prelude::*;
 use yew_router::prelude::use_location;
@@ -11,15 +11,15 @@ struct Item {
     sm_class: String,
 }
 
-#[function_component(Header)]
-pub fn header() -> Html {
+#[function_component]
+pub fn Header() -> Html {
     let location = use_location();
 
     let items = vec![
         Item {
             name: "Posts".to_string(),
             active_paths: vec!["pages".to_string(), "posts".to_string()],
-            href: RootRoutes::Pages { page: 1 },
+            href: RootRoutes::PostIndex { page: 1 },
             lp_class: "tracking-wider text-gray-700 text-base".to_string(),
             sm_class: "tracking-wider text-gray-700 text-sm text-center".to_string(),
         },
@@ -33,7 +33,7 @@ pub fn header() -> Html {
         Item {
             name: "About".to_string(),
             active_paths: vec!["about".to_string()],
-            href: RootRoutes::About,
+            href: RootRoutes::AboutIndex,
             lp_class: "tracking-wider text-gray-700 text-base".to_string(),
             sm_class: "tracking-wider text-gray-700 text-sm text-center".to_string(),
         },
@@ -67,7 +67,7 @@ pub fn header() -> Html {
     html! {
     <nav class="py-3 bg-white rounded-md shadow-lg px-7 bg-opacity-60 mb-5 sm:mb-16">
       <div class="flex items-center justify-between">
-        <Link href={RootRoutes::Pages { page: 1 }} class={"text-2xl font-semibold tracking-wide text-gray-700 whitespace-nowrap"}>
+        <Link href={RootRoutes::PostIndex { page: 1 }} class={"text-2xl font-semibold tracking-wide text-gray-700 whitespace-nowrap"}>
             { "Masahiro's tech note" }
         </Link>
         <div class="items-center hidden sm:flex sm:space-x-8 md:space-x-12">

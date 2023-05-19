@@ -1,19 +1,23 @@
-use crate::pages::pages::Pages;
-use crate::pages::{about::About, not_found::NotFound, post::PostDetail, projects::Projects};
-use crate::presentation::layout::BaseLayout;
+use crate::pages::{
+    about::index::AboutIndex,
+    not_found::NotFound,
+    posts::{detail::PostDetail, index::PostIndex},
+    projects::index::Projects,
+    shared::layout::Layout,
+};
 use yew::prelude::*;
 use yew_router::prelude::*;
 
 #[derive(Clone, Routable, PartialEq)]
 pub enum RootRoutes {
     #[at("/pages/:page")]
-    Pages { page: i32 },
+    PostIndex { page: i32 },
     #[at("/posts/:slug")]
     PostDetail { slug: String },
     #[at("/projects")]
     Projects,
     #[at("/about")]
-    About,
+    AboutIndex,
     #[not_found]
     #[at("/404")]
     NotFound,
@@ -21,21 +25,21 @@ pub enum RootRoutes {
 
 fn switch(routes: RootRoutes) -> Html {
     match routes {
-        RootRoutes::Pages { page } => html! {<Pages page={page.clone()} />},
+        RootRoutes::PostIndex { page } => html! {<PostIndex page={page.clone()} />},
         RootRoutes::PostDetail { slug } => html! {<PostDetail slug={slug.clone()} />},
         RootRoutes::Projects => html! { <Projects /> },
-        RootRoutes::About => html! { <About /> },
+        RootRoutes::AboutIndex => html! { <AboutIndex /> },
         RootRoutes::NotFound => html! { <NotFound />},
     }
 }
 
-#[function_component(RouteOutlet)]
-pub fn route_outlet() -> Html {
+#[function_component]
+pub fn App() -> Html {
     html! {
         <BrowserRouter>
-            <BaseLayout>
+            <Layout>
                 <Switch<RootRoutes> render={switch} />
-            </BaseLayout>
+            </Layout>
         </BrowserRouter>
     }
 }

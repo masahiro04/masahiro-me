@@ -1,7 +1,10 @@
-use super::utils::metadata::{insert_metadata, MetadataParams};
-use crate::presentation::project::{project_header::ProjectHeader, project_item::ProjectItem};
-use crate::usecase::exe::{
-    fetch_advisory_projects_usecase, fetch_past_work_projects_usecase, fetch_work_projects_usecase,
+use crate::{
+    pages::projects::shared::{project_header::ProjectHeader, project_item::ProjectItem},
+    pages::shared::metadata::{insert_metadata, MetadataParams},
+    usecase::exe::{
+        fetch_advisory_projects_usecase, fetch_past_work_projects_usecase,
+        fetch_work_projects_usecase,
+    },
 };
 use yew::prelude::*;
 
@@ -31,7 +34,6 @@ pub fn projects() -> Html {
             })
             .collect::<Html>()
     };
-
     let render_past_works = || -> Html {
         past_works
             .into_iter()
@@ -44,11 +46,11 @@ pub fn projects() -> Html {
     };
     fn render_section(title: String, project_nodes: Html) -> Html {
         html! {
-            <div>
+            <div class="mb-3">
                 <div class="mb-3 font-semibold text-gray-700 text-lg sm:text-xl">
                     {title.clone()}
                 </div>
-                <div class="gap-8 gap-x-10 justify-center sm:columns-2">
+                <div class="gap-x-10 justify-center sm:columns-2">
                     {project_nodes}
                 </div>
             </div>
