@@ -1,8 +1,10 @@
-use super::not_found::NotFound;
-use super::utils::metadata::{insert_metadata, MetadataParams};
 use crate::domain::entities::post::Post;
-use crate::presentation::common::back_button::BackButton;
-use crate::presentation::post::{categories::Categories, post_body::PostBody, post_item::PostItem};
+use crate::pages::{
+    not_found::NotFound,
+    posts::shared::{categories::Categories, post_body::PostBody, post_item::PostItem},
+    shared::back_button::BackButton,
+    shared::metadata::{insert_metadata, MetadataParams},
+};
 use crate::usecase::exe::{fetch_post_usecase, fetch_related_posts_usecase};
 use yew::platform::spawn_local;
 use yew::prelude::*;
@@ -39,8 +41,8 @@ pub struct PostProps {
     pub slug: String,
 }
 
-#[function_component(PostDetail)]
-pub fn post_detail(props: &PostProps) -> Html {
+#[function_component]
+pub fn PostDetail(props: &PostProps) -> Html {
     let post: UseStateHandle<Option<Post>> = use_state(|| None);
     let related_posts: UseStateHandle<Vec<Post>> = use_state(|| vec![]);
     let is_loading = use_state(|| true);
@@ -147,8 +149,6 @@ pub fn post_detail(props: &PostProps) -> Html {
     if post.is_none() {
         return html! { <NotFound /> };
     }
-
-    // TODO: use_effectであれば一度だけレンダリングされると思う
 
     html! {
         <div>

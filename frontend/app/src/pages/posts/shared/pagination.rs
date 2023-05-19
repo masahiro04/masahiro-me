@@ -1,4 +1,4 @@
-use crate::presentation::link::Link;
+use crate::pages::shared::link::Link;
 use crate::routes::RootRoutes;
 use yew::prelude::*;
 
@@ -22,8 +22,8 @@ fn loading() -> Html {
     }
 }
 
-#[function_component(Pagination)]
-pub fn pagination(props: &PaginationProps) -> Html {
+#[function_component]
+pub fn Pagination(props: &PaginationProps) -> Html {
     if props.is_loading {
         return html! { <Loading /> };
     }
@@ -32,7 +32,7 @@ pub fn pagination(props: &PaginationProps) -> Html {
     <div class="flex items-center justify-center space-x-4 mt-8">
       { if props.current_page != 1 {
             html! {
-                <Link href={RootRoutes::Pages{ page: props.current_page - 1 } }>
+                <Link href={RootRoutes::PostIndex { page: props.current_page - 1 } }>
                   <div class="relative cursor-pointer duration-500 py-2 bg-white rounded-md shadow-sm px-2 bg-opacity-60 flex items-center w-24 justify-center text-gray-600 text-sm sm:text-base sm:px-4 sm:w-32 hover:shadow-md">
                     <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                       <path
@@ -56,7 +56,7 @@ pub fn pagination(props: &PaginationProps) -> Html {
 
       { if props.has_next_page  {
             html!{
-                <Link href={RootRoutes::Pages{ page: props.current_page + 1 } }>
+                <Link href={RootRoutes::PostIndex { page: props.current_page + 1 } }>
                   <div class="relative cursor-pointer duration-500 py-2 bg-white rounded-md shadow-sm px-2 bg-opacity-60 flex items-center w-24 justify-center text-gray-600 text-sm sm:text-base sm:px-4 sm:w-32 hover:shadow-md">
                     <span class="mr-1">{"Next"}</span>
                     <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">

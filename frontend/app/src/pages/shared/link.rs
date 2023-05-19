@@ -15,8 +15,8 @@ pub struct LinkProps {
     pub onclick: Option<Callback<MouseEvent>>,
 }
 
-#[function_component(Link)]
-pub fn link(props: &LinkProps) -> Html {
+#[function_component]
+pub fn Link(props: &LinkProps) -> Html {
     let navigator = use_navigator().unwrap();
     let onclick_callback = match props.onclick.clone() {
         Some(callback) => callback,

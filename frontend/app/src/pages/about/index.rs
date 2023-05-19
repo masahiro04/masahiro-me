@@ -1,24 +1,24 @@
-use super::utils::metadata::{insert_metadata, MetadataParams};
-use crate::presentation::image::Image;
+use crate::pages::{
+    shared::image::Image,
+    shared::metadata::{insert_metadata, MetadataParams},
+};
 use yew::prelude::*;
 
-#[function_component(About)]
-pub fn about() -> Html {
+#[function_component]
+pub fn AboutIndex() -> Html {
     let languages = vec![
         "TypeScript".to_string(),
         "Go".to_string(),
         "Rust".to_string(),
     ];
 
-    {
-        let metadata_params = MetadataParams {
-            title: None,
-            keywords: None,
-            description: None,
-            image_url: None,
-        };
-        insert_metadata(metadata_params);
-    }
+    let metadata_params = MetadataParams {
+        title: None,
+        keywords: None,
+        description: None,
+        image_url: None,
+    };
+    insert_metadata(metadata_params);
 
     html! {
       <div class="flex justify-center mx-auto mt-10 sm:w-2/3 sm:mt-0">

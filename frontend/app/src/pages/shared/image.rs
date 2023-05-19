@@ -12,8 +12,8 @@ pub struct ImageProps {
     #[prop_or(0)]
     pub width: i32,
 }
-#[function_component(Image)]
-pub fn image(props: &ImageProps) -> Html {
+#[function_component]
+pub fn Image(props: &ImageProps) -> Html {
     html! {
         <img src={props.source.clone()} class={props.class.clone()} alt={props.alt.clone()} height={props.height.to_string()} width={props.width.to_string()} />
     }

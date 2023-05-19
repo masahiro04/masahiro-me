@@ -7,8 +7,8 @@ pub struct ProjectItemProps {
     pub url: String,
 }
 
-#[function_component(ProjectItem)]
-pub fn project_item(props: &ProjectItemProps) -> Html {
+#[function_component]
+pub fn ProjectItem(props: &ProjectItemProps) -> Html {
     html! {
         <div class="group cursor-pointer mb-2">
             <a href={props.url.clone()} target="_blank" rel="noreferrer">

@@ -1,7 +1,10 @@
-use super::utils::metadata::{insert_metadata, MetadataParams};
-use crate::presentation::project::{project_header::ProjectHeader, project_item::ProjectItem};
-use crate::usecase::exe::{
-    fetch_advisory_projects_usecase, fetch_past_work_projects_usecase, fetch_work_projects_usecase,
+use crate::{
+    pages::projects::shared::{project_header::ProjectHeader, project_item::ProjectItem},
+    pages::shared::metadata::{insert_metadata, MetadataParams},
+    usecase::exe::{
+        fetch_advisory_projects_usecase, fetch_past_work_projects_usecase,
+        fetch_work_projects_usecase,
+    },
 };
 use yew::prelude::*;
 

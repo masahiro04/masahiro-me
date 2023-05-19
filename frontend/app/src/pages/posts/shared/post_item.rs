@@ -1,6 +1,6 @@
 use super::categories::Categories;
 use crate::domain::entities::post::Post;
-use crate::presentation::link::Link;
+use crate::pages::shared::link::Link;
 use crate::routes::RootRoutes;
 use yew::prelude::*;
 
@@ -9,8 +9,8 @@ pub struct PostItemProps {
     pub post: Post,
 }
 
-#[function_component(PostItem)]
-pub fn post_item(props: &PostItemProps) -> Html {
+#[function_component]
+pub fn PostItem(props: &PostItemProps) -> Html {
     html! {
         <div class="relative w-full group cursor-pointer">
             <Link href={RootRoutes::PostDetail { slug: props.post.slug().to_string() }}>
