@@ -1,6 +1,12 @@
 use crate::domain::entities::post::Post;
 use askama::Template;
 
+struct Project {
+    name: String,
+    url: String,
+    skills: String,
+}
+
 #[derive(Template)]
 #[template(path = "meta.html")]
 struct MetaTemplate<'a> {
@@ -33,7 +39,11 @@ pub struct PageTemplate<'a> {
 }
 #[derive(Template)]
 #[template(path = "projects.html")]
-pub struct ProjectsTemplate {}
+pub struct ProjectsTemplate<'a> {
+    works: &'a Vec<Project>,
+    advisors: &'a Vec<Project>,
+    past_works: &'a Vec<Project>,
+}
 
 #[derive(Template)]
 #[template(path = "about.html")]
@@ -102,7 +112,47 @@ pub fn render_post(post: &Post, related_posts: &Vec<Post>) -> String {
 }
 
 pub fn render_projects() -> String {
-    let content = ProjectsTemplate {}.render().unwrap();
+    let works = vec![Project {
+        name: "Doctormate".to_string(),
+        url: "https://doctormate.co.jp/".to_string(),
+        skills: "TypeScript / React / Next.js / NestJS / React Native / Expo / GCP / Firebase"
+            .to_string(),
+    }];
+
+    let past_works = vec![
+        Project {
+            name: "Flucle".to_string(),
+        url: "https://hrbase.jp/".to_string(),
+            skills: "Golang / TypeScript / Terraform / Gin / React / Next.js / Heroku / AWS"
+                .to_string(),
+        },
+        Project {
+            name: "Seibii".to_string(),
+        url: "https://seibii.co.jp/".to_string(),
+            skills: "TypeScript / Dart / Ruby / Terraform / React / Remix / Ruby on Rails / Flutter / AWS"
+                .to_string(),
+        },
+    ];
+
+    let advisors = vec![
+        Project {
+            name: "Benten".to_string(),
+            url: "https://bentenmarket.com/".to_string(),
+            skills: "Management / Ruby / React / Ruby on Rails / Heroku / AWS".to_string(),
+        },
+        Project {
+            name: "Everyplus".to_string(),
+            url: "https://recreation.everyplus.jp/".to_string(),
+            skills: "Management / Ruby / React / Ruby on Rails / Heroku / AWS".to_string(),
+        },
+    ];
+    let content = ProjectsTemplate {
+        works: &works,
+        past_works: &past_works,
+        advisors: &advisors,
+    }
+    .render()
+    .unwrap();
     let title = "Projects | Masahiro's tech note".to_string();
     let keywords = "ITエンジニア, ITコンサル, IT顧問, システム開発, Rust, wasm".to_string();
     let description = "参加しているProject一覧です。".to_string();

@@ -1,6 +1,6 @@
 use worker::*;
 mod app;
-mod domain;
+pub mod domain;
 mod infrastructure;
 mod presentation;
 mod routes;
