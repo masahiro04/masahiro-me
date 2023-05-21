@@ -24,9 +24,6 @@ pub async fn handle_get_pages_request(req: Request, ctx: RouteContext<()>) -> Re
     if id != 1 {
         offset = per_page * (id - 1);
     }
-    // TODO: related postsは /related_posts として作成しても良さそうだと思った
-    // if category_ids.is_empty() {
-    // };
 
     let kv_namespace = String::from("BLOG_CONTENT");
     let kv = &ctx.env.kv(&kv_namespace);

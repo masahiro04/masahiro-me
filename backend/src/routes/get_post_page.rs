@@ -7,18 +7,7 @@ use worker::*;
 
 pub async fn handle_get_post_page_request(req: Request, ctx: RouteContext<()>) -> Result<Response> {
     log_request(&req);
-    let cloned_req = req.clone().unwrap();
-
-    let url = cloned_req.url().unwrap();
-    let path_segments = url.path_segments().unwrap().collect::<Vec<_>>();
-    let mut slug = "".to_string();
-
-    if path_segments.len() > 1 {
-        slug = path_segments[1].to_string();
-    } else {
-        println!("No ID found in the path");
-    }
-
+    let slug: &str = ctx.param("slug").unwrap();
     let kv_namespace = String::from("BLOG_CONTENT");
     let kv = &ctx.env.kv(&kv_namespace);
     let store = match kv {
