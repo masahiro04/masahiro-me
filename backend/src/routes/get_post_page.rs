@@ -1,11 +1,8 @@
 use crate::{
     log_request,
-    presentation::render::{render_pages, render_post},
-    usecase::exe::{fetch_post_usecase, fetch_posts_usecase, fetch_related_posts_usecase},
+    presentation::render::render_post,
+    usecase::exe::{fetch_post_usecase, fetch_related_posts_usecase},
 };
-use std::collections::HashMap;
-
-use url::form_urlencoded;
 use worker::*;
 
 pub async fn handle_get_post_page_request(req: Request, ctx: RouteContext<()>) -> Result<Response> {

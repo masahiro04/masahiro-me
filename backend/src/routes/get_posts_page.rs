@@ -1,31 +1,31 @@
-use crate::{
-    log_request,
-    presentation::render::render_pages,
-    usecase::exe::{fetch_posts_usecase, fetch_related_posts_usecase},
-};
-use std::collections::HashMap;
-use url::form_urlencoded;
+use crate::{log_request, presentation::render::render_posts, usecase::exe::fetch_posts_usecase};
 use worker::*;
 
 pub async fn handle_get_pages_request(req: Request, ctx: RouteContext<()>) -> Result<Response> {
     log_request(&req);
-    let cloned_req = req.clone().unwrap();
-    let url = cloned_req.url().unwrap();
-    let query_params = url.query().unwrap_or("");
-    let parsed_params: HashMap<String, String> = form_urlencoded::parse(query_params.as_bytes())
-        .into_owned()
-        .collect();
+    console_log!("url: {}", req.url()?.to_string());
+    let key = req.url()?.to_string();
+    console_log!("sentinel1");
+    let id: u32 = ctx.param("id").unwrap().parse().unwrap_or(1);
+    console_log!("sentinel2");
 
-    let path_segments = url.path_segments().unwrap().collect::<Vec<_>>();
-    let mut id = 1;
+    let cache = Cache::default();
+    console_log!("sentinel4");
 
-    if path_segments.len() > 1 {
-        let route_id = path_segments[1];
-        id = route_id.parse().unwrap_or(1);
-        println!("{}", id);
-    } else {
-        println!("No ID found in the path");
+    let cache_data = match cache.get(&key, true).await {
+        Ok(val) => val,
+        Err(e) => {
+            console_log!("error: {}", e);
+            None
+        }
+    };
+    console_log!("sentinel5");
+    if cache_data.is_some() {
+        console_log!("sentinel6");
+        let val = cache_data.unwrap();
+        return Ok(val);
     }
+    console_log!("sentinel7");
 
     let per_page = 10;
     let offset = per_page * (id - 1);
@@ -51,21 +51,16 @@ pub async fn handle_get_pages_request(req: Request, ctx: RouteContext<()>) -> Re
     let posts = fetch_posts_usecase(store, &per_page.to_string(), &offset.to_string())
         .await
         .unwrap();
-    // let json_string = serde_json::to_string(&posts).unwrap();
-    // let mut res = Response::ok(json_string).unwrap().with_cors(&cors).unwrap();
-    // res.headers_mut()
-    //     .set("content-type", "application/json")
-    //     .unwrap();
-    // return Ok(res);
-    // let posts = fetch_related_posts_usecase(&ctx.env, &category_ids)
-    //     .await
-    //     .unwrap();
     console_log!("posts: {:?}", posts.len());
     console_log!("id: {}", id);
 
-    let html = render_pages(&posts, id, true);
+    let html = render_posts(&posts, id, true);
 
     let mut resp = Response::ok(html).unwrap();
     resp.headers_mut().set("content-type", "text/html").unwrap();
+    // TODO: cacheは外部に切り分けた方が良いかも
+    resp.headers_mut().set("cache-control", "s-maxage=86400")?;
+    cache.put(key, resp.cloned()?).await?;
+
     Ok(resp)
 }
