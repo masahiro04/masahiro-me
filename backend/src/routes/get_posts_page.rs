@@ -44,7 +44,9 @@ pub async fn handle_get_pages_request(req: Request, ctx: RouteContext<()>) -> Re
     let mut resp = Response::ok(html).unwrap();
     resp.headers_mut().set("content-type", "text/html").unwrap();
     // TODO: cacheは外部に切り分けた方が良いかも
-    resp.headers_mut().set("cache-control", "s-maxage=86400")?;
+    resp.headers_mut()
+        .set("cache-control", "s-maxage=86400")
+        .unwrap();
     cache.put(key, resp.cloned()?).await?;
 
     Ok(resp)
