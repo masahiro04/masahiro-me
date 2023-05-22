@@ -1,3 +1,4 @@
+#[cfg(target_arch = "wasm32")]
 use wasm_bindgen::prelude::JsCast;
 use web_sys::HtmlMetaElement;
 
@@ -34,6 +35,7 @@ pub fn insert_metadata(params: MetadataParams) {
 
     for i in 0..metadata_list.length() {
         if let Some(meta) = metadata_list.item(i) {
+            #[cfg(target_arch = "wasm32")]
             if let Ok(meta_element) = meta.dyn_into::<HtmlMetaElement>() {
                 let meta_name = meta_element.name();
                 if meta_name == "twitter:title" {

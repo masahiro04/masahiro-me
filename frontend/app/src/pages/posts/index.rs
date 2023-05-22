@@ -44,7 +44,8 @@ pub fn PostIndex(props: &HomeProps) -> Html {
                 let future = async move {
                     match fetch_posts_usecase(PER_PAGE, offset).await {
                         Ok(posts) => set_posts.set(posts),
-                        Err(e) => log::error!("Error: {}", e),
+                        // Err(e) => log::error!("Error: {}", e),
+                        Err(e) => console_log!("Error: {}", e),
                     }
                     set_is_loading.set(false)
                 };
