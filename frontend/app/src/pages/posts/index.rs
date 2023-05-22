@@ -1,3 +1,4 @@
+use crate::console_log;
 use crate::domain::entities::post::Post;
 use crate::pages::{
     posts::shared::loading_post::LoadingPost,
@@ -31,8 +32,9 @@ pub fn PostIndex(props: &HomeProps) -> Html {
     let offset = if props.page == 1 {
         0
     } else {
-        PER_PAGE * props.page
+        PER_PAGE * (props.page - 1)
     };
+    console_log!("offset: {}", offset);
     let has_next_page = use_state(|| posts.clone().len() == PER_PAGE as usize);
     {
         let set_posts = posts.clone();
