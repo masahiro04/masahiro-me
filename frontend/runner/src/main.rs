@@ -2,7 +2,7 @@ use yew::{self, function_component, html, Html};
 
 use app::routes::App;
 
-extern crate lazy_static;
+// extern crate lazy_static;
 extern crate wee_alloc;
 
 #[macro_export]
