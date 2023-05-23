@@ -1,5 +1,5 @@
 [package]
-name = "runner"
+name = "ssr_server"
 version = "0.1.0"
 authors = ["masahiro <stmhamachiii@gmail.com>"]
 edition = "2021"
@@ -36,8 +36,7 @@ jemallocator = "0.5"
 hydration = ["yew/hydration"]
 ssr = ["yew/ssr"]
 
-# [profile.release]
-# lto = true
-# opt-level = 'z'
-# codegen-units = 1
-#
+[profile.release]
+lto = true
+opt-level = 'z'
+codegen-units = 1

@@ -22,8 +22,7 @@ wasm-bindgen-futures = "0.4"
 wasm-bindgen = "0.2.85"
 wasm-logger = "0.2.0"
 
-# [profile.release]
-# lto = true
-# opt-level = 'z'
-# codegen-units = 1
-
+[profile.release]
+lto = true
+opt-level = 'z'
+codegen-units = 1

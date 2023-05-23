@@ -84,7 +84,7 @@ pub fn Header() -> Html {
             }
         </div>
         <div class="relative">
-          <Image class="w-6 h-6 flex-none" source="/images/github.svg" />
+          <Image class="w-6 h-6 flex-none" source="https://assets.masahiro.me/github.svg" />
           <a
             class="absolute inset-0"
             href="https://github.com/masahiro04/masahiro-me"
