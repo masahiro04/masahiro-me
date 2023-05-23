@@ -1,12 +1,14 @@
-use crate::pages::shared::{image::Image, link::Link};
-use crate::routes::RootRoutes;
+use crate::pages::shared::image::Image;
+use crate::routes::Route;
 use yew::prelude::*;
 use yew_router::prelude::use_location;
+use yew_router::prelude::*;
 
+#[derive(Clone)]
 struct Item {
     name: String,
     active_paths: Vec<String>,
-    href: RootRoutes,
+    href: Route,
     lp_class: String,
     sm_class: String,
 }
@@ -19,21 +21,21 @@ pub fn Header() -> Html {
         Item {
             name: "Posts".to_string(),
             active_paths: vec!["pages".to_string(), "posts".to_string()],
-            href: RootRoutes::PostIndex { page: 1 },
+            href: Route::PostIndex { page: 1 },
             lp_class: "tracking-wider text-gray-700 text-base".to_string(),
             sm_class: "tracking-wider text-gray-700 text-sm text-center".to_string(),
         },
         Item {
             name: "Projects".to_string(),
             active_paths: vec!["projects".to_string()],
-            href: RootRoutes::Projects,
+            href: Route::Projects,
             lp_class: "tracking-wider text-gray-700 text-base".to_string(),
             sm_class: "tracking-wider text-gray-700 text-sm text-center".to_string(),
         },
         Item {
             name: "About".to_string(),
             active_paths: vec!["about".to_string()],
-            href: RootRoutes::AboutIndex,
+            href: Route::AboutIndex,
             lp_class: "tracking-wider text-gray-700 text-base".to_string(),
             sm_class: "tracking-wider text-gray-700 text-sm text-center".to_string(),
         },
@@ -67,16 +69,16 @@ pub fn Header() -> Html {
     html! {
     <nav class="py-3 bg-white rounded-md shadow-lg px-7 bg-opacity-60 mb-5 sm:mb-16">
       <div class="flex items-center justify-between">
-        <Link href={RootRoutes::PostIndex { page: 1 }} class={"text-2xl font-semibold tracking-wide text-gray-700 whitespace-nowrap"}>
+        <Link<Route> classes={"text-2xl font-semibold tracking-wide text-gray-700 whitespace-nowrap"} to={Route::PostIndex { page: 1 }} >
             { "Masahiro's tech note" }
-        </Link>
+        </Link<Route>>
         <div class="items-center hidden sm:flex sm:space-x-8 md:space-x-12">
             {
                 items.iter().map(|item| {
                     html! {
-                        <Link href={item.href.clone()} class={make_class_string(item.lp_class.clone(), is_current_path(item.active_paths.clone()))}>
+                        <Link<Route> classes={classes!(make_class_string(item.lp_class.clone(), is_current_path(item.active_paths.clone())))} to={item.href.clone()}>
                             { item.name.clone() }
-                        </Link>
+                        </Link<Route>>
                     }
                 }).collect::<Html>()
             }
@@ -95,9 +97,9 @@ pub fn Header() -> Html {
         {
             items.iter().map(|item| {
                 html! {
-                    <Link href={item.href.clone()} class={make_class_string(item.sm_class.clone(), is_current_path(item.active_paths.clone()))}>
+                    <Link<Route> classes={classes!(make_class_string(item.sm_class.clone(), is_current_path(item.active_paths.clone())))} to={item.href.clone()}>
                         { item.name.clone() }
-                    </Link>
+                    </Link<Route>>
                 }
             }).collect::<Html>()
         }

@@ -1,7 +1,7 @@
 use crate::domain::entities::category::Category;
-use crate::pages::shared::link::Link;
-use crate::routes::RootRoutes;
+use crate::routes::Route;
 use yew::prelude::*;
+use yew_router::prelude::*;
 
 #[derive(Properties, Clone, PartialEq)]
 struct CategoryItemProps {
@@ -34,9 +34,9 @@ pub fn categories(props: &CategoriesProps) -> Html {
              {props.categories.iter().map(|category| {
                  if props.is_link {
                      html! {
-                         <Link href={RootRoutes::PostIndex { page: 1 }}>
+                         <Link<Route> to={Route::PostIndex { page: 1 }}>
                              <CategoryItem name={category.name().to_string()} />
-                         </Link>
+                         </Link<Route>>
                      }
                  } else {
                      html! {

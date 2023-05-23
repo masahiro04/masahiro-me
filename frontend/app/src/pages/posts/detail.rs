@@ -1,10 +1,8 @@
-use crate::console_log;
 use crate::domain::entities::post::Post;
 use crate::pages::{
     not_found::NotFound,
     posts::shared::{categories::Categories, post_body::PostBody, post_item::PostItem},
     shared::back_button::BackButton,
-    shared::metadata::{insert_metadata, MetadataParams},
 };
 use crate::usecase::exe::{fetch_post_usecase, fetch_related_posts_usecase};
 use yew::platform::spawn_local;
@@ -91,8 +89,7 @@ pub fn PostDetail(props: &PostProps) -> Html {
                 let future = async move {
                     match fetch_post_usecase(slug).await {
                         Ok(post) => set_post.set(post),
-                        // Err(e) => log::error!("Error: {}", e),
-                        Err(e) => console_log!("Error: {}", e),
+                        Err(e) => log::error!("Error: {}", e),
                     }
                     set_is_loading.set(false)
                 };
@@ -117,8 +114,7 @@ pub fn PostDetail(props: &PostProps) -> Html {
                 let future = async move {
                     match fetch_related_posts_usecase(&category_ids).await {
                         Ok(posts) => set_related_posts.set(posts),
-                        // Err(e) => log::error!("Error: {}", e),
-                        Err(e) => console_log!("Error: {}", e),
+                        Err(e) => log::error!("Error: {}", e),
                     }
                     set_is_loading.set(false);
                 };
@@ -127,22 +123,6 @@ pub fn PostDetail(props: &PostProps) -> Html {
             },
             categories.clone(),
         );
-    }
-
-    {
-        let category_names = categories
-            .iter()
-            .map(|category| category.name().to_string())
-            .collect::<Vec<String>>()
-            .join(",");
-        let metadata_title = &format!("{} | Masahiro's tech note", &title);
-        let metadata_params = MetadataParams {
-            title: Some(metadata_title),
-            keywords: Some(&category_names),
-            description: Some(&excerpt),
-            image_url: Some(&featured_media),
-        };
-        insert_metadata(metadata_params);
     }
 
     if *is_loading {

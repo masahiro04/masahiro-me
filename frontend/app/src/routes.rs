@@ -11,7 +11,7 @@ use yew_router::history::{AnyHistory, History, MemoryHistory};
 use yew_router::prelude::*;
 
 #[derive(Clone, Routable, PartialEq)]
-pub enum RootRoutes {
+pub enum Route {
     #[at("/pages/:page")]
     PostIndex { page: i32 },
     #[at("/posts/:slug")]
@@ -25,13 +25,13 @@ pub enum RootRoutes {
     NotFound,
 }
 
-pub fn switch(routes: RootRoutes) -> Html {
+pub fn switch(routes: Route) -> Html {
     match routes {
-        RootRoutes::PostIndex { page } => html! {<PostIndex page={page.clone()} />},
-        RootRoutes::PostDetail { slug } => html! {<PostDetail slug={slug.clone()} />},
-        RootRoutes::Projects => html! { <Projects /> },
-        RootRoutes::AboutIndex => html! { <AboutIndex /> },
-        RootRoutes::NotFound => html! { <NotFound />},
+        Route::PostIndex { page } => html! {<PostIndex page={page.clone()} />},
+        Route::PostDetail { slug } => html! {<PostDetail slug={slug.clone()} />},
+        Route::Projects => html! { <Projects /> },
+        Route::AboutIndex => html! { <AboutIndex /> },
+        Route::NotFound => html! { <NotFound />},
     }
 }
 
@@ -50,7 +50,9 @@ pub fn ServerApp(props: &ServerAppProps) -> Html {
 
     html! {
         <Router history={history}>
-            <Switch<RootRoutes> render={switch} />
+            <Layout>
+                <Switch<Route> render={switch} />
+            </Layout>
         </Router>
     }
 }
@@ -59,9 +61,11 @@ pub fn ServerApp(props: &ServerAppProps) -> Html {
 pub fn App() -> Html {
     html! {
         <BrowserRouter>
-            <Layout>
-                <Switch<RootRoutes> render={switch} />
-            </Layout>
+            <Suspense>
+                <Layout>
+                    <Switch<Route> render={switch} />
+                </Layout>
+            </Suspense>
         </BrowserRouter>
     }
 }

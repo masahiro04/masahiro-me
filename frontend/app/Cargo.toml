@@ -11,29 +11,21 @@ required-features = ["yew/csr"]
 [dependencies]
 yew = { version = "0.20", features = ["ssr", "hydration", "csr"] }
 yew-router = "0.17.0"
-web-sys = { version = "0.3", features = [
-    "HtmlMetaElement",
-    "HtmlHeadElement",
-    "Document",
-    "Element",
-    "NodeList",
-    "DocumentFragment",
-    "HtmlTemplateElement",
-    "MediaQueryList" ] }
 serde = "1.0.126"
 serde_json = "1.0.64"
-wee_alloc = "0.4.5"
+lazy_static = "1.4.0"
 reqwest = { version = "0.11", features = ["json"] }
-gloo = "0.8.0"
 async-trait = "0.1.68"
 async-std = { version = "1.10", features = ["attributes"] }
+gloo = "0.8.0"
+wasm-bindgen = "0.2.85"
+log = "0.4"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 wasm-logger = "0.2.0"
-wasm-bindgen = "0.2.85"
-log = "0.4.17"
 
 [profile.release]
 lto = true
 opt-level = 'z'
 codegen-units = 1
+
