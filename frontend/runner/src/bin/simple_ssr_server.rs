@@ -13,7 +13,6 @@ use axum::response::IntoResponse;
 use axum::routing::get;
 use axum::Router;
 use clap::Parser;
-// use function_router::{ServerApp, ServerAppProps};
 use futures::stream::{self, StreamExt};
 use hyper::server::Server;
 use tower::ServiceExt;

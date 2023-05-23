@@ -1,5 +1,4 @@
 use app::routes::App;
-use yew::Renderer;
 
 fn main() {
     #[cfg(target_arch = "wasm32")]

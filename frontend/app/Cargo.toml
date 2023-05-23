@@ -9,7 +9,7 @@ name = "function_router"
 required-features = ["yew/csr"]
 
 [dependencies]
-yew = { version = "0.20", features = ["ssr", "hydration", "csr"] }
+yew = { version = "0.20" }
 yew-router = "0.17.0"
 serde = "1.0.126"
 serde_json = "1.0.64"
