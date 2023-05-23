@@ -34,6 +34,7 @@ pub fn PostIndex(props: &HomeProps) -> Html {
         PER_PAGE * (props.page - 1)
     };
     let has_next_page = use_state(|| posts.clone().len() == PER_PAGE as usize);
+
     {
         let set_posts = posts.clone();
         let set_is_loading = is_loading.clone();
@@ -43,7 +44,6 @@ pub fn PostIndex(props: &HomeProps) -> Html {
                     match fetch_posts_usecase(PER_PAGE, offset).await {
                         Ok(posts) => set_posts.set(posts),
                         Err(e) => log::error!("Error: {}", e),
-                        // Err(e) => console_log!("Error: {}", e),
                     }
                     set_is_loading.set(false)
                 };
