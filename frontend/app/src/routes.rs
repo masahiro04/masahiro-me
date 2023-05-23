@@ -59,13 +59,18 @@ pub fn ServerApp(props: &ServerAppProps) -> Html {
 
 #[function_component]
 pub fn App() -> Html {
+    // <BrowserRouter>
+    //     <Suspense>
+    //         <Layout>
+    //             <Switch<Route> render={switch} />
+    //         </Layout>
+    //     </Suspense>
+    // </BrowserRouter>
     html! {
         <BrowserRouter>
-            <Suspense>
                 <Layout>
                     <Switch<Route> render={switch} />
                 </Layout>
-            </Suspense>
         </BrowserRouter>
     }
 }

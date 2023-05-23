@@ -14,7 +14,7 @@ pub fn AboutIndex() -> Html {
         <div class="flex flex-col w-full">
           <Image
             class="object-cover rounded-full mx-auto w-24 h-24"
-            source="images/kyuri.png"
+            source="https://assets.masahiro.me/kyuri.png"
             alt=""
             width=100
             height=100
