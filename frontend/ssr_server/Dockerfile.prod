@@ -1,0 +1,22 @@
+FROM rust:latest as build
+
+WORKDIR /usr/src/ssr_server
+
+COPY ./Cargo.lock ./Cargo.lock
+COPY ./Cargo.toml ./Cargo.toml
+COPY ./src ./src
+
+RUN cargo build --release
+
+FROM debian:buster-slim
+
+RUN useradd ssr_server
+WORKDIR /home/ssr_server/bin/
+COPY --from=build /usr/src/ssr_server/target/release/ssr_server .
+RUN chown -R ssr_server:ssr_server ./
+
+USER ssr_server
+
+EXPOSE 8080
+
+CMD ["./ssr_server"]
