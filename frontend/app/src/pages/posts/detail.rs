@@ -3,7 +3,6 @@ use crate::pages::{
     not_found::NotFound,
     posts::shared::{categories::Categories, post_body::PostBody, post_item::PostItem},
     shared::back_button::BackButton,
-    shared::metadata::{insert_metadata, MetadataParams},
 };
 use crate::usecase::exe::{fetch_post_usecase, fetch_related_posts_usecase};
 use yew::platform::spawn_local;
@@ -124,22 +123,6 @@ pub fn PostDetail(props: &PostProps) -> Html {
             },
             categories.clone(),
         );
-    }
-
-    {
-        let category_names = categories
-            .iter()
-            .map(|category| category.name().to_string())
-            .collect::<Vec<String>>()
-            .join(",");
-        let metadata_title = &format!("{} | Masahiro's tech note", &title);
-        let metadata_params = MetadataParams {
-            title: Some(metadata_title),
-            keywords: Some(&category_names),
-            description: Some(&excerpt),
-            image_url: Some(&featured_media),
-        };
-        insert_metadata(metadata_params);
     }
 
     if *is_loading {

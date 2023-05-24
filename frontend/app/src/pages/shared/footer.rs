@@ -26,6 +26,15 @@ impl FooterItemKind {
             FooterItemKind::Email => "https://docs.google.com/forms/d/e/1FAIpQLSfXjYNmZf_Db_KqWrM3YPqkBORiVX_FY_mSv7jXhJ6FRz3iJA/viewform?embedded=true",
         }
     }
+
+    fn to_image_src(&self) -> &'static str {
+        match self {
+            FooterItemKind::GitHub => "https://assets.masahiro.me/github.svg",
+            FooterItemKind::Twitter => "https://assets.masahiro.me/twitter.svg",
+            FooterItemKind::Menta => "https://assets.masahiro.me/menta.svg",
+            FooterItemKind::Email => "https://assets.masahiro.me/email.svg",
+        }
+    }
 }
 
 #[derive(Clone, PartialEq)]
@@ -40,13 +49,13 @@ struct FooterItemProps {
 
 #[function_component]
 fn FooterItem(props: &FooterItemProps) -> Html {
-    let filename = format!("/images/{}.svg", props.item.clone().kind.to_str());
+    // let filename = format!("/images/{}.svg", props.item.clone().kind.to_str());
     let alt_text = format!("{}の画像", props.item.clone().kind.to_str());
     html! {
         <div class="relative">
             <Image
                 class="w-6 h-6"
-                source={filename}
+                source={props.item.kind.to_image_src()}
                 alt={alt_text}
                 width=100
                 height=100

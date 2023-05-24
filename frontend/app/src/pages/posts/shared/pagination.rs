@@ -1,6 +1,7 @@
-use crate::pages::shared::link::Link;
-use crate::routes::RootRoutes;
+// use crate::pages::shared::link::Link;
+use crate::routes::Route;
 use yew::prelude::*;
+use yew_router::prelude::*;
 
 #[derive(Properties, Clone, PartialEq)]
 pub struct PaginationProps {
@@ -32,7 +33,7 @@ pub fn Pagination(props: &PaginationProps) -> Html {
     <div class="flex items-center justify-center space-x-4 mt-8">
       { if props.current_page != 1 {
             html! {
-                <Link href={RootRoutes::PostIndex { page: props.current_page - 1 } }>
+                <Link<Route> to={Route::PostIndex { page: props.current_page - 1 } }>
                   <div class="relative cursor-pointer duration-500 py-2 bg-white rounded-md shadow-sm px-2 bg-opacity-60 flex items-center w-24 justify-center text-gray-600 text-sm sm:text-base sm:px-4 sm:w-32 hover:shadow-md">
                     <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                       <path
@@ -50,13 +51,13 @@ pub fn Pagination(props: &PaginationProps) -> Html {
                        </span>
                     </span>
                   </div>
-                </Link>
+                </Link<Route>>
             }
       } else { html!{} }}
 
       { if props.has_next_page  {
             html!{
-                <Link href={RootRoutes::PostIndex { page: props.current_page + 1 } }>
+                <Link<Route> to={Route::PostIndex { page: props.current_page + 1 } }>
                   <div class="relative cursor-pointer duration-500 py-2 bg-white rounded-md shadow-sm px-2 bg-opacity-60 flex items-center w-24 justify-center text-gray-600 text-sm sm:text-base sm:px-4 sm:w-32 hover:shadow-md">
                     <span class="mr-1">{"Next"}</span>
                     <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -67,7 +68,7 @@ pub fn Pagination(props: &PaginationProps) -> Html {
                       ></path>
                     </svg>
                   </div>
-                </Link>
+                </Link<Route>>
             }
         } else { html!{} }}
     </div>

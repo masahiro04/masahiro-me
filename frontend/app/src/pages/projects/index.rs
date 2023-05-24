@@ -1,6 +1,6 @@
 use crate::{
     pages::projects::shared::{project_header::ProjectHeader, project_item::ProjectItem},
-    pages::shared::metadata::{insert_metadata, MetadataParams},
+    // pages::shared::metadata::{insert_metadata, MetadataParams},
     usecase::exe::{
         fetch_advisory_projects_usecase, fetch_past_work_projects_usecase,
         fetch_work_projects_usecase,
@@ -55,16 +55,6 @@ pub fn projects() -> Html {
                 </div>
             </div>
         }
-    }
-
-    {
-        let metadata_params = MetadataParams {
-            title: None,
-            keywords: None,
-            description: None,
-            image_url: None,
-        };
-        insert_metadata(metadata_params);
     }
 
     html! {

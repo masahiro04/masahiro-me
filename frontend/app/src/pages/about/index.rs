@@ -1,7 +1,4 @@
-use crate::pages::{
-    shared::image::Image,
-    shared::metadata::{insert_metadata, MetadataParams},
-};
+use crate::pages::shared::image::Image;
 use yew::prelude::*;
 
 #[function_component]
@@ -12,20 +9,12 @@ pub fn AboutIndex() -> Html {
         "Rust".to_string(),
     ];
 
-    let metadata_params = MetadataParams {
-        title: None,
-        keywords: None,
-        description: None,
-        image_url: None,
-    };
-    insert_metadata(metadata_params);
-
     html! {
       <div class="flex justify-center mx-auto mt-10 sm:w-2/3 sm:mt-0">
         <div class="flex flex-col w-full">
           <Image
             class="object-cover rounded-full mx-auto w-24 h-24"
-            source="images/kyuri.png"
+            source="https://assets.masahiro.me/kyuri.png"
             alt=""
             width=100
             height=100

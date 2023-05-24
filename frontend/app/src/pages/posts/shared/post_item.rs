@@ -1,8 +1,8 @@
 use super::categories::Categories;
 use crate::domain::entities::post::Post;
-use crate::pages::shared::link::Link;
-use crate::routes::RootRoutes;
+use crate::routes::Route;
 use yew::prelude::*;
+use yew_router::prelude::*;
 
 #[derive(Properties, Clone, PartialEq)]
 pub struct PostItemProps {
@@ -13,7 +13,7 @@ pub struct PostItemProps {
 pub fn PostItem(props: &PostItemProps) -> Html {
     html! {
         <div class="relative w-full group cursor-pointer">
-            <Link href={RootRoutes::PostDetail { slug: props.post.slug().to_string() }}>
+            <Link<Route> to={Route::PostDetail { slug: props.post.slug().to_string() }}>
                 <div class="py-3 bg-white rounded-md max-w-full bg-opacity-60 font-semibold text-gray-600 truncate shadow-sm duration-500 px-3 sm:px-6 text-sm sm:text-base group-hover:shadow-lg group-hover:scale-[1.01] group-hover:bg-opacity-90">
                     {props.post.title()}
                     <div class="flex text-gray-400 font-thin text-sm">
@@ -25,7 +25,7 @@ pub fn PostItem(props: &PostItemProps) -> Html {
                         </div>
                     </div>
                 </div>
-            </Link>
+            </Link<Route>>
         </div>
     }
 }

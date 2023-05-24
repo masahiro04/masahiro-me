@@ -1,10 +1,9 @@
-use crate::console_log;
 use crate::domain::entities::post::Post;
 use crate::pages::{
     posts::shared::loading_post::LoadingPost,
     posts::shared::pagination::Pagination,
     posts::shared::post_item::PostItem,
-    shared::metadata::{insert_metadata, MetadataParams},
+    // shared::metadata::{insert_metadata, MetadataParams},
 };
 use crate::usecase::exe::*;
 use yew::platform::spawn_local;
@@ -34,8 +33,8 @@ pub fn PostIndex(props: &HomeProps) -> Html {
     } else {
         PER_PAGE * (props.page - 1)
     };
-    console_log!("offset: {}", offset);
     let has_next_page = use_state(|| posts.clone().len() == PER_PAGE as usize);
+
     {
         let set_posts = posts.clone();
         let set_is_loading = is_loading.clone();
@@ -64,14 +63,6 @@ pub fn PostIndex(props: &HomeProps) -> Html {
         },
         posts_len,
     );
-
-    let metadata_params = MetadataParams {
-        title: None,
-        keywords: None,
-        description: None,
-        image_url: None,
-    };
-    insert_metadata(metadata_params);
 
     html! {
         <>
