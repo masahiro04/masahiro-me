@@ -2,9 +2,11 @@ FROM rust:latest as build
 
 WORKDIR /usr/src/ssr_server
 
-COPY ./Cargo.lock ./Cargo.lock
-COPY ./Cargo.toml ./Cargo.toml
-COPY ./src ./src
+# COPY ./Cargo.lock ./Cargo.lock
+# COPY ./Cargo.toml ./Cargo.toml
+# COPY ./src ./src
+
+COPY . .
 
 RUN cargo build --release
 
@@ -19,4 +21,6 @@ USER ssr_server
 
 EXPOSE 8080
 
-CMD ["./ssr_server"]
+WORKDIR /usr/src/ssr_server
+
+CMD ["cargo", "run", "--features=ssr", "--bin", "simple_ssr_server", "--", "--dir", "dist"]
