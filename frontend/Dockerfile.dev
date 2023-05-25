@@ -2,20 +2,5 @@ FROM rust:latest as build
 
 WORKDIR /usr/src/ssr_server
 
-# COPY ./Cargo.lock ./Cargo.lock
-# COPY ./ssr_server/Cargo.toml ./Cargo.toml
-# TODO: めっちゃ大きくなるので、必要なところだけを使う
 COPY . .
-
-# COPY ./ssr_server .
-# COPY ./ssr_server/index.html ./index.html
-# COPY ./ssr_server/dist ./dist
-#
-# COPY ./app ./app
-
-# RUN cargo build
-
-# CMD ["cargo", "run"]
-# CMD ["cargo", "run", "--features=ssr", "--bin", "simple_ssr_server", "--", "--dir", "dist"]
-# cargo run --features=ssr --bin simple_ssr_server -- --dir dist
 
