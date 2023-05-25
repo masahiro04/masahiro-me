@@ -8,7 +8,11 @@ WORKDIR /usr/src/ssr_server
 
 COPY . .
 
-# RUN cargo build --release
+ENV PORT 8080
+ENV HOST 0.0.0.0
+EXPOSE 8080
+
+RUN cargo build --release
 #
 # FROM debian:buster-slim
 #
@@ -19,7 +23,6 @@ COPY . .
 #
 # USER ssr_server
 #
-EXPOSE 8080
 #
 # WORKDIR /usr/src/ssr_server
 
