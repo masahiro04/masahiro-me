@@ -8,8 +8,8 @@ WORKDIR /usr/src/ssr_server
 
 COPY . .
 
-ENV PORT 8080
-ENV HOST 0.0.0.0
+# ENV PORT 8080
+# ENV HOST 0.0.0.0
 EXPOSE 8080
 
 RUN cargo build --release
