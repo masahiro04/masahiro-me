@@ -112,7 +112,11 @@ async fn main() {
 
     println!("You can view the website at: http://localhost:8080/");
 
-    Server::bind(&"0.0.0.0:8080".parse().unwrap())
+    let port = std::env::var("PORT").unwrap_or_else(|_| "8080".to_string());
+
+    let bind_addr = format!("0.0.0.0:{}", port);
+    Server::bind(&bind_addr.parse().unwrap())
+        // Server::bind(&"0.0.0.0:8080".parse().unwrap())
         .executor(exec)
         .serve(app.into_make_service())
         .await
