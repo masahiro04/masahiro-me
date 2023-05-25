@@ -19,7 +19,7 @@ COPY . .
 #
 # USER ssr_server
 #
-# EXPOSE 8080
+EXPOSE 8080
 #
 # WORKDIR /usr/src/ssr_server
 
