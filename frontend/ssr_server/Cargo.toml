@@ -14,9 +14,13 @@ required-features = ["ssr"]
 
 [dependencies]
 yew = { version = "0.20", features = ["ssr", "hydration"] }
+# ここに不要だけど、app dirの方と同じ値を入れて不具合を発生しないように試してみてる
+# serde = "1.0.126"
+serde = "=1.0.126"
 futures = { version = "0.3", features = ["std"], default-features = false }
 log = "0.4"
 app = { path = "../app" }
+async-trait = "0.1.68"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 wasm-bindgen-futures = "0.4"

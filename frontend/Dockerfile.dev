@@ -1,6 +1,40 @@
-FROM rust:latest as build
+# FROM rust:1.69.0
+#
+# # TODO: ssr_serverではなく、appにして、cd ssr_serverでtrunk buildした方がいいかも
+# WORKDIR /usr/src/app
+#
+# COPY . .
+#
+#
+# # WORKDIR /usr/src/ssr_server
+# #
+# # RUN trunk build --release -d ./dist
+# # RUN cargo build --release
+#
+# WORKDIR /usr/src/app/ssr_server
+#
+# RUN cargo update
+# RUN cargo install trunk
+# # TODO: ここでbuildしているが、installを先にしたほうがエラー出ないかも？
+# # tryする価値な気もしてる
+# RUN cargo build --release
+# # RUN cargo build --release
+# # RUN cd ssr_server
+# RUN trunk build --release -d ./dist
 
-WORKDIR /usr/src/ssr_server
+
+FROM rust:1.69.0
+
+WORKDIR /usr/src/app
 
 COPY . .
+
+RUN cargo update
+RUN cargo install trunk
+
+# RUN trunk build --release -d ./dist
+
+CMD ["make", "ssr_dev"]
+
+
 
