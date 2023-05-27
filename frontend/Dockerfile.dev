@@ -23,18 +23,44 @@
 # RUN trunk build --release -d ./dist
 
 
+# FROM rust:1.69.0
+#
+# WORKDIR /usr/src/app
+#
+# COPY . .
+#
+# RUN cargo update
+# RUN cargo install trunk
+#
+# # RUN trunk build --release -d ./dist
+#
+# CMD ["make", "ssr_dev"]
+
+# Stage 1: Node.js and yarn installation
+# FROM node:18 AS node
+#
+# RUN npm install -g yarn
+
+# Stage 2: Building the Rust application
 FROM rust:1.69.0
 
-WORKDIR /usr/src/app
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+
+RUN apt-get update && apt-get install -y make nodejs
+RUN npm install -g yarn
+
+RUN cargo build --release
+
+# WORKDIR /usr/src/app
+#
+# # Copy Node.js and yarn from the previous stage
+# COPY --from=node /usr/local/bin/node /usr/local/bin/
+# COPY --from=node /usr/local/bin/yarn /usr/local/bin/
 
 COPY . .
 
 RUN cargo update
 RUN cargo install trunk
 
-# RUN trunk build --release -d ./dist
-
-CMD ["make", "ssr_dev"]
-
-
+# CMD ["make", "ssr_dev"]
 
