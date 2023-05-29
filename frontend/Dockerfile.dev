@@ -11,6 +11,7 @@ COPY . .
 
 RUN rustup target add wasm32-unknown-unknown
 
+RUN cargo install wasm-opt
 RUN cargo install --locked trunk
 # RUN cargo install trunk --version 0.16.0
 
@@ -25,5 +26,5 @@ RUN cargo build --release
 
 
 
-# CMD ["make", "ssr_dev"]
+CMD ["make", "ssr_dev"]
 

@@ -1,28 +1,61 @@
-FROM rust:latest as build
+# FROM rust:latest as build
+#
+# WORKDIR /usr/src/ssr_server
+#
+# # COPY ./Cargo.lock ./Cargo.lock
+# # COPY ./Cargo.toml ./Cargo.toml
+# # COPY ./src ./src
+#
+# COPY . .
+#
+# # ENV PORT 8080
+# # ENV HOST 0.0.0.0
+# EXPOSE 8080
+#
+# RUN cargo build --release
+# #
+# # FROM debian:buster-slim
+# #
+# # RUN useradd ssr_server
+# # WORKDIR /home/ssr_server/bin/
+# # COPY --from=build /usr/src/ssr_server/target/release/ssr_server .
+# # RUN chown -R ssr_server:ssr_server ./
+# #
+# # USER ssr_server
+# #
+# #
+#
+# CMD ["cargo", "run", "--features=ssr", "--bin", "simple_ssr_server", "--", "--dir", "dist"]
 
-WORKDIR /usr/src/ssr_server
 
-# COPY ./Cargo.lock ./Cargo.lock
-# COPY ./Cargo.toml ./Cargo.toml
-# COPY ./src ./src
+FROM rust:1.69.0
+
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+
+RUN apt-get update && apt-get install -y make nodejs g++
+RUN npm install -g yarn
 
 COPY . .
 
-# ENV PORT 8080
-# ENV HOST 0.0.0.0
-EXPOSE 8080
+# RUN cargo update
+
+RUN rustup target add wasm32-unknown-unknown
+
+RUN cargo install wasm-opt
+RUN cargo install --locked trunk
+# RUN cargo install trunk --version 0.16.0
 
 RUN cargo build --release
-#
-# FROM debian:buster-slim
-#
-# RUN useradd ssr_server
-# WORKDIR /home/ssr_server/bin/
-# COPY --from=build /usr/src/ssr_server/target/release/ssr_server .
-# RUN chown -R ssr_server:ssr_server ./
-#
-# USER ssr_server
-#
-#
+# RUN rustc --version
 
-CMD ["cargo", "run", "--features=ssr", "--bin", "simple_ssr_server", "--", "--dir", "dist"]
+# WORKDIR /usr/src/app
+#
+# # Copy Node.js and yarn from the previous stage
+# COPY --from=node /usr/local/bin/node /usr/local/bin/
+# COPY --from=node /usr/local/bin/yarn /usr/local/bin/
+
+
+
+CMD ["make", "ssr_dev"]
+
+
