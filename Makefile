@@ -4,6 +4,16 @@ dev:
 	yarn create:tailwind && \
 	trunk serve
 
+build_cf_pages:
+	cd app && \
+	trunk build --release -d ../runner/dist && \
+	cd ../ && \
+	cd middlewares && \
+	cp -r src ../runner/functions && \
+	cd ../ && \
+	cd runner && \
+	cp _redirects ./dist/_redirects
+
 ssr_dev:
 	cd app && \
 	yarn install && \
