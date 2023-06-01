@@ -1,3 +1,4 @@
+// use super::utils::metadata::{insert_metadata, MetadataParams};
 use crate::domain::entities::post::Post;
 use crate::pages::{
     posts::shared::loading_post::LoadingPost,
@@ -34,16 +35,16 @@ pub fn PostIndex(props: &HomeProps) -> Html {
         PER_PAGE * (props.page - 1)
     };
     let has_next_page = use_state(|| posts.clone().len() == PER_PAGE as usize);
-
     {
         let set_posts = posts.clone();
         let set_is_loading = is_loading.clone();
         use_effect_with_deps(
             move |_| {
                 let future = async move {
+                    #[cfg(feature = "wasm")]
                     match fetch_posts_usecase(PER_PAGE, offset).await {
                         Ok(posts) => set_posts.set(posts),
-                        Err(e) => log::error!("Error: {}", e),
+                        Err(e) => console_log!("Error: {}", e),
                     }
                     set_is_loading.set(false)
                 };
@@ -51,6 +52,18 @@ pub fn PostIndex(props: &HomeProps) -> Html {
                 || ()
             },
             props.clone().page,
+        );
+    }
+
+    {
+        let set_has_next_page = has_next_page.clone();
+        let posts_len = posts.len();
+        use_effect_with_deps(
+            move |_| {
+                set_has_next_page.set(posts_len == PER_PAGE as usize);
+                || {} // Cleanup function (optional)
+            },
+            (posts_len,), // Dependencies tuple
         );
     }
 
