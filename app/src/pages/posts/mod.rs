@@ -1,3 +1,5 @@
 pub mod detail;
+pub mod hook;
 pub mod index;
-mod shared;
+
+pub mod shared;

@@ -1,3 +1,4 @@
+use crate::pages::posts::shared::loading_posts::LoadingPosts;
 use crate::pages::{
     about::index::AboutIndex,
     not_found::NotFound,
@@ -26,8 +27,13 @@ pub enum Route {
 }
 
 pub fn switch(routes: Route) -> Html {
+    let fallback = html! {<LoadingPosts />};
     match routes {
-        Route::PostIndex { page } => html! {<PostIndex page={page.clone()} />},
+        Route::PostIndex { page } => html! {
+            <Suspense {fallback}>
+                <PostIndex page={page.clone()} />
+            </Suspense>
+        },
         Route::PostDetail { slug } => html! {<PostDetail slug={slug.clone()} />},
         Route::Projects => html! { <Projects /> },
         Route::AboutIndex => html! { <AboutIndex /> },
@@ -59,18 +65,11 @@ pub fn ServerApp(props: &ServerAppProps) -> Html {
 
 #[function_component]
 pub fn App() -> Html {
-    // <BrowserRouter>
-    //     <Suspense>
-    //         <Layout>
-    //             <Switch<Route> render={switch} />
-    //         </Layout>
-    //     </Suspense>
-    // </BrowserRouter>
     html! {
         <BrowserRouter>
-                <Layout>
-                    <Switch<Route> render={switch} />
-                </Layout>
+            <Layout>
+                <Switch<Route> render={switch} />
+            </Layout>
         </BrowserRouter>
     }
 }

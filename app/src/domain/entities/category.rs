@@ -1,6 +1,8 @@
 use std::fmt::Error;
 
-#[derive(PartialEq, Clone, Debug)]
+use serde::{Deserialize, Serialize};
+
+#[derive(PartialEq, Clone, Debug, Serialize, Deserialize)]
 pub struct Category {
     id: i32,
     name: String,

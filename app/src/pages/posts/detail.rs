@@ -129,9 +129,9 @@ pub fn PostDetail(props: &PostProps) -> Html {
         return html! { <Loading /> };
     }
 
-    if post.is_none() {
-        return html! { <NotFound /> };
-    }
+    // if post.is_none() {
+    //     return html! { <NotFound /> };
+    // }
 
     html! {
         <div>
