@@ -37,6 +37,7 @@ async fn render(
     State((index_html_before, index_html_after)): State<(String, String)>,
 ) -> impl IntoResponse {
     let url = url.to_string();
+    println!("url: {}", url);
 
     let renderer = yew::ServerRenderer::<ServerApp>::with_props(move || ServerAppProps {
         url: url.into(),

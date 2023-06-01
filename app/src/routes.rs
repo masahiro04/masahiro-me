@@ -1,4 +1,4 @@
-use crate::pages::posts::shared::loading_posts::LoadingPosts;
+use crate::pages::posts::shared::{loading_post::LoadingPost, loading_posts::LoadingPosts};
 use crate::pages::{
     about::index::AboutIndex,
     not_found::NotFound,
@@ -27,14 +27,23 @@ pub enum Route {
 }
 
 pub fn switch(routes: Route) -> Html {
-    let fallback = html! {<LoadingPosts />};
     match routes {
-        Route::PostIndex { page } => html! {
-            <Suspense {fallback}>
-                <PostIndex page={page.clone()} />
-            </Suspense>
-        },
-        Route::PostDetail { slug } => html! {<PostDetail slug={slug.clone()} />},
+        Route::PostIndex { page } => {
+            let fallback = html! {<LoadingPosts />};
+            html! {
+                <Suspense {fallback}>
+                    <PostIndex page={page.clone()} />
+                </Suspense>
+            }
+        }
+        Route::PostDetail { slug } => {
+            let fallback = html! {<LoadingPost />};
+            html! {
+                <Suspense {fallback}>
+                    <PostDetail slug={slug.clone()} />
+                </Suspense>
+            }
+        }
         Route::Projects => html! { <Projects /> },
         Route::AboutIndex => html! { <AboutIndex /> },
         Route::NotFound => html! { <NotFound />},
