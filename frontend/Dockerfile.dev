@@ -64,4 +64,6 @@ RUN cargo install --locked trunk
 RUN cargo build --release
 # COPY --from=node /usr/local/bin/yarn /usr/local/bin/
 
+EXPOSE 8080
+
 CMD ["make", "ssr_dev"]

@@ -7,6 +7,7 @@ services:
     ports:
       - "8080:8080"
     tty: true
+    env_file: .env
     volumes:
       - .:/usr/src/target
       - .:/usr/src/app/node_modules

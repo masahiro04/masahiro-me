@@ -110,9 +110,8 @@ async fn main() {
         handle_error,
     ));
 
-    println!("You can view the website at: http://localhost:8080/");
-
     let port = std::env::var("PORT").unwrap_or_else(|_| "8080".to_string());
+    println!("Listening on http://localhost:{}", port);
 
     let bind_addr = format!("0.0.0.0:{}", port);
     Server::bind(&bind_addr.parse().unwrap())
