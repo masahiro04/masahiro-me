@@ -10,6 +10,7 @@ ssr_dev:
 	yarn create:tailwind && \
 	cd ../ssr_server && \
 	trunk build --release -d ./dist && \
+	cp robots.txt ./dist/robots.txt && \
 	cargo run --features=ssr --bin simple_ssr_server -- --dir dist
 
 release_app:
