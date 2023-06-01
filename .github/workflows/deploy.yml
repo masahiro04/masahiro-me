@@ -31,10 +31,10 @@ jobs:
           cd runner
           yarn install --frozen-lockfile
 
-      - name: Create Tailwind css file
-        run: |
-          cd runner
-          yarn create:tailwind
+      # - name: Create Tailwind css file
+      #   run: |
+      #     cd runner
+      #     yarn create:tailwind
 
       - name: Build yew app
         run: |
