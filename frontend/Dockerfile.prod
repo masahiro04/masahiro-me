@@ -1,101 +1,14 @@
-# FROM rust:1.69.0-alpine as builder
-#
-# # Installing necessary dependencies for building
-# RUN apk add --no-cache build-base nodejs npm openssl-dev pkgconfig
-# RUN npm install -g yarn
-#
-# COPY . .
-#
-# RUN rustup target add wasm32-unknown-unknown
-#
-# RUN cargo install --locked trunk
-# RUN cargo build --release
-#
-# FROM alpine:latest
-#
-# RUN apk add --no-cache libgcc
-#
-# # COPY --from=builder /usr/local/cargo/bin /usr/local/cargo/bin
-# # COPY --from=builder /usr/src/myapp/target/release /app
-#
-# WORKDIR /app
-#
-# CMD ["make", "ssr_dev"]
-#
-
-
-# FROM rust:latest as build
-# FROM rust:latest as build
-#
-# WORKDIR /usr/src/ssr_server
-#
-# # COPY ./Cargo.lock ./Cargo.lock
-# # COPY ./Cargo.toml ./Cargo.toml
-# # COPY ./src ./src
-#
-# COPY . .
-#
-# # ENV PORT 8080
-# # ENV HOST 0.0.0.0
-# EXPOSE 8080
-#
-# RUN cargo build --release
-# #
-# # FROM debian:buster-slim
-# #
-# # RUN useradd ssr_server
-# # WORKDIR /home/ssr_server/bin/
-# # COPY --from=build /usr/src/ssr_server/target/release/ssr_server .
-# # RUN chown -R ssr_server:ssr_server ./
-# #
-# # USER ssr_server
-# #
-# #
-#
-# CMD ["cargo", "run", "--features=ssr", "--bin", "simple_ssr_server", "--", "--dir", "dist"]
-
-
-# FROM rust:1.69.0
-#
-# WORKDIR /usr/src/ssr_server
-# # RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-# RUN apt-get update && apt-get install -y make nodejs g++
-# RUN npm install -g yarn
-#
-# COPY . .
-#
-# # EXPOSE 8080
-#
-# RUN rustup target add wasm32-unknown-unknown
-#
-# RUN cargo install wasm-opt
-# RUN cargo install --locked trunk
-#
-# RUN cargo build --release
-# COPY --from=node /usr/local/bin/yarn /usr/local/bin/
-#
-# CMD ["make", "ssr_dev"]
-
-
-
 FROM rust:1.69.0
 
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-RUN apt-get update && apt-get install -y make nodejs g++
+RUN apt-get update && apt-get install -y make nodejs g++ binaryen
 RUN npm install -g yarn
 
 WORKDIR /usr/src/ssr_server
 COPY . .
 
-# EXPOSE 8080
-
 RUN rustup target add wasm32-unknown-unknown
-
-RUN cargo install wasm-opt
 RUN cargo install --locked trunk
-
 RUN cargo build --release
-# COPY --from=node /usr/local/bin/yarn /usr/local/bin/
 
 CMD ["make", "ssr_dev"]
-
