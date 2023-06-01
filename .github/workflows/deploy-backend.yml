@@ -1,0 +1,37 @@
+name: Deploy backend
+on:
+  workflow_dispatch:
+
+jobs:
+  cargo-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.18.1'
+
+      - name: Install Wrangler CLI
+        run: npm install -g wrangler
+
+      - name: Generate wrangler.toml file
+        run: |
+           cd backend
+           chmod +x ./gen/wrangler_template.sh
+           ./gen/wrangler_template.sh
+        shell: bash
+        env:
+          ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          KV_ID: ${{ secrets.CF_KV_ID }}
+          KV_PREVIEW_ID: ${{ secrets.CF_KV_PREVIEW_ID }}
+          KV_BINDING: ${{ secrets.CF_KV_BINDING }}
+
+      - name: Deploy workers
+        run: |
+          cd backend
+          wrangler publish
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+

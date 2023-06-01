@@ -1,13 +1,24 @@
-target
-app/target
-app/node_modules
-ssr_server/target
-ssr_server/node_modules
-middlewares/node_modules
+frontend/target
+frontend/app/target
+frontend/app/node_modules
+frontend/ssr_server/target
+frontend/ssr_server/node_modules
+frontend/middlewares/node_modules
 
 Cargo.lock
-dist/
-.env
+frontend/dist/
+frontend/.env
 dist/
 tailwind.css
+
+
+backend/target
+backend/.github
+backend/**/*.rs.bk
+backend/wasm-pack.log
+backend/build/
+backend/dist/
+backend/.env
+backend/.dev.vars
+backend/wrangler.toml
 
