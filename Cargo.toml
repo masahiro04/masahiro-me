@@ -1,8 +1,5 @@
 [workspace]
 members = [
     "app",
-<<<<<<< HEAD:Cargo.toml
     "ssr_server",
-=======
->>>>>>> dba6b60 (wip: deleted ssr and runnner):frontend/Cargo.toml
 ]

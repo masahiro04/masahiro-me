@@ -1,9 +1,3 @@
-<<<<<<< HEAD:app/src/pages/posts/detail.rs
-=======
-use super::not_found::NotFound;
-use super::utils::metadata::{insert_metadata, MetadataParams};
-use crate::console_log;
->>>>>>> 5c2643c (feat: ssr):frontend/app/src/pages/post.rs
 use crate::domain::entities::post::Post;
 use crate::pages::{
     not_found::NotFound,
@@ -11,16 +5,7 @@ use crate::pages::{
     shared::back_button::BackButton,
 };
 use crate::usecase::exe::{fetch_post_usecase, fetch_related_posts_usecase};
-<<<<<<< HEAD:app/src/pages/posts/detail.rs
 use yew::platform::spawn_local;
-=======
-use lazy_static::__Deref;
-use std::rc::Rc;
-<<<<<<< HEAD:app/src/pages/posts/detail.rs
-use web_sys::console;
->>>>>>> 5c2643c (feat: ssr):frontend/app/src/pages/post.rs
-=======
->>>>>>> e8a253f (fix: not to show post page):frontend/app/src/pages/post.rs
 use yew::prelude::*;
 
 #[function_component(Loading)]
@@ -59,101 +44,9 @@ pub struct PostProps {
 pub fn PostDetail(props: &PostProps) -> Html {
     let post: UseStateHandle<Option<Post>> = use_state(|| None);
     let related_posts: UseStateHandle<Vec<Post>> = use_state(|| vec![]);
-    let is_loading = use_state(|| false);
+    let is_loading = use_state(|| true);
     let slug = props.slug.clone();
 
-<<<<<<< HEAD:app/src/pages/posts/detail.rs
-<<<<<<< HEAD:app/src/pages/posts/detail.rs
-=======
-    // {
-    //     let set_post = post.clone();
-    //     let set_is_loading = is_loading.clone();
-    //     use_effect_with_deps(
-    //         move |_| {
-    //             let slug = slug.clone();
-    //             wasm_bindgen_futures::spawn_local(async move {
-    //                 match fetch_post_usecase(slug).await {
-    //                     Ok(post) => set_post.set(post),
-    //                     Err(e) => log::error!("Error: {}", e),
-    //                 }
-    //                 set_is_loading.set(false)
-    //             });
-    //             || {
-    //                 // ここで副作用のクリーンアップを行う
-    //                 // 例: イベントリスナーの削除など
-    //             }
-    //         },
-    //         props.slug.clone(),
-    //     );
-    // }
-=======
-    {
-        let set_post = post.clone();
-        let set_is_loading = is_loading.clone();
-        use_effect_with_deps(
-            move |_| {
-                let slug = slug.clone();
-                #[cfg(feature = "wasm")]
-                wasm_bindgen_futures::spawn_local(async move {
-                    match fetch_post_usecase(slug).await {
-                        Ok(post) => set_post.set(post),
-                        Err(e) => console_log!("Error: {}", e),
-                    }
-                    set_is_loading.set(false)
-                });
-                || {
-                    // ここで副作用のクリーンアップを行う
-                    // 例: イベントリスナーの削除など
-                }
-            },
-            props.slug.clone(),
-        );
-    }
->>>>>>> 5c2643c (feat: ssr):frontend/app/src/pages/post.rs
-
-    {
-        let set_related_posts = related_posts.clone();
-        let set_is_loading = is_loading.clone();
-        let post_clone = Rc::new(post.clone());
-        use_effect_with_deps(
-            move |post_ref: &Rc<UseStateHandle<Option<Post>>>| {
-                let post = post_ref.deref();
-                if let Some(post) = post.as_ref() {
-                    let category_ids = post
-                        .categories()
-                        .iter()
-                        .map(|category| format!("{}", category.id()))
-                        .collect::<Vec<String>>()
-                        .join(",");
-
-                    #[cfg(feature = "wasm")]
-                    wasm_bindgen_futures::spawn_local(async move {
-                        match fetch_related_posts_usecase(&category_ids).await {
-                            Ok(posts) => set_related_posts.set(posts),
-                            Err(e) => console_log!("Error: {}", e),
-                        }
-                        set_is_loading.set(false);
-                    });
-                };
-
-                move || {
-                    // ここで副作用のクリーンアップを行う
-                    // 例: イベントリスナーの削除など
-                }
-            },
-            Rc::clone(&post_clone),
-        );
-    }
-
-    if *is_loading {
-        return html! { <Loading /> };
-    }
-
-    if post.is_none() {
-        return html! { <NotFound /> };
-    }
-
->>>>>>> 6786113 (wip: changes):frontend/app/src/pages/post.rs
     let title = "".to_string();
     let title = if let Some(post) = &*post {
         &*post.title()
@@ -167,7 +60,6 @@ pub fn PostDetail(props: &PostProps) -> Html {
     } else {
         &content
     };
-    console_log!("content: {}", content);
 
     let excerpt = "".to_string();
     let excerpt = if let Some(post) = &*post {
