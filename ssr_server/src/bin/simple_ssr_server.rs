@@ -86,6 +86,7 @@ async fn main() {
         .await
         .expect("failed to read index.html");
 
+    // NOTE: ここでheadにデータを入れることでSSRを実現できそう
     let (index_html_before, index_html_after) = index_html_s.split_once("<body>").unwrap();
     let mut index_html_before = index_html_before.to_owned();
     index_html_before.push_str("<body>");

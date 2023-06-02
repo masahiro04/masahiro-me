@@ -9,20 +9,26 @@ name = "function_router"
 required-features = ["yew/csr"]
 
 [dependencies]
-yew = { version = "0.20", features = ["csr"] }
+yew = { version = "0.20" }
 yew-router = "0.17.0"
 serde = "=1.0.126"
 reqwest = { version = "0.11", features = ["json"] }
 async-trait = "0.1.68"
 log = "0.4"
 
+
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 wasm-bindgen-futures = "0.4"
 wasm-bindgen = "0.2.85"
 wasm-logger = "0.2.0"
-gloo = "0.8.0"
+# gloo = "0.8.0"
+# wasm-bindgen-futures = "0.4"
+# wasm-bindgen = "0.2.85"
+# wasm-logger = "0.2.0"
 
-# [profile.release]
-# lto = true
-# opt-level = 'z'
-# codegen-units = 1
+# gloo = "0.8.0"
+
+[profile.release]
+lto = true
+opt-level = 'z'
+codegen-units = 1

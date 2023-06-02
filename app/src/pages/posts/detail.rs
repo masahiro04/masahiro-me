@@ -1,4 +1,5 @@
 use crate::pages::{
+    bindings,
     posts::hook::{post::use_post, related_posts::use_related_posts},
     posts::shared::{categories::Categories, post_body::PostBody, post_item::PostItem},
     shared::back_button::BackButton,
@@ -20,6 +21,21 @@ pub fn PostDetail(props: &PostProps) -> HtmlResult {
         .collect::<Vec<String>>()
         .join(",");
     let related_posts = use_related_posts(category_ids)?;
+
+    #[cfg(target_arch = "wasm32")]
+    {
+        let title = format!("{} | Masahiro's tech note", post.title());
+        let excerpt = format!("{}", post.excerpt());
+        let category_names = post
+            .categories()
+            .iter()
+            .map(|category| format!("{}", category.name()))
+            .collect::<Vec<String>>()
+            .join(",");
+        bindings::updateTitle(&title);
+        bindings::updateMetaByName(String::from("description"), &excerpt);
+        bindings::updateMetaByName(String::from("keywords"), &category_names);
+    }
 
     Ok(html! {
         <div>

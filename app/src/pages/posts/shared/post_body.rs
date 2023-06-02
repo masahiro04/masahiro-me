@@ -17,6 +17,10 @@ pub fn PostBody(props: &PostBodyProps) -> Html {
     use_effect_with_deps(
         move |_| {
             let parsed = Html::from_html_unchecked(AttrValue::from(content_clone.clone()));
+            // let parsed = Html::from_html_unchecked(AttrValue::from(String::from(
+            //     "<pre><code class='language-css'>p { color: red }</code></pre>",
+            // )));
+
             set_node.set(Some(parsed));
             || ()
         },

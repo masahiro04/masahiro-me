@@ -44,8 +44,16 @@ pub fn switch(routes: Route) -> Html {
                 </Suspense>
             }
         }
-        Route::Projects => html! { <Projects /> },
-        Route::AboutIndex => html! { <AboutIndex /> },
+        Route::Projects => {
+            html! {
+                <Projects />
+            }
+        }
+        Route::AboutIndex => {
+            html! {
+                <AboutIndex />
+            }
+        }
         Route::NotFound => html! { <NotFound />},
     }
 }
