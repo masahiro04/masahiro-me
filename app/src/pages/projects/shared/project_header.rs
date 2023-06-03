@@ -7,7 +7,7 @@ pub fn ProjectHeader() -> Html {
       <div class="max-w-xl mx-auto">
         <a class="w-full group" href="https://github.com/masahiro04" target="_blank" rel="noreferrer">
           <div class="relative">
-            <Image class="w-full" source="https://assets.masahiro.me/honeycomb.svg" alt="" width=100 height=100 />
+            <Image class="w-full" source="honeycomb.svg" alt="" width=100 height=100 />
             <div class="absolute -scale-x-100 top-[35%] w-[9%] group-hover:duration-1000 group-hover:translate-x-[280%] group-hover:-translate-y-1 group-hover:delay-100">
               <Bee />
             </div>
@@ -25,7 +25,7 @@ pub fn ProjectHeader() -> Html {
             </div>
             <div class="absolute w-full h-full flex justify-center top-0">
               <div class="drop-shadow-lg flex-none self-center text-gray-800 w-[70%] h-[70%]">
-                <Image class="w-auto mx-auto" source="https://assets.masahiro.me/github.svg" alt=""  />
+                <Image class="w-auto mx-auto" source="github.svg" alt=""  />
               </div>
             </div>
           </div>
