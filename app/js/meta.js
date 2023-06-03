@@ -18,4 +18,4 @@ export function updateMetaByName(metaName, value) {
         document.getElementsByTagName("head")[0].appendChild(meta);
     }
 }
-/
+

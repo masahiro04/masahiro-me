@@ -15,20 +15,18 @@ serde = "=1.0.126"
 reqwest = { version = "0.11", features = ["json"] }
 async-trait = "0.1.68"
 log = "0.4"
+wee_alloc = "0.4.5"
 
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
-wasm-bindgen-futures = "0.4"
+# wasm-bindgen-futures = "0.4"
 wasm-bindgen = "0.2.85"
 wasm-logger = "0.2.0"
-# gloo = "0.8.0"
-# wasm-bindgen-futures = "0.4"
-# wasm-bindgen = "0.2.85"
-# wasm-logger = "0.2.0"
 
-# gloo = "0.8.0"
+# [profile.release]
 
 [profile.release]
+panic = 'abort'
 lto = true
 opt-level = 'z'
 codegen-units = 1
