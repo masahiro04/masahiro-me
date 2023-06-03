@@ -5,6 +5,7 @@ dev:
 	trunk serve
 
 build_cf_pages:
+	cargo install wasm-opt && \
 	cd app && \
 	trunk build --release -d ../runner/dist && \
 	cd ../ && \
