@@ -3,3 +3,10 @@ members = [
     "app",
     "ssr_server",
 ]
+
+[profile.release]
+strip = true
+panic = 'abort'
+codegen-units = 1
+opt-level = 'z'
+lto = true
