@@ -1,7 +1,9 @@
+use serde::{Deserialize, Serialize};
+
 use crate::domain::entities::category::Category;
 use std::fmt::Error;
 
-#[derive(PartialEq, Clone, Debug)]
+#[derive(PartialEq, Clone, Debug, Serialize, Deserialize)]
 pub struct Post {
     title: String,
     slug: String,

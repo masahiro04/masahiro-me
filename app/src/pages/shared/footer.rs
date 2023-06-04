@@ -29,10 +29,10 @@ impl FooterItemKind {
 
     fn to_image_src(&self) -> &'static str {
         match self {
-            FooterItemKind::GitHub => "https://assets.masahiro.me/github.svg",
-            FooterItemKind::Twitter => "https://assets.masahiro.me/twitter.svg",
-            FooterItemKind::Menta => "https://assets.masahiro.me/menta.svg",
-            FooterItemKind::Email => "https://assets.masahiro.me/email.svg",
+            FooterItemKind::GitHub => "github.svg",
+            FooterItemKind::Twitter => "twitter.svg",
+            FooterItemKind::Menta => "menta.svg",
+            FooterItemKind::Email => "email.svg",
         }
     }
 }

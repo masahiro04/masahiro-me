@@ -1,3 +1,4 @@
+use crate::pages::posts::shared::{loading_post::LoadingPost, loading_posts::LoadingPosts};
 use crate::pages::{
     about::index::AboutIndex,
     not_found::NotFound,
@@ -27,10 +28,32 @@ pub enum Route {
 
 pub fn switch(routes: Route) -> Html {
     match routes {
-        Route::PostIndex { page } => html! {<PostIndex page={page.clone()} />},
-        Route::PostDetail { slug } => html! {<PostDetail slug={slug.clone()} />},
-        Route::Projects => html! { <Projects /> },
-        Route::AboutIndex => html! { <AboutIndex /> },
+        Route::PostIndex { page } => {
+            let fallback = html! {<LoadingPosts />};
+            html! {
+                <Suspense {fallback}>
+                    <PostIndex page={page.clone()} />
+                </Suspense>
+            }
+        }
+        Route::PostDetail { slug } => {
+            let fallback = html! {<LoadingPost />};
+            html! {
+                <Suspense {fallback}>
+                    <PostDetail slug={slug.clone()} />
+                </Suspense>
+            }
+        }
+        Route::Projects => {
+            html! {
+                <Projects />
+            }
+        }
+        Route::AboutIndex => {
+            html! {
+                <AboutIndex />
+            }
+        }
         Route::NotFound => html! { <NotFound />},
     }
 }
@@ -59,18 +82,11 @@ pub fn ServerApp(props: &ServerAppProps) -> Html {
 
 #[function_component]
 pub fn App() -> Html {
-    // <BrowserRouter>
-    //     <Suspense>
-    //         <Layout>
-    //             <Switch<Route> render={switch} />
-    //         </Layout>
-    //     </Suspense>
-    // </BrowserRouter>
     html! {
         <BrowserRouter>
-                <Layout>
-                    <Switch<Route> render={switch} />
-                </Layout>
+            <Layout>
+                <Switch<Route> render={switch} />
+            </Layout>
         </BrowserRouter>
     }
 }

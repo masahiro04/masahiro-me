@@ -1,4 +1,5 @@
 use app::routes::{ServerApp, ServerAppProps};
+use ssr_server::metadata::{insert_metadata, MetadataParams};
 use std::collections::HashMap;
 use std::convert::Infallible;
 use std::future::Future;
@@ -19,6 +20,13 @@ use tower::ServiceExt;
 use tower_http::services::ServeDir;
 use yew::platform::Runtime;
 
+use html5ever::{
+    interface::{ExpandedName, QualName},
+    parse_document, serialize,
+    tendril::TendrilSink,
+    Attribute, NodeData, RcDom,
+};
+
 // We use jemalloc as it produces better performance.
 #[global_allocator]
 static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
@@ -37,6 +45,10 @@ async fn render(
     State((index_html_before, index_html_after)): State<(String, String)>,
 ) -> impl IntoResponse {
     let url = url.to_string();
+    println!("url: {}", url);
+
+    println!("index_html_before: {}", index_html_before);
+    println!("index_html_after: {}", index_html_after);
 
     let renderer = yew::ServerRenderer::<ServerApp>::with_props(move || ServerAppProps {
         url: url.into(),
@@ -81,10 +93,19 @@ async fn main() {
 
     let opts = Opt::parse();
 
+    let metadata = MetadataParams {
+        title: Some("My Title".to_string()),
+        description: Some("My Description".to_string()),
+        keywords: Some("My Keywords".to_string()),
+        image_url: Some("https://example.com/image.png".to_string()),
+    };
+    insert_metadata(metadata);
+
     let index_html_s = tokio::fs::read_to_string(opts.dir.join("index.html"))
         .await
         .expect("failed to read index.html");
 
+    // NOTE: ここでheadにデータを入れることでSSRを実現できそう
     let (index_html_before, index_html_after) = index_html_s.split_once("<body>").unwrap();
     let mut index_html_before = index_html_before.to_owned();
     index_html_before.push_str("<body>");

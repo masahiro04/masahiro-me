@@ -13,7 +13,7 @@ pub fn BackButton() -> Html {
             class="relative cursor-pointer duration-500 py-2 bg-white rounded-md shadow-sm px-2 bg-opacity-60 flex items-center w-24 justify-center text-gray-600 text-sm -translate-y-1 hover:shadow-md sm:-translate-y-2"
         >
             <span class="mr-1">{"Back"}</span>
-            <Image class="w-4 h-4 sm:w-5 sm:h-5" source="/images/back_arrow.svg" alt="back arrow icon" />
+            <Image class="w-4 h-4 sm:w-5 sm:h-5" source="back_arrow.svg" alt="back arrow icon" />
         </div>
     }
 }

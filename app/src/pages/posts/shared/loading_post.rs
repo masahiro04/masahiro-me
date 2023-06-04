@@ -1,18 +1,27 @@
 use yew::prelude::*;
-
 #[function_component]
 pub fn LoadingPost() -> Html {
     html! {
-        <div class="relative w-full cursor-pointer">
-            <div class="py-3 bg-white rounded-md max-w-full bg-opacity-60 font-semibold text-transparent animate-pulse shadow-sm duration-500 px-3 sm:px-6 text-sm sm:text-base">
-                <div class="bg-gray-300 h-6 w-1/2 mb-2 rounded" />
-                <div class="flex text-transparent font-thin text-sm">
-                    <div class="bg-gray-300 h-3 w-1/4 rounded" />
-                    <div class="ml-2 my-auto">
-                        <div class="bg-gray-300 h-3 w-1/4 rounded" />
+        <>
+            <div class="relative cursor-pointer duration-500 py-2 bg-white rounded-md shadow-sm px-2 bg-opacity-60 flex items-center w-24 justify-center text-gray-600 text-sm -translate-y-1 hover:shadow-md sm:-translate-y-2">
+                <div class="h-4 w-20 sm:w-5 sm:h-5 bg-gray-300 animate-pulse" />
+            </div>
+            <div class="relative overflow-hidden py-8 bg-white bg-opacity-50 rounded-md shadow-md sm:py-16">
+                <div class="relative px-4 sm:px-6 lg:px-8">
+                    <div class="mx-auto max-w-prose">
+                        <div class="mx-auto w-100 text-center mb-4">
+                            <div class="h-8 w-100 bg-gray-300 animate-pulse text-center mb-4" />
+                        </div>
+                        {for (0..4).map(|_| { html! {
+                            <>
+                                <div class="h-4 w-1/2 bg-gray-300 animate-pulse mb-4"></div>
+                                <div class="h-4 w-3/4 bg-gray-300 animate-pulse mb-4"></div>
+                                <div class="h-4 w-3/4 bg-gray-300 animate-pulse mb-4"></div>
+                            </>
+                        } })}
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     }
 }

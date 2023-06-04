@@ -1,6 +1,6 @@
+use crate::pages::bindings;
 use crate::{
     pages::projects::shared::{project_header::ProjectHeader, project_item::ProjectItem},
-    // pages::shared::metadata::{insert_metadata, MetadataParams},
     usecase::exe::{
         fetch_advisory_projects_usecase, fetch_past_work_projects_usecase,
         fetch_work_projects_usecase,
@@ -55,6 +55,22 @@ pub fn projects() -> Html {
                 </div>
             </div>
         }
+    }
+
+    #[cfg(target_arch = "wasm32")]
+    {
+        let title = "Projects | Masahiro's tech note";
+        let excerpt = "現在参加中の案件一覧です。上流から下流まで対応するプロジェクトやアドバイスを行う顧問活動も行っております。";
+        let keywords =
+            "参加案件, ソフトウェアエンジニア, バックエンド, フロントエンド, TypeScript, Rust";
+        let image_url = "/images/kyuri.png";
+        bindings::updateTitle(title);
+        bindings::updateMetaByName(String::from("description"), excerpt);
+        bindings::updateMetaByName(String::from("keywords"), keywords);
+
+        bindings::updateMetaByName(String::from("twitter:title"), title);
+        bindings::updateMetaByName(String::from("twitter:description"), excerpt);
+        bindings::updateMetaByName(String::from("twitter:image"), image_url);
     }
 
     html! {
