@@ -33,15 +33,17 @@ pub fn PostIndex(props: &HomeProps) -> HtmlResult {
 
     #[cfg(target_arch = "wasm32")]
     {
-        let title = format!("{} ", "Masahiro's tech note");
-        let excerpt = format!("{} ", "名古屋のソフトウェアエンジニア。SaaSやマッチングサービス、AR/VR等の開発を経て現在は独立して名古屋で開発やITコンサルしています。サービス開発の所感や、ハマった際の解決方法を記載しております。");
-        let keywords = format!(
-            "{}",
-            "ITエンジニア, ITコンサル, IT顧問, システム開発, Rust, wasm"
-        );
-        bindings::updateTitle(&title);
-        bindings::updateMetaByName(String::from("description"), &excerpt);
-        bindings::updateMetaByName(String::from("keywords"), &keywords);
+        let title = "Masahiro's tech note";
+        let excerpt = "名古屋のソフトウェアエンジニア。SaaSやマッチングサービス、AR/VR等の開発を経て現在は独立して名古屋で開発やITコンサルしています。サービス開発の所感や、ハマった際の解決方法を記載しております。";
+        let keywords = "ITエンジニア, ITコンサル, IT顧問, システム開発, Rust, wasm";
+        let image_url = "/images/kyuri.png";
+        bindings::updateTitle(title);
+        bindings::updateMetaByName(String::from("description"), excerpt);
+        bindings::updateMetaByName(String::from("keywords"), keywords);
+
+        bindings::updateMetaByName(String::from("twitter:title"), title);
+        bindings::updateMetaByName(String::from("twitter:description"), excerpt);
+        bindings::updateMetaByName(String::from("twitter:image"), image_url);
     }
 
     Ok(html! {

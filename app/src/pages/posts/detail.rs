@@ -35,6 +35,9 @@ pub fn PostDetail(props: &PostProps) -> HtmlResult {
         bindings::updateTitle(&title);
         bindings::updateMetaByName(String::from("description"), &excerpt);
         bindings::updateMetaByName(String::from("keywords"), &category_names);
+        bindings::updateMetaByName(String::from("twitter:title"), &title);
+        bindings::updateMetaByName(String::from("twitter:description"), &excerpt);
+        bindings::updateMetaByName(String::from("twitter:image"), &post.featured_media());
     }
 
     Ok(html! {

@@ -1,14 +1,9 @@
-export function sample(str) {
-    return alert(str);
-}
-
 export function updateTitle(newTitle) {
     document.title = newTitle;
 }
 
-
 export function updateMetaByName(metaName, value) {
-    let meta = document.querySelector(`meta[name=${metaName}]`);
+    let meta = document.querySelector(`meta[name="${metaName}"]`);
     if (meta) {
         meta.content = value;
     } else {

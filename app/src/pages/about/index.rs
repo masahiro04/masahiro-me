@@ -1,3 +1,4 @@
+use crate::pages::bindings;
 use crate::pages::shared::image::Image;
 use yew::prelude::*;
 
@@ -8,6 +9,21 @@ pub fn AboutIndex() -> Html {
         "Go".to_string(),
         "Rust".to_string(),
     ];
+
+    #[cfg(target_arch = "wasm32")]
+    {
+        let title = "About me | Masahiro's tech note ";
+        let excerpt = "ソフトウェアエンジニア、大久保将広のウェブサイトです。現在取り扱っている言語や興味関心ごとなどを記載しております。";
+        let keywords =
+            "大久保将広, ソフトウェアエンジニア, バックエンド, フロントエンド, TypeScript, Rust";
+        let image_url = "/images/kyuri.png";
+        bindings::updateTitle(title);
+        bindings::updateMetaByName(String::from("description"), excerpt);
+        bindings::updateMetaByName(String::from("keywords"), keywords);
+        bindings::updateMetaByName(String::from("twitter:title"), title);
+        bindings::updateMetaByName(String::from("twitter:description"), excerpt);
+        bindings::updateMetaByName(String::from("twitter:image"), image_url);
+    }
 
     html! {
       <div class="flex justify-center mx-auto mt-10 sm:w-2/3 sm:mt-0">
