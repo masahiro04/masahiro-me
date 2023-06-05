@@ -1,17 +1,3 @@
-// export const handleSsr: PagesFunction = async (_) => {
-//   const html = 'aaa';
-//   return new Response(html, {
-//     status: 200,
-//     headers: {
-//       'content-type': 'text/plain;charset=UTF-8'
-//     }
-//   });
-// };
-//
-// export const onRequest: PagesFunction[] = [handleSsr];
-//
-//
-
 const handleReverseProxy: PagesFunction = async (context) => {
   const originalUrl = context.request.url;
   const url = new URL(originalUrl);
@@ -85,7 +71,8 @@ const handleBot: PagesFunction = async (context) => {
   if (splitedUrl[3] === 'projects') {
     const title = "Projects | Masahiro's tech note";
     const imagePath = '/images/kyuri.png';
-    const description = '現在参加中の案件一覧です。上流から下流まで対応するプロジェクトやアドバイスを行う顧問活動も行っております。';
+    const description =
+      '現在参加中の案件一覧です。上流から下流まで対応するプロジェクトやアドバイスを行う顧問活動も行っております。';
     const keywords = '参加案件, ソフトウェアエンジニア, バックエンド, フロントエンド, TypeScript, Rust';
     const body = renderHtml(title, description, keywords, imagePath);
     return new Response(body, { headers: { 'Content-Type': 'text/html' } });
@@ -94,16 +81,35 @@ const handleBot: PagesFunction = async (context) => {
   if (splitedUrl[3] === 'pages' || splitedUrl[3] === '') {
     const title = "Projects | Masahiro's tech note";
     const imagePath = '/images/kyuri.png';
-    const description = '現在参加中の案件一覧です。上流から下流まで対応するプロジェクトやアドバイスを行う顧問活動も行っております。';
+    const description =
+      '現在参加中の案件一覧です。上流から下流まで対応するプロジェクトやアドバイスを行う顧問活動も行っております。';
     const keywords = '参加案件, ソフトウェアエンジニア, バックエンド, フロントエンド, TypeScript, Rust';
     const body = renderHtml(title, description, keywords, imagePath);
     return new Response(body, { headers: { 'Content-Type': 'text/html' } });
   }
 
+  const slug = splitedUrl[4];
+  if (splitedUrl[3] === 'posts' && slug) {
+    const url = new URL(`https://api.masahiro.me/api/posts/${slug}`);
+    const resp = await fetch(new Request(url));
+    const post = await resp.json<{
+      title: string;
+      excerpt: string;
+      slug: string;
+      content: string;
+      categories: Array<{ id: number; name: string }>;
+      featured_media: string;
+    }>();
+    console.log({ post });
 
-  if (!originalUrl.includes('/posts/')) {
-    return await context.next();
+    const title = `${post.title} | Masahiro's tech note`;
+    const imagePath = post.featured_media;
+    const description = post.excerpt;
+    const keywords = post.categories.map((category) => category.name).join(',');
+    const body = renderHtml(title, description, keywords, imagePath);
+    return new Response(body, { headers: { 'Content-Type': 'text/html' } });
   }
+
   return await context.next();
 
   // const url = new URL(context.request.url);
