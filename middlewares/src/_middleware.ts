@@ -27,12 +27,7 @@ const handleReverseProxy: PagesFunction = async (context) => {
   });
 };
 
-const aboutMeta = (): string => {
-  const title = "About me | Masahiro's tech note";
-  const imagePath = '/images/kyuri.png';
-  const description =
-    'ソフトウェアエンジニア、大久保将広のウェブサイトです。現在取り扱っている言語や興味関心ごとなどを記載しております。';
-  const keywords = '大久保将広, ソフトウェアエンジニア, バックエンド, フロントエンド, TypeScript, Rust';
+const renderHtml = (title: string, description: string, keywords: string, imagePath: string): string => {
   return `
       <!DOCTYPE html>
       <html>
@@ -64,7 +59,9 @@ const aboutMeta = (): string => {
 
 const handleBot: PagesFunction = async (context) => {
   const originalUrl = context.request.url;
-  console.log({ originalUrl });
+
+  const splitedUrl = originalUrl.split('/');
+  console.log({ splitedUrl });
 
   const isSocialMediaBot = (userAgent: string): boolean => {
     return ['Twitterbot', 'Slackbot'].some((botUserAgent) => userAgent.includes(botUserAgent));
@@ -75,22 +72,48 @@ const handleBot: PagesFunction = async (context) => {
     return await context.next();
   }
 
-  if (originalUrl.includes('/about')) {
-    return new Response(aboutMeta(), { headers: { 'Content-Type': 'text/html' } });
+  if (splitedUrl[3] === 'about') {
+    const title = "About me | Masahiro's tech note";
+    const imagePath = '/images/kyuri.png';
+    const description =
+      'ソフトウェアエンジニア、大久保将広のウェブサイトです。現在取り扱っている言語や興味関心ごとなどを記載しております。';
+    const keywords = '大久保将広, ソフトウェアエンジニア, バックエンド, フロントエンド, TypeScript, Rust';
+    const body = renderHtml(title, description, keywords, imagePath);
+    return new Response(body, { headers: { 'Content-Type': 'text/html' } });
   }
+
+  if (splitedUrl[3] === 'projects') {
+    const title = "Projects | Masahiro's tech note";
+    const imagePath = '/images/kyuri.png';
+    const description = '現在参加中の案件一覧です。上流から下流まで対応するプロジェクトやアドバイスを行う顧問活動も行っております。';
+    const keywords = '参加案件, ソフトウェアエンジニア, バックエンド, フロントエンド, TypeScript, Rust';
+    const body = renderHtml(title, description, keywords, imagePath);
+    return new Response(body, { headers: { 'Content-Type': 'text/html' } });
+  }
+
+  if (splitedUrl[3] === 'pages' || splitedUrl[3] === '') {
+    const title = "Projects | Masahiro's tech note";
+    const imagePath = '/images/kyuri.png';
+    const description = '現在参加中の案件一覧です。上流から下流まで対応するプロジェクトやアドバイスを行う顧問活動も行っております。';
+    const keywords = '参加案件, ソフトウェアエンジニア, バックエンド, フロントエンド, TypeScript, Rust';
+    const body = renderHtml(title, description, keywords, imagePath);
+    return new Response(body, { headers: { 'Content-Type': 'text/html' } });
+  }
+
 
   if (!originalUrl.includes('/posts/')) {
     return await context.next();
   }
+  return await context.next();
 
-  const url = new URL(context.request.url);
-  const splitedUrl = url.pathname.split('/');
-  const slug = splitedUrl[splitedUrl.length - 1];
-  const newUrl = new URL(`https://api.masahiro.me/meta?slug=${slug}`);
-  const resp = await fetch(new Request(newUrl));
-  return new Response(resp.body, {
-    headers: { 'Content-Type': 'text/html' }
-  });
+  // const url = new URL(context.request.url);
+  // const splitedUrl = url.pathname.split('/');
+  // const slug = splitedUrl[splitedUrl.length - 1];
+  // const newUrl = new URL(`https://api.masahiro.me/meta?slug=${slug}`);
+  // const resp = await fetch(new Request(newUrl));
+  // return new Response(resp.body, {
+  //   headers: { 'Content-Type': 'text/html' }
+  // });
 };
 
 export const onRequest: PagesFunction[] = [handleReverseProxy, handleBot];
