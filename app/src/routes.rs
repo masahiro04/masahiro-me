@@ -7,11 +7,13 @@ use crate::pages::{
     shared::layout::Layout,
 };
 use std::collections::HashMap;
+use std::str::FromStr;
+use url::Url;
 use yew::prelude::*;
 use yew_router::history::{AnyHistory, History, MemoryHistory};
 use yew_router::prelude::*;
 
-#[derive(Clone, Routable, PartialEq)]
+#[derive(Clone, Routable, PartialEq, Debug)]
 pub enum Route {
     #[at("/pages/:page")]
     PostIndex { page: i32 },
@@ -24,6 +26,46 @@ pub enum Route {
     #[not_found]
     #[at("/404")]
     NotFound,
+}
+
+impl FromStr for Route {
+    type Err = anyhow::Error;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        // let url = Url::parse(s)?;
+        // let url = Url::parse(&format!("https://masahiro.me{}", s))?;
+        let url = Url::parse(&format!("http://localhost:8080{}", s))?;
+
+        // println!("url: {:?}", url);
+        let Some(path_segments) = url.path_segments() else {
+            return Ok(Self::NotFound);
+        };
+
+        let path_segments = path_segments.collect::<Vec<_>>();
+
+        if let Some(&"about") = path_segments.get(0) {
+            return Ok(Self::AboutIndex {});
+        }
+        if let Some(&"projects") = path_segments.get(0) {
+            return Ok(Self::Projects {});
+        }
+
+        if let (Some(&"pages"), Some(page)) = (path_segments.get(0), path_segments.get(1)) {
+            return Ok(Self::PostIndex {
+                page: page.to_string().parse().unwrap_or(1),
+            });
+        }
+        if let (Some(&"posts"), Some(slug)) = (path_segments.get(0), path_segments.get(1)) {
+            return Ok(Self::PostDetail {
+                slug: slug.to_string(),
+            });
+        }
+
+        if let Some(&"") = path_segments.get(0) {
+            return Ok(Self::PostIndex { page: 1 });
+        }
+
+        Ok(Self::NotFound)
+    }
 }
 
 pub fn switch(routes: Route) -> Html {

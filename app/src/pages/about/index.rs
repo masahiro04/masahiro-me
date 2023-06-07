@@ -1,5 +1,6 @@
-use crate::pages::bindings;
+// use crate::pages::bindings;
 use crate::pages::shared::image::Image;
+use std::{fmt::Display, io::Result};
 use yew::prelude::*;
 
 #[function_component]
@@ -9,21 +10,6 @@ pub fn AboutIndex() -> Html {
         "Go".to_string(),
         "Rust".to_string(),
     ];
-
-    #[cfg(target_arch = "wasm32")]
-    {
-        let title = "About me | Masahiro's tech note ";
-        let excerpt = "ソフトウェアエンジニア、大久保将広のウェブサイトです。現在取り扱っている言語や興味関心ごとなどを記載しております。";
-        let keywords =
-            "大久保将広, ソフトウェアエンジニア, バックエンド, フロントエンド, TypeScript, Rust";
-        let image_url = "/images/kyuri.png";
-        bindings::updateTitle(title);
-        bindings::updateMetaByName(String::from("description"), excerpt);
-        bindings::updateMetaByName(String::from("keywords"), keywords);
-        bindings::updateMetaByName(String::from("twitter:title"), title);
-        bindings::updateMetaByName(String::from("twitter:description"), excerpt);
-        bindings::updateMetaByName(String::from("twitter:image"), image_url);
-    }
 
     html! {
       <div class="flex justify-center mx-auto mt-10 sm:w-2/3 sm:mt-0">
@@ -94,4 +80,67 @@ pub fn AboutIndex() -> Html {
         </div>
       </div>
     }
+}
+
+// #[cfg(target_arch = "wasm32")]
+// {
+//     let title = "About me | Masahiro's tech note ";
+//     let excerpt = "ソフトウェアエンジニア、大久保将広のウェブサイトです。現在取り扱っている言語や興味関心ごとなどを記載しております。";
+//     let keywords =
+//         "大久保将広, ソフトウェアエンジニア, バックエンド, フロントエンド, TypeScript, Rust";
+//     let image_url = "/images/kyuri.png";
+//     bindings::updateTitle(title);
+//     bindings::updateMetaByName(String::from("description"), excerpt);
+//     bindings::updateMetaByName(String::from("keywords"), keywords);
+//     bindings::updateMetaByName(String::from("twitter:title"), title);
+//     bindings::updateMetaByName(String::from("twitter:description"), excerpt);
+//     bindings::updateMetaByName(String::from("twitter:image"), image_url);
+// }
+
+// #[cfg(feature = "ssr")]
+pub fn about_meta_tags() -> Result<String> {
+    let title = "About me | Masahiro's tech note ";
+    let description = "ソフトウェアエンジニア、大久保将広のウェブサイトです。現在取り扱っている言語や興味関心ごとなどを記載しております。";
+    let keywords =
+        "大久保将広, ソフトウェアエンジニア, バックエンド, フロントエンド, TypeScript, Rust";
+    let image_url = "/images/kyuri.png";
+    let mut meta = String::new();
+    meta.push_str(&format!(r###"<title>{}</title>"###, title));
+    meta.push_str(&format!(
+        r###"<meta name="description" content="{}">"###,
+        description
+    ));
+    meta.push_str(&format!(
+        r###"<meta name="keywords" content="{}">"###,
+        keywords
+    ));
+    // meta.push_str(&format!(
+    //     r###"<meta property="og:url" content="{}{}" />
+    //                         "###,
+    //     CONFIG.app_origin, url
+    // ));
+    meta.push_str(&format!(
+        r###"<meta property="og:title" content="{}" />
+        "###,
+        title
+    ));
+    meta.push_str(&format!(
+        r###"<meta property="og:description" content="{}" />
+        "###,
+        description
+    ));
+    meta.push_str(&format!(
+        r###"<meta property="og:site_name" content=" Masahiro's tech note " />
+        "###,
+    ));
+    meta.push_str(&format!(
+        r###"<meta property="og:image" content="https://masahiro.me/kyuri.png" />
+        "###,
+    ));
+    meta.push_str(&format!(
+        r###"<meta name="twitter:creator" content="@masa_okubo" />
+        "###,
+    ));
+
+    Ok(meta)
 }

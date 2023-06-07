@@ -1,9 +1,13 @@
-use app::routes::{ServerApp, ServerAppProps};
-use ssr_server::metadata::{insert_metadata, MetadataParams};
+use app::pages::about::index::about_meta_tags;
+use app::pages::projects::index::projects_meta_tags;
+use app::routes::{Route, ServerApp, ServerAppProps};
+// use ssr_server::metadata::{insert_metadata, MetadataParams};
 use std::collections::HashMap;
 use std::convert::Infallible;
 use std::future::Future;
+use std::net::ToSocketAddrs;
 use std::path::PathBuf;
+use std::str::FromStr;
 
 use axum::body::StreamBody;
 use axum::error_handling::HandleError;
@@ -19,13 +23,6 @@ use hyper::server::Server;
 use tower::ServiceExt;
 use tower_http::services::ServeDir;
 use yew::platform::Runtime;
-
-use html5ever::{
-    interface::{ExpandedName, QualName},
-    parse_document, serialize,
-    tendril::TendrilSink,
-    Attribute, NodeData, RcDom,
-};
 
 // We use jemalloc as it produces better performance.
 #[global_allocator]
@@ -47,13 +44,50 @@ async fn render(
     let url = url.to_string();
     println!("url: {}", url);
 
-    println!("index_html_before: {}", index_html_before);
-    println!("index_html_after: {}", index_html_after);
+    let (index_html_top, index_html_head) = index_html_before.split_once("<head>").unwrap();
+    let mut index_html_top = index_html_top.to_owned();
+    // let meta_tags = match Route::
+    let route = Route::from_str(&url).unwrap();
+    print!("route: {:?}", route);
+
+    let mut meta = "".to_string();
+
+    meta = match route {
+        Route::PostIndex { page } => {
+            log::debug!("Posts OGP Setting {}", page);
+            about_meta_tags().unwrap()
+        }
+        Route::Projects => projects_meta_tags().unwrap(),
+        Route::AboutIndex => about_meta_tags().unwrap(),
+        // Ok(Route::Preview { id }) => {
+        //     log::debug!("Preview OGP Setting {}", id);
+        //     about_meta_tags().unwrap()
+        // }
+        // Ok(Route::Home) => {
+        //     log::debug!("Home OGP Setting");
+        // }
+        _ => meta,
+    };
+
+    if meta != "".to_string() {
+        index_html_top.push_str(&meta);
+    }
+
+    // match meta {
+    //     Ok(meta) => index_html_top.push_str(&meta),
+    //     Err(e) => log::warn!("{:#}", e),
+    // };
+    println!("meta: {}", meta);
+
+    // NOTE: 実装は多分これであってるけど、おそらく/images/hogehgoe
+    // のようなアクセスで上書きされてmetaがおかしくなっている
 
     let renderer = yew::ServerRenderer::<ServerApp>::with_props(move || ServerAppProps {
         url: url.into(),
         queries,
     });
+
+    let index_html_before = format!("{}{}", index_html_top, index_html_head);
 
     StreamBody::new(
         stream::once(async move { index_html_before })
@@ -92,14 +126,6 @@ async fn main() {
     env_logger::init();
 
     let opts = Opt::parse();
-
-    let metadata = MetadataParams {
-        title: Some("My Title".to_string()),
-        description: Some("My Description".to_string()),
-        keywords: Some("My Keywords".to_string()),
-        image_url: Some("https://example.com/image.png".to_string()),
-    };
-    insert_metadata(metadata);
 
     let index_html_s = tokio::fs::read_to_string(opts.dir.join("index.html"))
         .await
