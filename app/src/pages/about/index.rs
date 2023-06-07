@@ -98,7 +98,7 @@ pub fn AboutIndex() -> Html {
 // }
 
 // #[cfg(feature = "ssr")]
-pub fn about_meta_tags() -> Result<String> {
+pub fn about_meta_tags() -> String {
     let title = "About me | Masahiro's tech note ";
     let description = "ソフトウェアエンジニア、大久保将広のウェブサイトです。現在取り扱っている言語や興味関心ごとなどを記載しております。";
     let keywords =
@@ -142,5 +142,5 @@ pub fn about_meta_tags() -> Result<String> {
         "###,
     ));
 
-    Ok(meta)
+    meta
 }

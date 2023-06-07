@@ -1,4 +1,6 @@
 use app::pages::about::index::about_meta_tags;
+use app::pages::posts::detail::post_meta_tags;
+// use app::pages::posts::detail::post_meta_tags;
 use app::pages::projects::index::projects_meta_tags;
 use app::routes::{Route, ServerApp, ServerAppProps};
 // use ssr_server::metadata::{insert_metadata, MetadataParams};
@@ -14,7 +16,7 @@ use axum::error_handling::HandleError;
 use axum::extract::{Query, State};
 use axum::handler::HandlerWithoutStateExt;
 use axum::http::{StatusCode, Uri};
-use axum::response::IntoResponse;
+use axum::response::{IntoResponse, Html};
 use axum::routing::get;
 use axum::Router;
 use clap::Parser;
@@ -40,7 +42,12 @@ async fn render(
     url: Uri,
     Query(queries): Query<HashMap<String, String>>,
     State((index_html_before, index_html_after)): State<(String, String)>,
+// ) -> impl IntoResponse {
 ) -> impl IntoResponse {
+
+
+// ) -> impl Future<Output = impl IntoResponse> {
+// ) -> impl futures::Future<Output = impl IntoResponse> {
     let url = url.to_string();
     println!("url: {}", url);
 
@@ -50,15 +57,21 @@ async fn render(
     let route = Route::from_str(&url).unwrap();
     print!("route: {:?}", route);
 
-    let mut meta = "".to_string();
+    // let mut meta = "".to_string();
 
-    meta = match route {
+    let meta = match route {
         Route::PostIndex { page } => {
             log::debug!("Posts OGP Setting {}", page);
-            about_meta_tags().unwrap()
+            about_meta_tags()
         }
-        Route::Projects => projects_meta_tags().unwrap(),
-        Route::AboutIndex => about_meta_tags().unwrap(),
+        Route::PostDetail { slug } => {
+            log::debug!("Posts OGP Setting {}", slug);
+
+            // about_meta_tags()
+            // post_meta_tags(slug).await
+        }
+        Route::Projects => projects_meta_tags(),
+        Route::AboutIndex => about_meta_tags(),
         // Ok(Route::Preview { id }) => {
         //     log::debug!("Preview OGP Setting {}", id);
         //     about_meta_tags().unwrap()
@@ -66,7 +79,7 @@ async fn render(
         // Ok(Route::Home) => {
         //     log::debug!("Home OGP Setting");
         // }
-        _ => meta,
+        _ => "".to_string(),
     };
 
     if meta != "".to_string() {
@@ -79,22 +92,31 @@ async fn render(
     // };
     println!("meta: {}", meta);
 
-    // NOTE: 実装は多分これであってるけど、おそらく/images/hogehgoe
-    // のようなアクセスで上書きされてmetaがおかしくなっている
-
     let renderer = yew::ServerRenderer::<ServerApp>::with_props(move || ServerAppProps {
         url: url.into(),
         queries,
     });
 
-    let index_html_before = format!("{}{}", index_html_top, index_html_head);
 
-    StreamBody::new(
-        stream::once(async move { index_html_before })
-            .chain(renderer.render_stream())
-            .chain(stream::once(async move { index_html_after }))
-            .map(Result::<_, Infallible>::Ok),
-    )
+    let index_html_before = format!("{}{}", index_html_top, index_html_head);
+    // StreamBody::new(
+    //     stream::once(async move { index_html_before })
+    //         .chain(renderer.render_stream())
+    //         .chain(stream::once(async move { index_html_after }))
+    //         .map(Result::<_, Infallible>::Ok),
+    // )
+
+    let mut body = index_html_before;
+    body.push_str(&renderer.render().await);
+    body.push_str(&index_html_after);
+
+    // StreamBody::new(
+    //     stream::once(async move { index_html_before })
+    //         .chain(renderer.render_stream())
+    //         .chain(stream::once(async move { index_html_after }))
+    //         .map(Result::<_, Infallible>::Ok),
+    // )
+    Html(body)
 }
 
 // An executor to process requests on the Yew runtime.

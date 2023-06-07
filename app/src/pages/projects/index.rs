@@ -85,7 +85,7 @@ pub fn projects() -> Html {
 // }
 
 // #[cfg(feature = "ssr")]
-pub fn projects_meta_tags() -> Result<String> {
+pub fn projects_meta_tags() -> String {
     let title = "Projects | Masahiro's tech note ";
     let description = "現在参加中の案件一覧です。上流から下流まで対応するプロジェクトやアドバイスを行う顧問活動も行っております。";
     let keywords =
@@ -129,5 +129,5 @@ pub fn projects_meta_tags() -> Result<String> {
         "###,
     ));
 
-    Ok(meta)
+    meta
 }

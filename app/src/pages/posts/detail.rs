@@ -1,9 +1,13 @@
-use crate::pages::{
-    // bindings,
-    posts::hook::{post::use_post, related_posts::use_related_posts},
-    posts::shared::{categories::Categories, post_body::PostBody, post_item::PostItem},
-    shared::back_button::BackButton,
+use crate::{
+    pages::{
+        // bindings,
+        posts::hook::{post::use_post, related_posts::use_related_posts},
+        posts::shared::{categories::Categories, post_body::PostBody, post_item::PostItem},
+        shared::back_button::BackButton,
+    },
+    usecase::exe::fetch_post_usecase,
 };
+use std::io::Result;
 use yew::prelude::*;
 
 #[derive(Properties, Clone, PartialEq)]
@@ -74,4 +78,65 @@ pub fn PostDetail(props: &PostProps) -> HtmlResult {
             }}
         </div>
     })
+}
+
+// #[cfg(feature = "ssr")]
+pub async fn post_meta_tags(slug: String) ->String {
+    let fetched_post = match fetch_post_usecase(slug).await {
+        Ok(post) => post,
+        Err(_) => None,
+    };
+    if fetched_post.is_none() {
+        return "".to_string();
+    }
+    let post = fetched_post.unwrap();
+    let title = format!("{} | Masahiro's tech note", post.title());
+    let description = format!("{}", post.excerpt());
+    let keywords = post
+        .categories()
+        .iter()
+        .map(|category| format!("{}", category.name()))
+        .collect::<Vec<String>>()
+        .join(",");
+    let image_url = post.featured_media();
+    let mut meta = String::new();
+    meta.push_str(&format!(r###"<title>{}</title>"###, title));
+    meta.push_str(&format!(
+        r###"<meta name="description" content="{}">"###,
+        description
+    ));
+    meta.push_str(&format!(
+        r###"<meta name="keywords" content="{}">"###,
+        keywords
+    ));
+    // meta.push_str(&format!(
+    //     r###"<meta property="og:url" content="{}{}" />
+    //                         "###,
+    //     CONFIG.app_origin, url
+    // ));
+    meta.push_str(&format!(
+        r###"<meta property="og:title" content="{}" />
+        "###,
+        title
+    ));
+    meta.push_str(&format!(
+        r###"<meta property="og:description" content="{}" />
+        "###,
+        description
+    ));
+    meta.push_str(&format!(
+        r###"<meta property="og:site_name" content=" Masahiro's tech note " />
+      t "###,
+    ));
+    meta.push_str(&format!(
+        r###"<meta property="og:image" content="{}" />
+        "###,
+        image_url
+    ));
+    meta.push_str(&format!(
+        r###"<meta name="twitter:creator" content="@masa_okubo" />
+        "###,
+    ));
+
+    meta
 }
