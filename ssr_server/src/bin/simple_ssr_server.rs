@@ -3,6 +3,7 @@ use app::pages::posts::detail::post_meta_tags;
 // use app::pages::posts::detail::post_meta_tags;
 use app::pages::projects::index::projects_meta_tags;
 use app::routes::{Route, ServerApp, ServerAppProps};
+use reqwest::Client;
 // use ssr_server::metadata::{insert_metadata, MetadataParams};
 use std::collections::HashMap;
 use std::convert::Infallible;
@@ -38,6 +39,15 @@ struct Opt {
     dir: PathBuf,
 }
 
+
+pub async fn fetch_data_from_api(slug: &str) -> Result<String, reqwest::Error> {
+    let url = format!("https://api.example.com/posts/{}", slug);
+    let client = Client::new();
+    let response = client.get(&url).send().await?;
+    let body = response.text().await?;
+    Ok(body)
+}
+
 async fn render(
     url: Uri,
     Query(queries): Query<HashMap<String, String>>,
@@ -66,8 +76,22 @@ async fn render(
         }
         Route::PostDetail { slug } => {
             log::debug!("Posts OGP Setting {}", slug);
+            // about_meta_tags();
+            let slug_clone = slug.clone(); // if slug is needed later, clone it
+            let meta_future = tokio::spawn(async move {
+                // post_meta_tags(slug_clone).await
 
-            // about_meta_tags()
+                // TODO: 多分こちらの情報を使えばSSRいける
+                let api_response = fetch_data_from_api(&slug).await;
+                let response = match api_response {
+                    Ok(body) => format!("API response: {}", body),
+                    Err(err) => format!("Failed to fetch data from API: {}", err),
+                };
+                // "aaaaaaaaaaaaaaaa".to_string()
+                about_meta_tags()
+            });
+            // other code
+            meta_future.await.unwrap_or_else(|_| "".to_string())
             // post_meta_tags(slug).await
         }
         Route::Projects => projects_meta_tags(),
