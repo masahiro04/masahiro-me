@@ -114,11 +114,6 @@ pub fn about_meta_tags() -> String {
         r###"<meta name="keywords" content="{}">"###,
         keywords
     ));
-    // meta.push_str(&format!(
-    //     r###"<meta property="og:url" content="{}{}" />
-    //                         "###,
-    //     CONFIG.app_origin, url
-    // ));
     meta.push_str(&format!(
         r###"<meta property="og:title" content="{}" />
         "###,
@@ -130,7 +125,7 @@ pub fn about_meta_tags() -> String {
         description
     ));
     meta.push_str(&format!(
-        r###"<meta property="og:site_name" content=" Masahiro's tech note " />
+        r###"<meta property="og:site_name" content="Masahiro's tech note" />
         "###,
     ));
     meta.push_str(&format!(

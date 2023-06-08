@@ -1,5 +1,5 @@
 mod domain;
-mod infrastructure;
+pub mod infrastructure;
 pub mod pages;
 pub mod routes;
 mod usecase;

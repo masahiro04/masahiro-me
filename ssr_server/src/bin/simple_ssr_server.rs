@@ -1,3 +1,4 @@
+use app::infrastructure::repositories::post_repository::PostFromApi;
 use app::pages::about::index::about_meta_tags;
 use app::pages::posts::detail::post_meta_tags;
 // use app::pages::posts::detail::post_meta_tags;
@@ -40,11 +41,11 @@ struct Opt {
 }
 
 
-pub async fn fetch_data_from_api(slug: &str) -> Result<String, reqwest::Error> {
-    let url = format!("https://api.example.com/posts/{}", slug);
+pub async fn fetch_data_from_api(slug: &str) -> Result<PostFromApi, reqwest::Error> {
+    let url = format!("https://api.masahiro.me/api/posts/{}", slug);
     let client = Client::new();
     let response = client.get(&url).send().await?;
-    let body = response.text().await?;
+    let body = response.json::<PostFromApi>().await?;
     Ok(body)
 }
 
@@ -80,15 +81,23 @@ async fn render(
             let slug_clone = slug.clone(); // if slug is needed later, clone it
             let meta_future = tokio::spawn(async move {
                 // post_meta_tags(slug_clone).await
-
                 // TODO: 多分こちらの情報を使えばSSRいける
                 let api_response = fetch_data_from_api(&slug).await;
-                let response = match api_response {
-                    Ok(body) => format!("API response: {}", body),
-                    Err(err) => format!("Failed to fetch data from API: {}", err),
+                let post_from_api = match api_response {
+                    Ok(body) => body,
+                    Err(err) => panic!("error: {}", err),
                 };
+
+                let title = post_from_api.title;
+                let description = post_from_api.excerpt;
+                // let description = "".to_string();
+                let featured_media = post_from_api.featured_media;
+                let keywords =
+                    post_from_api
+                        .categories.iter().map(|category| category.name.clone()).collect::<Vec<String>>().join(",");
+                post_meta_tags(&title, &description, &keywords, &featured_media)
                 // "aaaaaaaaaaaaaaaa".to_string()
-                about_meta_tags()
+                // about_meta_tags()
             });
             // other code
             meta_future.await.unwrap_or_else(|_| "".to_string())
