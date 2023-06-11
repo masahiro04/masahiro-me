@@ -13,6 +13,16 @@ build_cf_pages:
 	cd runner && \
 	cp _redirects ./dist/_redirects
 
+dev_cf_pages:
+	rm -rf functions && \
+	cd app && \
+	trunk build --release -d ../runner/dist && \
+	cd ../ && \
+	cd middlewares && \
+	cp -r src ../functions && \
+	cd ../ && \
+	wrangler pages dev runner/dist
+
 ssr_dev:
 	cd app && \
 	cd ../ssr_server && \
