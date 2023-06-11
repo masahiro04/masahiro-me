@@ -1,4 +1,3 @@
-use crate::pages::bindings;
 use crate::pages::posts::hook::posts::use_posts;
 use crate::pages::{posts::shared::pagination::Pagination, posts::shared::post_item::PostItem};
 use yew::prelude::*;
@@ -31,21 +30,6 @@ pub fn PostIndex(props: &HomeProps) -> HtmlResult {
         posts_len,
     );
 
-    #[cfg(target_arch = "wasm32")]
-    {
-        let title = "Masahiro's tech note";
-        let excerpt = "名古屋のソフトウェアエンジニア。SaaSやマッチングサービス、AR/VR等の開発を経て現在は独立して名古屋で開発やITコンサルしています。サービス開発の所感や、ハマった際の解決方法を記載しております。";
-        let keywords = "ITエンジニア, ITコンサル, IT顧問, システム開発, Rust, wasm";
-        let image_url = "/images/kyuri.png";
-        bindings::updateTitle(title);
-        bindings::updateMetaByName(String::from("description"), excerpt);
-        bindings::updateMetaByName(String::from("keywords"), keywords);
-
-        bindings::updateMetaByName(String::from("twitter:title"), title);
-        bindings::updateMetaByName(String::from("twitter:description"), excerpt);
-        bindings::updateMetaByName(String::from("twitter:image"), image_url);
-    }
-
     Ok(html! {
         <>
             <div class="space-y-2 sm:space-y-3">
@@ -63,4 +47,46 @@ pub fn PostIndex(props: &HomeProps) -> HtmlResult {
             </div>
         </>
     })
+}
+
+pub fn posts_meta_tags() -> String {
+    let title = "Masahiro's tech note ";
+    let description = "ソフトウェアエンジニア、大久保将広のウェブサイトです。現在取り扱っている言語や興味関心ごとなどを記載しております。";
+    let keywords =
+        "大久保将広, ソフトウェアエンジニア, バックエンド, フロントエンド, TypeScript, Rust";
+    let image_url = "/images/kyuri.png";
+    let mut meta = String::new();
+    meta.push_str(&format!(r###"<title>{}</title>"###, title));
+    meta.push_str(&format!(
+        r###"<meta name="description" content="{}">"###,
+        description
+    ));
+    meta.push_str(&format!(
+        r###"<meta name="keywords" content="{}">"###,
+        keywords
+    ));
+    meta.push_str(&format!(
+        r###"<meta property="og:title" content="{}" />
+        "###,
+        title
+    ));
+    meta.push_str(&format!(
+        r###"<meta property="og:description" content="{}" />
+        "###,
+        description
+    ));
+    meta.push_str(&format!(
+        r###"<meta property="og:site_name" content="Masahiro's tech note" />
+        "###,
+    ));
+    meta.push_str(&format!(
+        r###"<meta property="og:image" content="https://masahiro.me/kyuri.png" />
+        "###,
+    ));
+    meta.push_str(&format!(
+        r###"<meta name="twitter:creator" content="@masa_okubo" />
+        "###,
+    ));
+
+    meta
 }

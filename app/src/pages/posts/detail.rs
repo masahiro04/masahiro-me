@@ -1,9 +1,13 @@
-use crate::pages::{
-    bindings,
-    posts::hook::{post::use_post, related_posts::use_related_posts},
-    posts::shared::{categories::Categories, post_body::PostBody, post_item::PostItem},
-    shared::back_button::BackButton,
+use crate::{
+    pages::{
+        // bindings,
+        posts::hook::{post::use_post, related_posts::use_related_posts},
+        posts::shared::{categories::Categories, post_body::PostBody, post_item::PostItem},
+        shared::back_button::BackButton,
+    },
+    usecase::exe::fetch_post_usecase,
 };
+use std::io::Result;
 use yew::prelude::*;
 
 #[derive(Properties, Clone, PartialEq)]
@@ -22,23 +26,23 @@ pub fn PostDetail(props: &PostProps) -> HtmlResult {
         .join(",");
     let related_posts = use_related_posts(category_ids)?;
 
-    #[cfg(target_arch = "wasm32")]
-    {
-        let title = format!("{} | Masahiro's tech note", post.title());
-        let excerpt = format!("{}", post.excerpt());
-        let category_names = post
-            .categories()
-            .iter()
-            .map(|category| format!("{}", category.name()))
-            .collect::<Vec<String>>()
-            .join(",");
-        bindings::updateTitle(&title);
-        bindings::updateMetaByName(String::from("description"), &excerpt);
-        bindings::updateMetaByName(String::from("keywords"), &category_names);
-        bindings::updateMetaByName(String::from("twitter:title"), &title);
-        bindings::updateMetaByName(String::from("twitter:description"), &excerpt);
-        bindings::updateMetaByName(String::from("twitter:image"), &post.featured_media());
-    }
+    // #[cfg(target_arch = "wasm32")]
+    // {
+    //     let title = format!("{} | Masahiro's tech note", post.title());
+    //     let excerpt = format!("{}", post.excerpt());
+    //     let category_names = post
+    //         .categories()
+    //         .iter()
+    //         .map(|category| format!("{}", category.name()))
+    //         .collect::<Vec<String>>()
+    //         .join(",");
+    //     bindings::updateTitle(&title);
+    //     bindings::updateMetaByName(String::from("description"), &excerpt);
+    //     bindings::updateMetaByName(String::from("keywords"), &category_names);
+    //     bindings::updateMetaByName(String::from("twitter:title"), &title);
+    //     bindings::updateMetaByName(String::from("twitter:description"), &excerpt);
+    //     bindings::updateMetaByName(String::from("twitter:image"), &post.featured_media());
+    // }
 
     Ok(html! {
         <div>
@@ -74,4 +78,51 @@ pub fn PostDetail(props: &PostProps) -> HtmlResult {
             }}
         </div>
     })
+}
+
+// #[cfg(feature = "ssr")]
+pub fn post_meta_tags(
+    title: &str,
+    description: &str,
+    keywords: &str,
+    featured_media: &str,
+) -> String {
+    let mut meta = String::new();
+    meta.push_str(&format!(
+        r###"<title>{} | Masahiro's tech note</title>"###,
+        title
+    ));
+    meta.push_str(&format!(
+        r###"<meta name="description" content="{}" >"###,
+        description
+    ));
+    meta.push_str(&format!(
+        r###"<meta name="keywords" content="{}" >"###,
+        keywords
+    ));
+    meta.push_str(&format!(
+        r###"<meta property="og:title" content="{}" />
+        "###,
+        title
+    ));
+    meta.push_str(&format!(
+        r###"<meta property="og:description" content="{}" />
+        "###,
+        description
+    ));
+    meta.push_str(&format!(
+        r###"<meta property="og:site_name" content="Masahiro's tech note" />
+        "###,
+    ));
+    meta.push_str(&format!(
+        r###"<meta property="og:image" content="{}" />
+        "###,
+        featured_media
+    ));
+    meta.push_str(&format!(
+        r###"<meta name="twitter:creator" content="@masa_okubo" />
+        "###,
+    ));
+
+    meta
 }

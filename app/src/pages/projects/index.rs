@@ -1,4 +1,4 @@
-use crate::pages::bindings;
+// use crate::pages::bindings;
 use crate::{
     pages::projects::shared::{project_header::ProjectHeader, project_item::ProjectItem},
     usecase::exe::{
@@ -6,6 +6,7 @@ use crate::{
         fetch_work_projects_usecase,
     },
 };
+use std::io::Result;
 use yew::prelude::*;
 
 #[function_component(Projects)]
@@ -57,22 +58,6 @@ pub fn projects() -> Html {
         }
     }
 
-    #[cfg(target_arch = "wasm32")]
-    {
-        let title = "Projects | Masahiro's tech note";
-        let excerpt = "現在参加中の案件一覧です。上流から下流まで対応するプロジェクトやアドバイスを行う顧問活動も行っております。";
-        let keywords =
-            "参加案件, ソフトウェアエンジニア, バックエンド, フロントエンド, TypeScript, Rust";
-        let image_url = "/images/kyuri.png";
-        bindings::updateTitle(title);
-        bindings::updateMetaByName(String::from("description"), excerpt);
-        bindings::updateMetaByName(String::from("keywords"), keywords);
-
-        bindings::updateMetaByName(String::from("twitter:title"), title);
-        bindings::updateMetaByName(String::from("twitter:description"), excerpt);
-        bindings::updateMetaByName(String::from("twitter:image"), image_url);
-    }
-
     html! {
         <>
             <ProjectHeader />
@@ -81,4 +66,52 @@ pub fn projects() -> Html {
             {render_section("Past works".to_string(), render_past_works())}
         </>
     }
+}
+
+// #[cfg(feature = "ssr")]
+pub fn projects_meta_tags() -> String {
+    let title = "Projects | Masahiro's tech note ";
+    let description = "現在参加中の案件一覧です。上流から下流まで対応するプロジェクトやアドバイスを行う顧問活動も行っております。";
+    let keywords =
+        "参加案件, ソフトウェアエンジニア, バックエンド, フロントエンド, TypeScript, Rust";
+    let image_url = "/images/kyuri.png";
+    let mut meta = String::new();
+    meta.push_str(&format!(r###"<title>{}</title>"###, title));
+    meta.push_str(&format!(
+        r###"<meta name="description" content="{}">"###,
+        description
+    ));
+    meta.push_str(&format!(
+        r###"<meta name="keywords" content="{}">"###,
+        keywords
+    ));
+    // meta.push_str(&format!(
+    //     r###"<meta property="og:url" content="{}{}" />
+    //                         "###,
+    //     CONFIG.app_origin, url
+    // ));
+    meta.push_str(&format!(
+        r###"<meta property="og:title" content="{}" />
+        "###,
+        title
+    ));
+    meta.push_str(&format!(
+        r###"<meta property="og:description" content="{}" />
+        "###,
+        description
+    ));
+    meta.push_str(&format!(
+        r###"<meta property="og:site_name" content=" Masahiro's tech note " />
+        "###,
+    ));
+    meta.push_str(&format!(
+        r###"<meta property="og:image" content="https://masahiro.me/kyuri.png" />
+        "###,
+    ));
+    meta.push_str(&format!(
+        r###"<meta name="twitter:creator" content="@masa_okubo" />
+        "###,
+    ));
+
+    meta
 }

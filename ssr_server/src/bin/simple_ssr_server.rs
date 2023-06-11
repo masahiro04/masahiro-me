@@ -1,31 +1,27 @@
-use app::routes::{ServerApp, ServerAppProps};
-use ssr_server::metadata::{insert_metadata, MetadataParams};
+use app::infrastructure::repositories::post_repository::PostFromApi;
+use app::pages::about::index::about_meta_tags;
+use app::pages::posts::detail::post_meta_tags;
+use app::pages::posts::index::posts_meta_tags;
+use app::pages::projects::index::projects_meta_tags;
+use app::routes::{Route, ServerApp, ServerAppProps};
+use reqwest::Client;
 use std::collections::HashMap;
-use std::convert::Infallible;
 use std::future::Future;
 use std::path::PathBuf;
+use std::str::FromStr;
 
-use axum::body::StreamBody;
 use axum::error_handling::HandleError;
 use axum::extract::{Query, State};
 use axum::handler::HandlerWithoutStateExt;
 use axum::http::{StatusCode, Uri};
-use axum::response::IntoResponse;
+use axum::response::{IntoResponse, Html};
 use axum::routing::get;
 use axum::Router;
 use clap::Parser;
-use futures::stream::{self, StreamExt};
 use hyper::server::Server;
 use tower::ServiceExt;
 use tower_http::services::ServeDir;
 use yew::platform::Runtime;
-
-use html5ever::{
-    interface::{ExpandedName, QualName},
-    parse_document, serialize,
-    tendril::TendrilSink,
-    Attribute, NodeData, RcDom,
-};
 
 // We use jemalloc as it produces better performance.
 #[global_allocator]
@@ -39,28 +35,81 @@ struct Opt {
     dir: PathBuf,
 }
 
+
+pub async fn fetch_data_from_api(slug: &str) -> Result<PostFromApi, reqwest::Error> {
+    let url = format!("https://api.masahiro.me/api/posts/{}", slug);
+    let client = Client::new();
+    let response = client.get(&url).send().await?;
+    let body = response.json::<PostFromApi>().await?;
+    Ok(body)
+}
+
 async fn render(
     url: Uri,
     Query(queries): Query<HashMap<String, String>>,
     State((index_html_before, index_html_after)): State<(String, String)>,
 ) -> impl IntoResponse {
     let url = url.to_string();
-    println!("url: {}", url);
+    let (index_html_top, index_html_head) = index_html_before.split_once("<head>").unwrap();
+    let mut index_html_top = index_html_top.to_owned();
+    let route = Route::from_str(&url).unwrap();
 
-    println!("index_html_before: {}", index_html_before);
-    println!("index_html_after: {}", index_html_after);
+    let meta = match route {
+        Route::PostIndex { page } => posts_meta_tags(),
+        Route::PostDetail { slug } => {
+            log::debug!("Posts OGP Setting {}", slug);
+            let meta_future = tokio::spawn(async move {
+                // TODO: 多分こちらの情報を使えばSSRいける
+                let api_response = fetch_data_from_api(&slug).await;
+                let post_from_api = match api_response {
+                    Ok(body) => body,
+                    Err(err) => panic!("error: {}", err),
+                };
+
+                let title = post_from_api.title;
+                let description = post_from_api.excerpt;
+                let featured_media = post_from_api.featured_media;
+                let keywords =
+                    post_from_api
+                        .categories.iter().map(|category| category.name.clone()).collect::<Vec<String>>().join(",");
+                post_meta_tags(&title, &description, &keywords, &featured_media)
+            });
+            meta_future.await.unwrap_or_else(|_| "".to_string())
+        }
+        Route::Projects => projects_meta_tags(),
+        Route::AboutIndex => about_meta_tags(),
+        _ => "".to_string(),
+    };
+
+    if meta != "".to_string() {
+        index_html_top.push_str(&meta);
+    }
 
     let renderer = yew::ServerRenderer::<ServerApp>::with_props(move || ServerAppProps {
         url: url.into(),
         queries,
     });
 
-    StreamBody::new(
-        stream::once(async move { index_html_before })
-            .chain(renderer.render_stream())
-            .chain(stream::once(async move { index_html_after }))
-            .map(Result::<_, Infallible>::Ok),
-    )
+
+    let index_html_before = format!("{}{}", index_html_top, index_html_head);
+    // StreamBody::new(
+    //     stream::once(async move { index_html_before })
+    //         .chain(renderer.render_stream())
+    //         .chain(stream::once(async move { index_html_after }))
+    //         .map(Result::<_, Infallible>::Ok),
+    // )
+
+    let mut body = index_html_before;
+    body.push_str(&renderer.render().await);
+    body.push_str(&index_html_after);
+
+    // StreamBody::new(
+    //     stream::once(async move { index_html_before })
+    //         .chain(renderer.render_stream())
+    //         .chain(stream::once(async move { index_html_after }))
+    //         .map(Result::<_, Infallible>::Ok),
+    // )
+    Html(body)
 }
 
 // An executor to process requests on the Yew runtime.
@@ -92,14 +141,6 @@ async fn main() {
     env_logger::init();
 
     let opts = Opt::parse();
-
-    let metadata = MetadataParams {
-        title: Some("My Title".to_string()),
-        description: Some("My Description".to_string()),
-        keywords: Some("My Keywords".to_string()),
-        image_url: Some("https://example.com/image.png".to_string()),
-    };
-    insert_metadata(metadata);
 
     let index_html_s = tokio::fs::read_to_string(opts.dir.join("index.html"))
         .await

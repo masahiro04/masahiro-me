@@ -8,21 +8,21 @@ use std::io::Result;
 extern crate reqwest;
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-struct CategoryFromApi {
-    id: i32,
-    name: String,
+pub struct CategoryFromApi {
+    pub id: i32,
+    pub name: String,
 }
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-struct PostFromApi {
-    title: String,
-    slug: String,
-    date: String,
-    excerpt: String,
-    content: String,
-    categories: Vec<CategoryFromApi>,
-    tags: Vec<String>,
-    featured_media: String,
+pub struct PostFromApi {
+    pub title: String,
+    pub slug: String,
+    pub date: String,
+    pub excerpt: String,
+    pub content: String,
+    pub categories: Vec<CategoryFromApi>,
+    pub tags: Vec<String>,
+    pub featured_media: String,
 }
 
 #[derive(Clone)]
