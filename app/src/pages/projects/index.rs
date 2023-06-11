@@ -68,22 +68,6 @@ pub fn projects() -> Html {
     }
 }
 
-// #[cfg(target_arch = "wasm32")]
-// {
-//     let title = "Projects | Masahiro's tech note";
-//     let excerpt = "現在参加中の案件一覧です。上流から下流まで対応するプロジェクトやアドバイスを行う顧問活動も行っております。";
-//     let keywords =
-//         "参加案件, ソフトウェアエンジニア, バックエンド, フロントエンド, TypeScript, Rust";
-//     let image_url = "/images/kyuri.png";
-//     bindings::updateTitle(title);
-//     bindings::updateMetaByName(String::from("description"), excerpt);
-//     bindings::updateMetaByName(String::from("keywords"), keywords);
-//
-//     bindings::updateMetaByName(String::from("twitter:title"), title);
-//     bindings::updateMetaByName(String::from("twitter:description"), excerpt);
-//     bindings::updateMetaByName(String::from("twitter:image"), image_url);
-// }
-
 // #[cfg(feature = "ssr")]
 pub fn projects_meta_tags() -> String {
     let title = "Projects | Masahiro's tech note ";

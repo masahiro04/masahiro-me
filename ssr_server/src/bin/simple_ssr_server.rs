@@ -1,19 +1,15 @@
 use app::infrastructure::repositories::post_repository::PostFromApi;
 use app::pages::about::index::about_meta_tags;
 use app::pages::posts::detail::post_meta_tags;
-// use app::pages::posts::detail::post_meta_tags;
+use app::pages::posts::index::posts_meta_tags;
 use app::pages::projects::index::projects_meta_tags;
 use app::routes::{Route, ServerApp, ServerAppProps};
 use reqwest::Client;
-// use ssr_server::metadata::{insert_metadata, MetadataParams};
 use std::collections::HashMap;
-use std::convert::Infallible;
 use std::future::Future;
-use std::net::ToSocketAddrs;
 use std::path::PathBuf;
 use std::str::FromStr;
 
-use axum::body::StreamBody;
 use axum::error_handling::HandleError;
 use axum::extract::{Query, State};
 use axum::handler::HandlerWithoutStateExt;
@@ -22,7 +18,6 @@ use axum::response::{IntoResponse, Html};
 use axum::routing::get;
 use axum::Router;
 use clap::Parser;
-use futures::stream::{self, StreamExt};
 use hyper::server::Server;
 use tower::ServiceExt;
 use tower_http::services::ServeDir;
@@ -53,34 +48,17 @@ async fn render(
     url: Uri,
     Query(queries): Query<HashMap<String, String>>,
     State((index_html_before, index_html_after)): State<(String, String)>,
-// ) -> impl IntoResponse {
 ) -> impl IntoResponse {
-
-
-// ) -> impl Future<Output = impl IntoResponse> {
-// ) -> impl futures::Future<Output = impl IntoResponse> {
     let url = url.to_string();
-    println!("url: {}", url);
-
     let (index_html_top, index_html_head) = index_html_before.split_once("<head>").unwrap();
     let mut index_html_top = index_html_top.to_owned();
-    // let meta_tags = match Route::
     let route = Route::from_str(&url).unwrap();
-    print!("route: {:?}", route);
-
-    // let mut meta = "".to_string();
 
     let meta = match route {
-        Route::PostIndex { page } => {
-            log::debug!("Posts OGP Setting {}", page);
-            about_meta_tags()
-        }
+        Route::PostIndex { page } => posts_meta_tags(),
         Route::PostDetail { slug } => {
             log::debug!("Posts OGP Setting {}", slug);
-            // about_meta_tags();
-            let slug_clone = slug.clone(); // if slug is needed later, clone it
             let meta_future = tokio::spawn(async move {
-                // post_meta_tags(slug_clone).await
                 // TODO: 多分こちらの情報を使えばSSRいける
                 let api_response = fetch_data_from_api(&slug).await;
                 let post_from_api = match api_response {
@@ -90,40 +68,22 @@ async fn render(
 
                 let title = post_from_api.title;
                 let description = post_from_api.excerpt;
-                // let description = "".to_string();
                 let featured_media = post_from_api.featured_media;
                 let keywords =
                     post_from_api
                         .categories.iter().map(|category| category.name.clone()).collect::<Vec<String>>().join(",");
                 post_meta_tags(&title, &description, &keywords, &featured_media)
-                // "aaaaaaaaaaaaaaaa".to_string()
-                // about_meta_tags()
             });
-            // other code
             meta_future.await.unwrap_or_else(|_| "".to_string())
-            // post_meta_tags(slug).await
         }
         Route::Projects => projects_meta_tags(),
         Route::AboutIndex => about_meta_tags(),
-        // Ok(Route::Preview { id }) => {
-        //     log::debug!("Preview OGP Setting {}", id);
-        //     about_meta_tags().unwrap()
-        // }
-        // Ok(Route::Home) => {
-        //     log::debug!("Home OGP Setting");
-        // }
         _ => "".to_string(),
     };
 
     if meta != "".to_string() {
         index_html_top.push_str(&meta);
     }
-
-    // match meta {
-    //     Ok(meta) => index_html_top.push_str(&meta),
-    //     Err(e) => log::warn!("{:#}", e),
-    // };
-    println!("meta: {}", meta);
 
     let renderer = yew::ServerRenderer::<ServerApp>::with_props(move || ServerAppProps {
         url: url.into(),
