@@ -7,6 +7,7 @@ use app::routes::{Route, ServerApp, ServerAppProps};
 use reqwest::Client;
 use std::collections::HashMap;
 use std::future::Future;
+use std::net::SocketAddr;
 use std::path::PathBuf;
 use std::str::FromStr;
 
@@ -18,7 +19,6 @@ use axum::response::{IntoResponse, Html};
 use axum::routing::get;
 use axum::Router;
 use clap::Parser;
-use hyper::server::Server;
 use tower::ServiceExt;
 use tower_http::services::ServeDir;
 use yew::platform::Runtime;
@@ -172,15 +172,17 @@ async fn main() {
         handle_error,
     ));
 
-    println!("You can view the website at: http://localhost:8080/");
+    println!("You can view the website at: http://127.0.0.1:8080/");
 
-    let port = std::env::var("PORT").unwrap_or_else(|_| "8080".to_string());
+    let port = match std::env::var("PORT") {
+        Ok(port) => port.parse::<u16>().unwrap(),
+        Err(_) => 8080,
+    };
 
-    let bind_addr = format!("0.0.0.0:{}", port);
-    Server::bind(&bind_addr.parse().unwrap())
-        // Server::bind(&"0.0.0.0:8080".parse().unwrap())
-        .executor(exec)
+    let addr = SocketAddr::from(([127, 0, 0, 1], port));
+
+    axum::Server::bind(&addr)
         .serve(app.into_make_service())
         .await
-        .unwrap();
+        .expect("server failed");
 }
