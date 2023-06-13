@@ -11,6 +11,6 @@ RUN rustup target add wasm32-unknown-unknown
 RUN cargo install --locked trunk
 RUN cargo build --release
 
-EXPOSE 8080
+# EXPOSE 8080
 
 CMD ["make", "ssr_dev"]
