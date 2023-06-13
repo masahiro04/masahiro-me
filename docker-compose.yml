@@ -3,14 +3,14 @@ services:
   ssr_server:
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      # dockerfile: Dockerfile
     ports:
-      - "8080:8080"
-    tty: true
+      - "8000:8080"
+    # tty: true
     env_file: .env
     volumes:
       - .:/usr/src/target
-      - .:/usr/src/app/node_modules
-      - .:/usr/src/ssr_server/node_modules
+      # - .:/usr/src/app/node_modules
+      # - .:/usr/src/ssr_server/node_modules
 
 # volumesにtargetなども入れないときつそう
