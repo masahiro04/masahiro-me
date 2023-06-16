@@ -172,14 +172,16 @@ async fn main() {
         handle_error,
     ));
 
-    println!("You can view the website at: http://127.0.0.1:8080/");
+    println!("You can view the website at: http://0.0.0.0:8080/");
 
     let port = match std::env::var("PORT") {
         Ok(port) => port.parse::<u16>().unwrap(),
         Err(_) => 8080,
     };
 
-    let addr = SocketAddr::from(([127, 0, 0, 1], port));
+    // let addr = SocketAddr::from(([0, 0, 0, 0], port));
+
+    let addr = ([0, 0, 0, 0], 8080).into();
 
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
