@@ -13,9 +13,12 @@ build_cf_pages:
 	cd runner && \
 	cp _redirects ./dist/_redirects
 
-ssr_dev:
+ssr_build:
 	cd app && \
 	cd ../ssr_server && \
 	trunk build --release -d ./dist && \
-	cp robots.txt ./dist/robots.txt && \
+	cp robots.txt ./dist/robots.txt
+
+ssr_run:
+	cd ssr_server && \
 	cargo run --features=ssr --bin simple_ssr_server -- --dir dist
