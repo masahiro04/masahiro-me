@@ -2,7 +2,6 @@
 members = [
     "app",
     "ssr_server",
-    "ssr_worker",
 ]
 
 [profile.release]
