@@ -50,18 +50,36 @@ RUN cargo build --release
 RUN ls /usr/src/ssr_server/target/release
 
 # Stage 2: Copy the trunk binary
-FROM debian:buster-slim
+# FROM debian:buster-slim
+FROM debian:bullseye-slim
 COPY --from=builder /usr/local/cargo/bin/trunk /usr/local/bin/trunk
 
 # your application setup goes here
 # I'm not sure what you need for your application to run,
 # so please replace the below command with whatever you need.
 
-# Copy the release output from the builder stage
+
+# Copy the binary and other necessary files
+# COPY --from=builder /usr/local/cargo/bin/trunk /usr/local/bin/trunk
 COPY --from=builder /usr/src/ssr_server/target/release /app
-WORKDIR /app
+# COPY --from=builder /usr/src/ssr_server /usr/src/ssr_server
+
+# Set the working directory
+WORKDIR /usr/src/ssr_server
+
+# Install the necessary runtime dependencies
+RUN apt-get update && apt-get install -y make nodejs g++ binaryen
+
+# Run your application
+
+
+# # Copy the release output from the builder stage
+# COPY --from=builder /usr/src/ssr_server/target/release /app
+# WORKDIR /app
+# RUN ls /app
+# RUN apt-get update && apt-get install -y make nodejs g++ binaryen
+#
 # Install the necessary runtime dependencies
 # RUN apt-get update && apt-get install -y make nodejs g++ binaryen
 
 CMD ["make", "ssr_dev"]
-
