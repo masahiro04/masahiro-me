@@ -15,7 +15,7 @@ use axum::error_handling::HandleError;
 use axum::extract::{Query, State};
 use axum::handler::HandlerWithoutStateExt;
 use axum::http::{StatusCode, Uri};
-use axum::response::{IntoResponse, Html};
+use axum::response::{Html, IntoResponse};
 use axum::routing::get;
 use axum::Router;
 use clap::Parser;
@@ -26,15 +26,6 @@ use yew::platform::Runtime;
 // We use jemalloc as it produces better performance.
 #[global_allocator]
 static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
-
-/// A basic example
-#[derive(Parser, Debug)]
-struct Opt {
-    /// the "dist" created by trunk directory to be served for hydration.
-    #[clap(short, long, parse(from_os_str))]
-    dir: PathBuf,
-}
-
 
 pub async fn fetch_data_from_api(slug: &str) -> Result<PostFromApi, reqwest::Error> {
     let url = format!("https://api.masahiro.me/api/posts/{}", slug);
@@ -59,7 +50,6 @@ async fn render(
         Route::PostDetail { slug } => {
             log::debug!("Posts OGP Setting {}", slug);
             let meta_future = tokio::spawn(async move {
-                // TODO: 多分こちらの情報を使えばSSRいける
                 let api_response = fetch_data_from_api(&slug).await;
                 let post_from_api = match api_response {
                     Ok(body) => body,
@@ -69,9 +59,12 @@ async fn render(
                 let title = post_from_api.title;
                 let description = post_from_api.excerpt;
                 let featured_media = post_from_api.featured_media;
-                let keywords =
-                    post_from_api
-                        .categories.iter().map(|category| category.name.clone()).collect::<Vec<String>>().join(",");
+                let keywords = post_from_api
+                    .categories
+                    .iter()
+                    .map(|category| category.name.clone())
+                    .collect::<Vec<String>>()
+                    .join(",");
                 post_meta_tags(&title, &description, &keywords, &featured_media)
             });
             meta_future.await.unwrap_or_else(|_| "".to_string())
@@ -90,25 +83,11 @@ async fn render(
         queries,
     });
 
-
     let index_html_before = format!("{}{}", index_html_top, index_html_head);
-    // StreamBody::new(
-    //     stream::once(async move { index_html_before })
-    //         .chain(renderer.render_stream())
-    //         .chain(stream::once(async move { index_html_after }))
-    //         .map(Result::<_, Infallible>::Ok),
-    // )
 
     let mut body = index_html_before;
     body.push_str(&renderer.render().await);
     body.push_str(&index_html_after);
-
-    // StreamBody::new(
-    //     stream::once(async move { index_html_before })
-    //         .chain(renderer.render_stream())
-    //         .chain(stream::once(async move { index_html_after }))
-    //         .map(Result::<_, Infallible>::Ok),
-    // )
     Html(body)
 }
 
@@ -118,31 +97,11 @@ async fn render(
 // it processes request on the same thread as the rendering task.
 //
 // This increases performance in some environments (e.g.: in VM).
-#[derive(Clone, Default)]
-struct Executor {
-    inner: Runtime,
-}
-
-impl<F> hyper::rt::Executor<F> for Executor
-where
-    F: Future + Send + 'static,
-{
-    fn execute(&self, fut: F) {
-        self.inner.spawn_pinned(move || async move {
-            fut.await;
-        });
-    }
-}
 
 #[tokio::main]
 async fn main() {
-    let exec = Executor::default();
-
     env_logger::init();
-
-    let opts = Opt::parse();
-
-    let index_html_s = tokio::fs::read_to_string(opts.dir.join("index.html"))
+    let index_html_s = tokio::fs::read_to_string("dist/index.html")
         .await
         .expect("failed to read index.html");
 
@@ -161,7 +120,7 @@ async fn main() {
     };
 
     let app = Router::new().fallback_service(HandleError::new(
-        ServeDir::new(opts.dir)
+        ServeDir::new("dist")
             .append_index_html_on_directories(false)
             .fallback(
                 get(render)
@@ -172,17 +131,13 @@ async fn main() {
         handle_error,
     ));
 
-    println!("You can view the website at: http://0.0.0.0:8080/");
-
     let port = match std::env::var("PORT") {
         Ok(port) => port.parse::<u16>().unwrap(),
         Err(_) => 8080,
     };
 
-    // let addr = SocketAddr::from(([0, 0, 0, 0], port));
-
+    println!("You can view the website at: http://0.0.0.0:8080/");
     let addr = ([0, 0, 0, 0], 8080).into();
-
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
         .await
