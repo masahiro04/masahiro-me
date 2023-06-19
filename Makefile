@@ -17,8 +17,15 @@ ssr_build:
 	cd app && \
 	cd ../ssr_server && \
 	trunk build --release -d ./dist && \
-	cp robots.txt ./dist/robots.txt
+	cp robots.txt ./dist/robots.txt && \
+	cd ../ssr_server && \
+	cargo build --release --features=ssr --bin simple_ssr_server --
 
 ssr_run:
 	cd ssr_server && \
-	cargo run --features=ssr --bin simple_ssr_server -- --dir dist
+	cargo run --release --features=ssr --bin simple_ssr_server -- --dir dist
+
+
+run:
+	cd ssr_server && \
+	cargo run --dir dist

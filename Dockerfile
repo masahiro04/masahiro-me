@@ -15,9 +15,13 @@ RUN cargo install --locked trunk
 RUN cargo build --release
 RUN make ssr_build
 
+# RUN cargo build --release --features "your_feature"
+
 EXPOSE 8080
 
 # CMD ["make", "ssr_run"]
 # COPY start_server.sh .
-RUN chmod +x start_server.sh
-CMD ["bash", "start_server.sh"]
+# RUN chmod +x start_server.sh
+# CMD ["bash", "start_server.sh"]
+
+CMD ["make", "ssr_run"]
