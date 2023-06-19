@@ -16,6 +16,7 @@ use axum::extract::{Query, State};
 use axum::handler::HandlerWithoutStateExt;
 use axum::http::{StatusCode, Uri};
 use axum::response::{Html, IntoResponse};
+
 use axum::routing::get;
 use axum::Router;
 use clap::Parser;
@@ -26,6 +27,13 @@ use yew::platform::Runtime;
 // We use jemalloc as it produces better performance.
 #[global_allocator]
 static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
+/// A basic example
+#[derive(Parser, Debug)]
+struct Opt {
+    /// the "dist" created by trunk directory to be served for hydration.
+    #[clap(short, long, parse(from_os_str))]
+    dir: PathBuf,
+}
 
 pub async fn fetch_data_from_api(slug: &str) -> Result<PostFromApi, reqwest::Error> {
     let url = format!("https://api.masahiro.me/api/posts/{}", slug);
@@ -90,6 +98,21 @@ async fn render(
     body.push_str(&index_html_after);
     Html(body)
 }
+#[derive(Clone, Default)]
+struct Executor {
+    inner: Runtime,
+}
+
+impl<F> hyper::rt::Executor<F> for Executor
+where
+    F: Future + Send + 'static,
+{
+    fn execute(&self, fut: F) {
+        self.inner.spawn_pinned(move || async move {
+            fut.await;
+        });
+    }
+}
 
 // An executor to process requests on the Yew runtime.
 //
@@ -98,10 +121,69 @@ async fn render(
 //
 // This increases performance in some environments (e.g.: in VM).
 
+// #[tokio::main]
+// async fn main() {
+//     let exec = Executor::default();
+//     // env_logger::init();
+//     // let index_html_s = tokio::fs::read_to_string("dist/index.html")
+//     //     .await
+//     //     .expect("failed to read index.html");
+//     // let exec = Executor::default();
+//
+//     env_logger::init();
+//
+//     let opts = Opt::parse();
+//
+//     let index_html_s = tokio::fs::read_to_string(opts.dir.join("index.html"))
+//
+//     // NOTE: ここでheadにデータを入れることでSSRを実現できそう
+//     let (index_html_before, index_html_after) = index_html_s.split_once("<body>").unwrap();
+//     let mut index_html_before = index_html_before.to_owned();
+//     index_html_before.push_str("<body>");
+//
+//     let index_html_after = index_html_after.to_owned();
+//
+//     let handle_error = |e| async move {
+//         (
+//             StatusCode::INTERNAL_SERVER_ERROR,
+//             format!("error occurred: {e}"),
+//         )
+//     };
+//
+//     let app = Router::new().fallback_service(HandleError::new(
+//         ServeDir::new(opts.dir)
+//             .append_index_html_on_directories(false)
+//             .fallback(
+//                 get(render)
+//                     .with_state((index_html_before.clone(), index_html_after.clone()))
+//                     .into_service()
+//                     .map_err(|err| -> std::io::Error { match err {} }),
+//             ),
+//         handle_error,
+//     ));
+//
+//     let port = match std::env::var("PORT") {
+//         Ok(port) => port.parse::<u16>().unwrap(),
+//         Err(_) => 8080,
+//     };
+//
+//     println!("You can view the website at: http://0.0.0.0:8080/");
+//     let addr = ([0, 0, 0, 0], 8080).into();
+//     axum::Server::bind(&addr)
+//         .serve(app.into_make_service())
+//         .await
+//         .expect("server failed");
+// }
+
 #[tokio::main]
 async fn main() {
+    let exec = Executor::default();
+
     env_logger::init();
-    let index_html_s = tokio::fs::read_to_string("dist/index.html")
+
+    let opts = Opt::parse();
+
+    let index_html_s = tokio::fs::read_to_string(opts.dir.join("index.html"))
         .await
         .expect("failed to read index.html");
 
@@ -109,9 +191,7 @@ async fn main() {
     let (index_html_before, index_html_after) = index_html_s.split_once("<body>").unwrap();
     let mut index_html_before = index_html_before.to_owned();
     index_html_before.push_str("<body>");
-
     let index_html_after = index_html_after.to_owned();
-
     let handle_error = |e| async move {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
@@ -120,7 +200,7 @@ async fn main() {
     };
 
     let app = Router::new().fallback_service(HandleError::new(
-        ServeDir::new("dist")
+        ServeDir::new(opts.dir)
             .append_index_html_on_directories(false)
             .fallback(
                 get(render)
@@ -131,13 +211,17 @@ async fn main() {
         handle_error,
     ));
 
+    println!("You can view the website at: http://0.0.0.0:8080/");
+
     let port = match std::env::var("PORT") {
         Ok(port) => port.parse::<u16>().unwrap(),
         Err(_) => 8080,
     };
 
-    println!("You can view the website at: http://0.0.0.0:8080/");
+    // let addr = SocketAddr::from(([0, 0, 0, 0], port));
+
     let addr = ([0, 0, 0, 0], 8080).into();
+
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
         .await
