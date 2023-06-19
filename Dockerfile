@@ -17,4 +17,7 @@ RUN make ssr_build
 
 EXPOSE 8080
 
-CMD ["make", "ssr_run"]
+# CMD ["make", "ssr_run"]
+# COPY start_server.sh .
+RUN chmod +x start_server.sh
+CMD ["bash", "start_server.sh"]
