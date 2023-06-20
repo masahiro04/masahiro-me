@@ -25,7 +25,3 @@ ssr_run:
 	cd ssr_server && \
 	cargo run --release --features=ssr --bin simple_ssr_server -- --dir dist
 
-
-run:
-	cd ssr_server && \
-	cargo run --dir dist

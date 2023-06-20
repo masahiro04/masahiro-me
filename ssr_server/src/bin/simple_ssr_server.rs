@@ -7,15 +7,14 @@ use app::routes::{Route, ServerApp, ServerAppProps};
 use reqwest::Client;
 use std::collections::HashMap;
 use std::future::Future;
-use std::net::SocketAddr;
 use std::path::PathBuf;
 use std::str::FromStr;
 
 use axum::error_handling::HandleError;
 use axum::extract::{Query, State};
 use axum::handler::HandlerWithoutStateExt;
-use axum::http::{header::LOCATION, StatusCode, Uri};
-use axum::response::{Html, IntoResponse, Redirect, Response};
+use axum::http::{header::CACHE_CONTROL, StatusCode, Uri};
+use axum::response::{IntoResponse, Redirect, Response};
 
 use axum::routing::get;
 use axum::Router;
@@ -96,7 +95,14 @@ async fn render(
     let mut body = index_html_before;
     body.push_str(&renderer.render().await);
     body.push_str(&index_html_after);
-    Html(body)
+
+    let response = Response::builder()
+        .status(StatusCode::OK)
+        .header(CACHE_CONTROL, "public, max-age=86400, s-maxage=86400")
+        .body(body)
+        .unwrap();
+
+    response
 }
 #[derive(Clone, Default)]
 struct Executor {
@@ -169,8 +175,6 @@ async fn main() {
         Ok(port) => port.parse::<u16>().unwrap(),
         Err(_) => 8080,
     };
-
-    // let addr = SocketAddr::from(([0, 0, 0, 0], port));
 
     let addr = ([0, 0, 0, 0], 8080).into();
 
