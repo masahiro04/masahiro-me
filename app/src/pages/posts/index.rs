@@ -79,7 +79,7 @@ pub fn posts_meta_tags() -> String {
         "###,
     ));
     meta.push_str(&format!(
-        r###"<meta property="og:image" content="https://masahiro.me/kyuri.png">
+        r###"<meta property="og:image" content="https://assets.masahiro.me/kyuri.png">
         "###,
     ));
     meta.push_str(&format!(

@@ -92,11 +92,11 @@ pub fn projects_meta_tags() -> String {
         description
     ));
     meta.push_str(&format!(
-        r###"<meta property="og:site_name" content=" Masahiro's tech note ">
+        r###"<meta property="og:site_name" content="Masahiro's tech note">
         "###,
     ));
     meta.push_str(&format!(
-        r###"<meta property="og:image" content="https://masahiro.me/kyuri.png">
+        r###"<meta property="og:image" content="https://assets.masahiro.me/kyuri.png">
         "###,
     ));
     meta.push_str(&format!(
