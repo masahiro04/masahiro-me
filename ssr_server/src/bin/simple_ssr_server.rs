@@ -14,8 +14,8 @@ use std::str::FromStr;
 use axum::error_handling::HandleError;
 use axum::extract::{Query, State};
 use axum::handler::HandlerWithoutStateExt;
-use axum::http::{StatusCode, Uri};
-use axum::response::{Html, IntoResponse};
+use axum::http::{header::LOCATION, StatusCode, Uri};
+use axum::response::{Html, IntoResponse, Redirect, Response};
 
 use axum::routing::get;
 use axum::Router;
@@ -120,60 +120,10 @@ where
 // it processes request on the same thread as the rendering task.
 //
 // This increases performance in some environments (e.g.: in VM).
-
-// #[tokio::main]
-// async fn main() {
-//     let exec = Executor::default();
-//     // env_logger::init();
-//     // let index_html_s = tokio::fs::read_to_string("dist/index.html")
-//     //     .await
-//     //     .expect("failed to read index.html");
-//     // let exec = Executor::default();
-//
-//     env_logger::init();
-//
-//     let opts = Opt::parse();
-//
-//     let index_html_s = tokio::fs::read_to_string(opts.dir.join("index.html"))
-//
-//     // NOTE: ここでheadにデータを入れることでSSRを実現できそう
-//     let (index_html_before, index_html_after) = index_html_s.split_once("<body>").unwrap();
-//     let mut index_html_before = index_html_before.to_owned();
-//     index_html_before.push_str("<body>");
-//
-//     let index_html_after = index_html_after.to_owned();
-//
-//     let handle_error = |e| async move {
-//         (
-//             StatusCode::INTERNAL_SERVER_ERROR,
-//             format!("error occurred: {e}"),
-//         )
-//     };
-//
-//     let app = Router::new().fallback_service(HandleError::new(
-//         ServeDir::new(opts.dir)
-//             .append_index_html_on_directories(false)
-//             .fallback(
-//                 get(render)
-//                     .with_state((index_html_before.clone(), index_html_after.clone()))
-//                     .into_service()
-//                     .map_err(|err| -> std::io::Error { match err {} }),
-//             ),
-//         handle_error,
-//     ));
-//
-//     let port = match std::env::var("PORT") {
-//         Ok(port) => port.parse::<u16>().unwrap(),
-//         Err(_) => 8080,
-//     };
-//
-//     println!("You can view the website at: http://0.0.0.0:8080/");
-//     let addr = ([0, 0, 0, 0], 8080).into();
-//     axum::Server::bind(&addr)
-//         .serve(app.into_make_service())
-//         .await
-//         .expect("server failed");
-// }
+// pub fn health() -> impl IntoResponse {
+async fn redirect_to_pages(_: ()) -> impl IntoResponse {
+    Redirect::to("/pages/1")
+}
 
 #[tokio::main]
 async fn main() {
@@ -199,17 +149,19 @@ async fn main() {
         )
     };
 
-    let app = Router::new().fallback_service(HandleError::new(
-        ServeDir::new(opts.dir)
-            .append_index_html_on_directories(false)
-            .fallback(
-                get(render)
-                    .with_state((index_html_before.clone(), index_html_after.clone()))
-                    .into_service()
-                    .map_err(|err| -> std::io::Error { match err {} }),
-            ),
-        handle_error,
-    ));
+    let app = Router::new()
+        .route("/", get(redirect_to_pages))
+        .fallback_service(HandleError::new(
+            ServeDir::new(opts.dir)
+                .append_index_html_on_directories(false)
+                .fallback(
+                    get(render)
+                        .with_state((index_html_before.clone(), index_html_after.clone()))
+                        .into_service()
+                        .map_err(|err| -> std::io::Error { match err {} }),
+                ),
+            handle_error,
+        ));
 
     println!("You can view the website at: http://0.0.0.0:8080/");
 
