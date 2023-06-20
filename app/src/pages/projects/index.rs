@@ -1,4 +1,3 @@
-// use crate::pages::bindings;
 use crate::{
     pages::projects::shared::{project_header::ProjectHeader, project_item::ProjectItem},
     usecase::exe::{
@@ -6,7 +5,6 @@ use crate::{
         fetch_work_projects_usecase,
     },
 };
-use std::io::Result;
 use yew::prelude::*;
 
 #[function_component(Projects)]
@@ -68,13 +66,11 @@ pub fn projects() -> Html {
     }
 }
 
-// #[cfg(feature = "ssr")]
 pub fn projects_meta_tags() -> String {
     let title = "Projects | Masahiro's tech note ";
     let description = "現在参加中の案件一覧です。上流から下流まで対応するプロジェクトやアドバイスを行う顧問活動も行っております。";
     let keywords =
         "参加案件, ソフトウェアエンジニア, バックエンド, フロントエンド, TypeScript, Rust";
-    let image_url = "/images/kyuri.png";
     let mut meta = String::new();
     meta.push_str(&format!(r###"<title>{}</title>"###, title));
     meta.push_str(&format!(
@@ -85,31 +81,30 @@ pub fn projects_meta_tags() -> String {
         r###"<meta name="keywords" content="{}">"###,
         keywords
     ));
-    // meta.push_str(&format!(
-    //     r###"<meta property="og:url" content="{}{}" />
-    //                         "###,
-    //     CONFIG.app_origin, url
-    // ));
     meta.push_str(&format!(
-        r###"<meta property="og:title" content="{}" />
+        r###"<meta property="og:title" content="{}">
         "###,
         title
     ));
     meta.push_str(&format!(
-        r###"<meta property="og:description" content="{}" />
+        r###"<meta property="og:description" content="{}">
         "###,
         description
     ));
     meta.push_str(&format!(
-        r###"<meta property="og:site_name" content=" Masahiro's tech note " />
+        r###"<meta property="og:site_name" content=" Masahiro's tech note ">
         "###,
     ));
     meta.push_str(&format!(
-        r###"<meta property="og:image" content="https://masahiro.me/kyuri.png" />
+        r###"<meta property="og:image" content="https://masahiro.me/kyuri.png">
         "###,
     ));
     meta.push_str(&format!(
-        r###"<meta name="twitter:creator" content="@masa_okubo" />
+        r###"<meta name="twitter:creator" content="@masa_okubo">
+        "###,
+    ));
+    meta.push_str(&format!(
+        r###"<meta name="twitter:card" content="summary_large_image">
         "###,
     ));
 

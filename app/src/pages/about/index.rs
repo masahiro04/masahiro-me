@@ -82,13 +82,11 @@ pub fn AboutIndex() -> Html {
     }
 }
 
-// #[cfg(feature = "ssr")]
 pub fn about_meta_tags() -> String {
     let title = "About me | Masahiro's tech note ";
     let description = "ソフトウェアエンジニア、大久保将広のウェブサイトです。現在取り扱っている言語や興味関心ごとなどを記載しております。";
     let keywords =
         "大久保将広, ソフトウェアエンジニア, バックエンド, フロントエンド, TypeScript, Rust";
-    let image_url = "/images/kyuri.png";
     let mut meta = String::new();
     meta.push_str(&format!(r###"<title>{}</title>"###, title));
     meta.push_str(&format!(
@@ -100,25 +98,29 @@ pub fn about_meta_tags() -> String {
         keywords
     ));
     meta.push_str(&format!(
-        r###"<meta property="og:title" content="{}" />
+        r###"<meta property="og:title" content="{}">
         "###,
         title
     ));
     meta.push_str(&format!(
-        r###"<meta property="og:description" content="{}" />
+        r###"<meta property="og:description" content="{}">
         "###,
         description
     ));
     meta.push_str(&format!(
-        r###"<meta property="og:site_name" content="Masahiro's tech note" />
+        r###"<meta property="og:site_name" content="Masahiro's tech note">
         "###,
     ));
     meta.push_str(&format!(
-        r###"<meta property="og:image" content="https://masahiro.me/kyuri.png" />
+        r###"<meta property="og:image" content="https://masahiro.me/kyuri.png">
         "###,
     ));
     meta.push_str(&format!(
-        r###"<meta name="twitter:creator" content="@masa_okubo" />
+        r###"<meta name="twitter:creator" content="@masa_okubo">
+        "###,
+    ));
+    meta.push_str(&format!(
+        r###"<meta name="twitter:card" content="summary_large_image">
         "###,
     ));
 

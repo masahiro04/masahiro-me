@@ -4,7 +4,7 @@ use yew::prelude::*;
 pub fn not_found() -> Html {
     html! {
         <div>
-            <img src="/images/page_not_found.png" />
+            <img src="https://masahiro.me/page_not_found.png" />
         </div>
     }
 }
