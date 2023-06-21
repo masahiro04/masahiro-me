@@ -10,8 +10,6 @@ pub struct LayoutProps {
 pub fn Layout(props: &LayoutProps) -> Html {
     html! {
         <>
-            <script src="https://assets.masahiro.me/prism.js"></script>
-
             <div class="flex flex-col min-h-screen w-full p-5 mx-auto sm:max-w-4xl sm:py-12">
                 <div class="flex-grow">
                     <main>
