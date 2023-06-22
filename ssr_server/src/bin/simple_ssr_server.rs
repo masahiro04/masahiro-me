@@ -26,7 +26,7 @@ use yew::platform::Runtime;
 // We use jemalloc as it produces better performance.
 #[global_allocator]
 static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
-/// A basic example
+
 #[derive(Parser, Debug)]
 struct Opt {
     /// the "dist" created by trunk directory to be served for hydration.
@@ -131,6 +131,10 @@ async fn redirect_to_pages(_: ()) -> impl IntoResponse {
     Redirect::to("/pages/1")
 }
 
+async fn redirect_to_sitemap(_: ()) -> impl IntoResponse {
+    Redirect::to("http://api.masahiro.me/sitemap")
+}
+
 #[tokio::main]
 async fn main() {
     let exec = Executor::default();
@@ -157,6 +161,7 @@ async fn main() {
 
     let app = Router::new()
         .route("/", get(redirect_to_pages))
+        .route("/sitemap", get(redirect_to_sitemap))
         .fallback_service(HandleError::new(
             ServeDir::new(opts.dir)
                 .append_index_html_on_directories(false)
