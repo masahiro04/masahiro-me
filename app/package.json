@@ -1,14 +1,13 @@
 {
   "scripts": {
     "create:tailwind": "tailwindcss -i ./assets/styles/base.css -o ./tailwind.css",
-    "watch:tailwind": "tailwindcss -i ./assets/styles/base.css -o ./style.css --minify",
+    "watch:tailwind": "tailwindcss -i ./assets/styles/base.css -o ./style.css --watch",
     "build:tailwind": "tailwindcss -i ./assets/styles/base.css -c ./tailwind.config.js -o ./style.css --minify"
   },
   "devDependencies": {
     "@types/node": "^20.1.4"
   },
   "dependencies": {
-    "@cloudflare/workers-types": "^3.18.0",
     "@tailwindcss/typography": "^0.5.9",
     "tailwindcss": "^3.3.1"
   }

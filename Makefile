@@ -1,5 +1,7 @@
 dev:
 	cd app && \
+	yarn install && \
+	yarn build:tailwind && \
 	trunk serve
 
 build_cf_pages:
