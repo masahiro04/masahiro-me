@@ -1,10 +1,8 @@
-// use crate::pages::bindings;
 use crate::pages::shared::image::Image;
-use std::{fmt::Display, io::Result};
 use yew::prelude::*;
 
-#[function_component]
-pub fn AboutIndex() -> Html {
+#[function_component(AboutIndex)]
+pub fn about_index() -> Html {
     let languages = vec![
         "TypeScript".to_string(),
         "Go".to_string(),
@@ -36,11 +34,13 @@ pub fn AboutIndex() -> Html {
             <div>
               <div class="relative">
                 <div class="flex justify-center py-3 bg-white rounded-md max-w-full px-6 bg-opacity-60 text-gray-400 shadow-sm space-x-1 text-sm sm:text-base sm:space-x-2">
-                    {languages.iter().map(|language| {
+                    {languages.iter().enumerate().map(|(index, language)| {
                         html! {
                             <>
                               <div class="text-gray-800 text-center">{language}</div>
-                              <div class="text-gray-600 text-center">{"/"}</div>
+                              {if index != languages.len() - 1 {
+                                html!{<div class="text-gray-600 text-center last:hidden">{"/"}</div>}
+                              } else { html!{} }}
                             </>
                         }
                     }).collect::<Html>()}
@@ -73,7 +73,7 @@ pub fn AboutIndex() -> Html {
                   href="https://docs.google.com/forms/d/e/1FAIpQLSfXjYNmZf_Db_KqWrM3YPqkBORiVX_FY_mSv7jXhJ6FRz3iJA/viewform?embedded=true"
                   target="_blank"
                   rel="noreferrer"
-                ></a>
+                />
               </div>
             </div>
           </div>
@@ -83,7 +83,7 @@ pub fn AboutIndex() -> Html {
 }
 
 pub fn about_meta_tags() -> String {
-    let title = "About me | Masahiro's tech note ";
+    let title = "About me | Masahiro's tech note";
     let description = "ソフトウェアエンジニア、大久保将広のウェブサイトです。現在取り扱っている言語や興味関心ごとなどを記載しております。";
     let keywords =
         "大久保将広, ソフトウェアエンジニア, バックエンド, フロントエンド, TypeScript, Rust";
