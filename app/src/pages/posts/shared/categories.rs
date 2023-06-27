@@ -29,10 +29,11 @@ pub struct CategoriesProps {
 
 #[function_component(Categories)]
 pub fn categories(props: &CategoriesProps) -> Html {
+    let CategoriesProps { categories, is_link } = props;
     html! {
          <div class="flex space-x-2 items-center pl-1">
-             {props.categories.iter().map(|category| {
-                 if props.is_link {
+             {categories.iter().map(|category| {
+                 if *is_link {
                      html! {
                          <Link<Route> to={Route::PostIndex { page: 1 }}>
                              <CategoryItem name={category.name().to_string()} />

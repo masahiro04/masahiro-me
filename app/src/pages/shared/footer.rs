@@ -47,10 +47,10 @@ struct FooterItemProps {
     item: Item,
 }
 
-#[function_component]
-fn FooterItem(props: &FooterItemProps) -> Html {
-    // let filename = format!("/images/{}.svg", props.item.clone().kind.to_str());
-    let alt_text = format!("{}の画像", props.item.clone().kind.to_str());
+#[function_component(FooterItem)]
+fn footer_item(props: &FooterItemProps) -> Html {
+    let FooterItemProps { item } = props;
+    let alt_text = format!("{}の画像", item.kind.to_str());
     html! {
         <div class="relative">
             <Image
@@ -60,13 +60,13 @@ fn FooterItem(props: &FooterItemProps) -> Html {
                 width=100
                 height=100
             />
-            <a class="absolute inset-0" href={props.item.kind.to_link()} target="_blank" rel="noreferrer"></a>
+            <a class="absolute inset-0" href={props.item.kind.to_link()} target="_blank" rel="noreferrer" />
         </div>
     }
 }
 
-#[function_component]
-pub fn Footer() -> Html {
+#[function_component(Footer)]
+pub fn footer() -> Html {
     let items: Vec<Item> = vec![
         Item {
             kind: FooterItemKind::GitHub,

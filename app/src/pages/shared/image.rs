@@ -12,9 +12,16 @@ pub struct ImageProps {
     #[prop_or(0)]
     pub width: i32,
 }
-#[function_component]
-pub fn Image(props: &ImageProps) -> Html {
+#[function_component(Image)]
+pub fn image(props: &ImageProps) -> Html {
+    let ImageProps { source, class, alt, height, width } = props;
     html! {
-        <img src={format!("https://assets.masahiro.me/{}", props.source.clone())} class={props.class.clone()} alt={props.alt.clone()} height={props.height.to_string()} width={props.width.to_string()} />
+        <img
+            src={format!("https://assets.masahiro.me/{}", source.to_string())}
+            class={class.to_string()}
+            alt={alt.to_string()}
+            height={height.to_string()}
+            width={width.to_string()}
+        />
     }
 }

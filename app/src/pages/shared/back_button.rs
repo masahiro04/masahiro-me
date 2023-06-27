@@ -2,8 +2,8 @@ use crate::pages::shared::image::Image;
 use yew::prelude::*;
 use yew_router::prelude::*;
 
-#[function_component]
-pub fn BackButton() -> Html {
+#[function_component(BackButton)]
+pub fn back_button() -> Html {
     let navigator = use_navigator().unwrap();
     let onclick = Callback::from(move |_| navigator.back());
 

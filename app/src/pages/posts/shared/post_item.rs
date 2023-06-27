@@ -9,8 +9,8 @@ pub struct PostItemProps {
     pub post: Post,
 }
 
-#[function_component]
-pub fn PostItem(props: &PostItemProps) -> Html {
+#[function_component(PostItem)]
+pub fn post_item(props: &PostItemProps) -> Html {
     html! {
         <div class="relative w-full group cursor-pointer">
             <Link<Route> to={Route::PostDetail { slug: props.post.slug().to_string() }}>
