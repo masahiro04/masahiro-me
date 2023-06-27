@@ -53,7 +53,7 @@ pub fn about_index() -> Html {
             <div>
               <div class="relative">
                 <div class="flex justify-center space-x-2 py-3 bg-white rounded-md max-w-full px-6 bg-opacity-60 text-gray-400 shadow-sm text-sm">
-                  <div class="text-gray-800 text-center">{"Edge computing, Rust, wasm"}</div>
+                  <div class="text-gray-800 text-center">{"Edge computing / Rust / WASM"}</div>
                 </div>
                 <div class="absolute inset-0 text-sm text-gray-500 -translate-y-6 sm:translate-y-0 sm:left-2 md:left-3 sm:top-0 md:top-1">
                     {"Interests :"}
