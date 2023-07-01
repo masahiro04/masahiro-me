@@ -9,9 +9,8 @@ pub struct HomeProps {
     pub page: i32,
 }
 
-// TODO: paginationをクリックしたら、is_loadingな状態にする
-#[function_component]
-pub fn PostIndex(props: &HomeProps) -> HtmlResult {
+#[function_component(PostIndex)]
+pub fn post_index(props: &HomeProps) -> HtmlResult {
     let offset = if props.page == 1 {
         0
     } else {
@@ -41,7 +40,6 @@ pub fn PostIndex(props: &HomeProps) -> HtmlResult {
                     }
                 }
             </div>
-
             <div class="px-6 mx-auto sm:px-10 sm:max-w-screen-md lg:max-w-screen-lg">
                 <Pagination is_loading={false} has_next_page={*has_next_page} current_page={props.page} />
             </div>

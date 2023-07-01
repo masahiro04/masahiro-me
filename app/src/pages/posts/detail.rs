@@ -1,13 +1,8 @@
-use crate::{
-    pages::{
-        // bindings,
-        posts::hook::{post::use_post, related_posts::use_related_posts},
-        posts::shared::{categories::Categories, post_body::PostBody, post_item::PostItem},
-        shared::back_button::BackButton,
-    },
-    usecase::exe::fetch_post_usecase,
+use crate::pages::{
+    posts::hook::{post::use_post, related_posts::use_related_posts},
+    posts::shared::{categories::Categories, post_body::PostBody, post_item::PostItem},
+    shared::back_button::BackButton,
 };
-use std::io::Result;
 use yew::prelude::*;
 
 #[derive(Properties, Clone, PartialEq)]
@@ -15,8 +10,8 @@ pub struct PostProps {
     pub slug: String,
 }
 
-#[function_component]
-pub fn PostDetail(props: &PostProps) -> HtmlResult {
+#[function_component(PostDetail)]
+pub fn post_detail(props: &PostProps) -> HtmlResult {
     let post = use_post(props.slug.clone())?;
     let category_ids = post
         .categories()
@@ -39,7 +34,7 @@ pub fn PostDetail(props: &PostProps) -> HtmlResult {
                             </span>
                         </h1>
                     </div>
-                    <div class="prose prose-base prose-cyan mx-auto text-gray-600 sm:prose-lg">
+                    <div class="prose prose-base prose-cyan mx-auto text-gray-600 sm:prose-lg break-words">
                         <PostBody content={post.content().to_string()} />
                     </div>
                 </div>

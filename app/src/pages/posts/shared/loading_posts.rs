@@ -1,7 +1,7 @@
 use yew::{function_component, html, Html};
 
-#[function_component]
-fn LoadingPost() -> Html {
+#[function_component(LoadingPost)]
+fn loading_post() -> Html {
     html! {
         <div class="relative w-full cursor-pointer">
             <div class="py-3 bg-white rounded-md max-w-full bg-opacity-60 font-semibold text-transparent animate-pulse shadow-sm duration-500 px-3 sm:px-6 text-sm sm:text-base">
@@ -17,8 +17,8 @@ fn LoadingPost() -> Html {
     }
 }
 
-#[function_component]
-pub fn LoadingPosts() -> Html {
+#[function_component(LoadingPosts)]
+pub fn loading_posts() -> Html {
     html! {
         <div class="space-y-2 sm:space-y-3">
             { for (0..10).map(|_| html! { <LoadingPost /> }) }

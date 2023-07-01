@@ -1,6 +1,5 @@
 module.exports = {
   mode: 'jit',
-  // purge: ['./src/ui/**/*.{js,ts,jsx,tsx}', './src/shared/presentation/components/**/*.{js,ts,jsx,tsx}'],
   purge: {
     mode: "all",
     content: [
@@ -8,7 +7,7 @@ module.exports = {
       "./index.html",
     ],
   },
-  darkMode: false, // or 'media' or 'class'
+  darkMode: false,
   theme: {
     extend: {
       colors: {
@@ -22,8 +21,8 @@ module.exports = {
       }
     }
   },
-  variants: {
-    extend: {}
-  },
-  plugins: [require('@tailwindcss/typography')]
+  variants: { extend: { } },
+  plugins: [
+    require('@tailwindcss/typography')
+  ]
 };

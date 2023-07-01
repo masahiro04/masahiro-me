@@ -1,6 +1,6 @@
 use yew::prelude::*;
-#[function_component]
-pub fn LoadingPost() -> Html {
+#[function_component(LoadingPost)]
+pub fn loading_post() -> Html {
     html! {
         <>
             <div class="relative cursor-pointer duration-500 py-2 bg-white rounded-md shadow-sm px-2 bg-opacity-60 flex items-center w-24 justify-center text-gray-600 text-sm -translate-y-1 hover:shadow-md sm:-translate-y-2">
