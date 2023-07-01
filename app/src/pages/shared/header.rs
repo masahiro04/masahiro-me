@@ -16,7 +16,6 @@ struct Item {
 #[function_component(Header)]
 pub fn header() -> Html {
     let location = use_location();
-
     let items = vec![
         Item {
             name: "Posts".to_string(),
@@ -40,7 +39,6 @@ pub fn header() -> Html {
             sm_class: "tracking-wider text-gray-700 text-sm text-center".to_string(),
         },
     ];
-
     let is_current_path = |paths: Vec<String>| -> bool {
         match &location {
             Some(lo) => {
@@ -54,7 +52,6 @@ pub fn header() -> Html {
             None => false,
         }
     };
-
     let make_class_string = |class: String, is_current: bool| -> String {
         if is_current {
             format!(

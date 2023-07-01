@@ -31,24 +31,17 @@ pub enum Route {
 impl FromStr for Route {
     type Err = anyhow::Error;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        // let url = Url::parse(s)?;
-        // let url = Url::parse(&format!("https://masahiro.me{}", s))?;
         let url = Url::parse(&format!("http://localhost:8080{}", s))?;
-
-        // println!("url: {:?}", url);
         let Some(path_segments) = url.path_segments() else {
             return Ok(Self::NotFound);
         };
-
         let path_segments = path_segments.collect::<Vec<_>>();
-
         if let Some(&"about") = path_segments.get(0) {
             return Ok(Self::AboutIndex {});
         }
         if let Some(&"projects") = path_segments.get(0) {
             return Ok(Self::Projects {});
         }
-
         if let (Some(&"pages"), Some(page)) = (path_segments.get(0), path_segments.get(1)) {
             return Ok(Self::PostIndex {
                 page: page.to_string().parse().unwrap_or(1),
@@ -59,11 +52,9 @@ impl FromStr for Route {
                 slug: slug.to_string(),
             });
         }
-
         if let Some(&"") = path_segments.get(0) {
             return Ok(Self::PostIndex { page: 1 });
         }
-
         Ok(Self::NotFound)
     }
 }
@@ -87,14 +78,10 @@ pub fn switch(routes: Route) -> Html {
             }
         }
         Route::Projects => {
-            html! {
-                <Projects />
-            }
+            html! { <Projects /> }
         }
         Route::AboutIndex => {
-            html! {
-                <AboutIndex />
-            }
+            html! { <AboutIndex /> }
         }
         Route::NotFound => html! { <NotFound />},
     }
@@ -106,8 +93,8 @@ pub struct ServerAppProps {
     pub queries: HashMap<String, String>,
 }
 
-#[function_component]
-pub fn ServerApp(props: &ServerAppProps) -> Html {
+#[function_component(ServerApp)]
+pub fn server_app(props: &ServerAppProps) -> Html {
     let history = AnyHistory::from(MemoryHistory::new());
     history
         .push_with_query(&*props.url, &props.queries)
@@ -122,8 +109,8 @@ pub fn ServerApp(props: &ServerAppProps) -> Html {
     }
 }
 
-#[function_component]
-pub fn App() -> Html {
+#[function_component(App)]
+pub fn app() -> Html {
     html! {
         <BrowserRouter>
             <Layout>
