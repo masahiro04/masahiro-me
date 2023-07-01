@@ -1,13 +1,72 @@
 use crate::pages::shared::image::Image;
 use yew::prelude::*;
 
+struct RenderItem {
+    pub title: String,
+    pub elements: Vec<String>,
+}
+
 #[function_component(AboutIndex)]
 pub fn about_index() -> Html {
-    let languages = vec![
-        "TypeScript".to_string(),
-        "Go".to_string(),
-        "Rust".to_string(),
-    ];
+    let render_item = |item: RenderItem| -> Html {
+        html! {
+            <div class="relative">
+                <div
+                    class="flex justify-center py-3 bg-white rounded-md max-w-full px-6 bg-opacity-60 text-gray-400 shadow-sm space-x-1 text-sm sm:text-base sm:space-x-2"
+                >
+                    {
+                        item.elements
+                            .iter()
+                            .enumerate()
+                            .map(|(index, element)| {
+                                html! {
+                                    <>
+                                        <div class="text-gray-800 text-center">{element}</div>
+                                        {if index != item.elements.len() - 1 { html!{
+                                            <div class="text-gray-600 text-center last:hidden">{"/"}</div>
+                                        } } else { html!{
+                                            <></>
+                                        } } }
+                                    </>
+                                }
+                            })
+                            .collect::<Html>()
+                    }
+
+                </div>
+                <div
+                    class="absolute inset-0 text-sm text-gray-500 -translate-y-6 sm:translate-y-0 sm:left-2 md:left-3 sm:top-0 md:top-1"
+                >
+                    { format!("{} :", item.title)}
+                </div>
+            </div>
+        }
+    };
+
+    let render_items = || -> Html {
+        let languages = RenderItem {
+            title: "Languages".to_string(),
+            elements: vec![
+                "TypeScript".to_string(),
+                "Go".to_string(),
+                "Rust".to_string(),
+            ],
+        };
+        let interests = RenderItem {
+            title: "Interests".to_string(),
+            elements: vec![
+                "Edge computing".to_string(),
+                "Rust".to_string(),
+                "WASM".to_string(),
+            ],
+        };
+        html! {
+            <>
+                {render_item(languages)}
+                {render_item(interests)}
+            </>
+        }
+    };
 
     html! {
         <div class="flex justify-center mx-auto mt-10 sm:w-2/3 sm:mt-0">
@@ -16,52 +75,29 @@ pub fn about_index() -> Html {
                     class="object-cover rounded-full mx-auto w-24 h-24"
                     source="kyuri.png"
                     alt=""
-                    width=100
-                    height=100
+                    width={ 100 }
+                    height={ 100 }
                 />
                 <div class="mt-3 space-y-2">
                     <h3 class="text-xl font-semibold text-center text-gray-800">
-                    { "Masahiro Okubo" }
+                        { "Masahiro Okubo" }
                     </h3>
                     <p class="mx-auto text-center text-gray-800">
-                        {
-                            "I'm a software engineer living in Japan, Nagoya. Currently building a car mechanic version of Uber.
-                            Previously, I worked on a XR startup and built multiple applications."
-                        }
-                    </p>
+                        { "I'm a software engineer living in Japan, Nagoya." } </p>
                 </div>
                 <div class="mt-8 space-y-7 sm:mt-5 sm:space-y-3">
-                    <div class="relative">
-                        <div class="flex justify-center py-3 bg-white rounded-md max-w-full px-6 bg-opacity-60 text-gray-400 shadow-sm space-x-1 text-sm sm:text-base sm:space-x-2">
-                            {
-                                languages.iter().enumerate().map(|(index, language)| {
-                                    html! {
-                                        <>
-                                            <div class="text-gray-800 text-center">{language}</div>
-                                            {if index != languages.len() - 1 {
-                                                html!{<div class="text-gray-600 text-center last:hidden">{"/"}</div>}
-                                            } else { html!{} } }
-                                        </>
-                                    } }).collect::<Html>()
-                            }
-                        </div>
-                        <div class="absolute inset-0 text-sm text-gray-500 -translate-y-6 sm:translate-y-0 sm:left-2 md:left-3 sm:top-0 md:top-1">
-                            {"Languages :"}
-                        </div>
-                    </div>
-                    <div class="relative">
-                        <div class="flex justify-center space-x-2 py-3 bg-white rounded-md max-w-full px-6 bg-opacity-60 text-gray-400 shadow-sm text-sm">
-                            <div class="text-gray-800 text-center">{"Edge computing / Rust / WASM"}</div>
-                        </div>
-                        <div class="absolute inset-0 text-sm text-gray-500 -translate-y-6 sm:translate-y-0 sm:left-2 md:left-3 sm:top-0 md:top-1">
-                            {"Interests :"}
-                        </div>
-                    </div>
+                    {render_items()}
                     <div class="relative group cursor-pointer">
-                        <div class="flex justify-center space-x-2 py-3 bg-white rounded-md max-w-full px-6 bg-opacity-60 text-gray-400 shadow-sm duration-500 text-sm group-hover:shadow-md group-hover:scale-1 group-hover:bg-opacity-90">
-                            <div class="text-gray-800 text-center">{ "Contact me on Google Form" }</div>
+                        <div
+                            class="flex justify-center py-3 bg-white rounded-md max-w-full px-6 bg-opacity-60 text-gray-400 shadow-sm space-x-1 text-sm sm:text-base sm:space-x-2"
+                        >
+                            <div class="text-gray-800 text-center">
+                                { "Contact me on Google Form" }
+                            </div>
                         </div>
-                        <div class="absolute inset-0 text-sm text-gray-500 -translate-y-6 sm:translate-y-0 sm:left-2 md:left-3 sm:top-0 md:top-1">
+                        <div
+                            class="absolute inset-0 text-sm text-gray-500 -translate-y-6 sm:translate-y-0 sm:left-2 md:left-3 sm:top-0 md:top-1"
+                        >
                             { "Contact :" }
                         </div>
                         <a
