@@ -1,9 +1,7 @@
-use crate::{
-    pages::{
-        posts::hook::{post::use_post, related_posts::use_related_posts},
-        posts::shared::{categories::Categories, post_body::PostBody, post_item::PostItem},
-        shared::back_button::BackButton,
-    },
+use crate::pages::{
+    posts::hook::{post::use_post, related_posts::use_related_posts},
+    posts::shared::{categories::Categories, post_body::PostBody, post_item::PostItem},
+    shared::back_button::BackButton,
 };
 use yew::prelude::*;
 

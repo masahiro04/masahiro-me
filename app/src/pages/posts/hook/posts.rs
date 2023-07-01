@@ -23,7 +23,6 @@ impl PostsState {
     fn new(offset: i32) -> Self {
         let (susp, handle) = Suspension::new();
         let value: Rc<RefCell<Option<Vec<Post>>>> = Rc::default();
-
         {
             let value = value.clone();
             spawn_local(async move {
@@ -38,7 +37,6 @@ impl PostsState {
                 handle.resume();
             });
         }
-
         Self {
             susp,
             value,
@@ -54,11 +52,9 @@ pub fn use_posts(offset: i32) -> SuspensionResult<Vec<Post>> {
         let new_state = PostsState::new(offset);
         posts_state.set(new_state);
     }
-
     let result = match *posts_state.value.borrow() {
         Some(ref user) => Ok(user.clone()),
         None => Err(posts_state.susp.clone()),
     };
-
     result
 }
