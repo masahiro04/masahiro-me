@@ -1,8 +1,8 @@
 use crate::pages::{projects::shared::bee::Bee, shared::image::Image};
 use yew::prelude::*;
 
-#[function_component]
-pub fn ProjectHeader() -> Html {
+#[function_component(ProjectHeader)]
+pub fn project_header() -> Html {
     html! {
         <div class="max-w-xl mx-auto">
             <a class="w-full group" href="https://github.com/masahiro04" target="_blank" rel="noreferrer">

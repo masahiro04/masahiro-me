@@ -9,7 +9,11 @@ pub struct ProjectItemProps {
 
 #[function_component(ProjectItem)]
 pub fn project_item(props: &ProjectItemProps) -> Html {
-    let ProjectItemProps { name, technologies, url } = props;
+    let ProjectItemProps {
+        name,
+        technologies,
+        url,
+    } = props;
     html! {
         <div class="group cursor-pointer mb-2">
             <a href={url.to_string()} target="_blank" rel="noreferrer">
