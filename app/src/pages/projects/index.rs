@@ -60,7 +60,7 @@ pub fn projects() -> Html {
         <>
             <ProjectHeader />
             {render_section("Currently working on".to_string(), render_works())}
-            {render_section("Advidors".to_string(), render_advisories())}
+            {render_section("Board member / Advidors".to_string(), render_advisories())}
             {render_section("Past works".to_string(), render_past_works())}
         </>
     }
