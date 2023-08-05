@@ -32,7 +32,7 @@ impl IProjectRepository for ProjectRepository {
             )
             .unwrap(),
             Project::new(
-                "Benten".to_string(),
+                "Cogane Studio".to_string(),
                 "Management / Ruby / React / Ruby on Rails / Heroku / AWS".to_string(),
                 "https://bentenmarket.com/".to_string(),
                 ProjectKind::Advisory,
