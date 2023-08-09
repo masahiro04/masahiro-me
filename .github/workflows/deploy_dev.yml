@@ -1,0 +1,10 @@
+name: Deploy to production
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    uses: ./.github/workflows/_deploy.yml
+    with:
+      environment: development
+    secrets: inherit
