@@ -1,6 +1,7 @@
-version: '3'
+version: "3"
 services:
   ssr_server:
+    tty: true
     build:
       context: .
       # dockerfile: Dockerfile
@@ -12,5 +13,4 @@ services:
       - .:/usr/src/target
       # - .:/usr/src/app/node_modules
       # - .:/usr/src/ssr_server/node_modules
-
 # volumesにtargetなども入れないときつそう
