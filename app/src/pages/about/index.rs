@@ -46,18 +46,14 @@ pub fn about_index() -> Html {
     let render_items = || -> Html {
         let languages = RenderItem {
             title: "Languages".to_string(),
-            elements: vec![
-                "TypeScript".to_string(),
-                "Go".to_string(),
-                "Rust".to_string(),
-            ],
+            elements: vec!["TypeScript".to_string(), "Rust".to_string()],
         };
         let interests = RenderItem {
             title: "Interests".to_string(),
             elements: vec![
-                "Edge computing".to_string(),
                 "Rust".to_string(),
                 "WASM".to_string(),
+                "Infrastructure".to_string(),
             ],
         };
         html! {
