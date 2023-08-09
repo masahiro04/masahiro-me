@@ -5,7 +5,6 @@ on:
       environment:
         required: true
         type: string
-    # secretsは呼び出し元で `secrets: inherit` を指定する想定
 
 env:
   WORKLOAD_IDENTITY_POOL_NAME: github-action-pool
@@ -33,7 +32,6 @@ jobs:
           workload_identity_provider: "projects/${{ vars.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/${{ env.WORKLOAD_IDENTITY_POOL_NAME }}/providers/${{ env.WORKLOAD_IDENTITY_PROVIDER_NAME }}"
           service_account: "${{ env.WORKLOAD_SERVICE_ACCOUNT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com"
 
-      # Setup gcloud CLI
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
 
@@ -44,4 +42,5 @@ jobs:
             --region ${{ env.REGION }} \
             --no-use-http2 \
             --service-account ${{ env.SERVICE_ACCOUNT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com \
-            --project ${{ vars.PROJECT_ID }}
+            --project ${{ vars.PROJECT_ID }} \
+            --async
