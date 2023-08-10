@@ -45,6 +45,7 @@ RUN apk add --no-cache libgcc libstdc++  # Rustのバイナリ実行に必要な
 EXPOSE 8080
 COPY --from=builder /usr/ssr_server/dist/ /dist/
 COPY --from=builder /tmp/target/release/simple_ssr_server /usr/local/bin/simple_ssr_server
+RUN ls -al /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/simple_ssr_server
 # COPY --from=builder /usr/local/cargo/bin/simple_ssr_server /usr/local/bin/simple_ssr_server
