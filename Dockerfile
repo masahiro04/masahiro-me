@@ -48,14 +48,13 @@ RUN ls -al /usr/ssr_server  # 追加: ディレクトリの内容を出力
 RUN ls -al /usr/ssr_server  # 追加: ディレクトリの内容を出力
 RUN ls -al /usr/ssr_server  # 追加: ディレクトリの内容を出力
 
+RUN ls -al /tmp/target/release/
+RUN ls -al /tmp/target/release/
+RUN ls -al /tmp/target/release/
+
 FROM scratch
 EXPOSE 8080
-RUN ls -al /tmp/target/release/
-RUN ls -al /tmp/target/release/
-RUN ls -al /tmp/target/release/
 COPY --from=builder /usr/ssr_server/dist/ /dist/
 COPY --from=builder /tmp/target/release/simple_ssr_server /usr/local/bin/simple_ssr_server
 # COPY --from=builder /usr/local/cargo/bin/simple_ssr_server /usr/local/bin/simple_ssr_server
-# CMD ["./simple_ssr_server", "--dir", "dist"]
-
-CMD ["/usr/local/bin/simple_ssr_server", "--dir", "dist"]
+CMD ["./simple_ssr_server", "--dir", "dist"]
