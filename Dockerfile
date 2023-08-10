@@ -21,7 +21,7 @@
 
 # ----------------------------------------------
 
-FROM rust:1.70.0 as builder
+FROM rust:1.69.0 as builder
 
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt-get update && apt-get install -y make nodejs g++ binaryen
@@ -35,7 +35,8 @@ COPY . .
 
 RUN rustup target add wasm32-unknown-unknown
 RUN cargo install --locked trunk
-RUN cargo install wasm-bindgen-cli --version 0.2.87
+# for local dev
+# RUN cargo install wasm-bindgen-cli --version 0.2.87
 
 RUN cargo build --release
 RUN make ssr_build
