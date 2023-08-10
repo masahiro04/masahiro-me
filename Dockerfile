@@ -35,19 +35,17 @@ COPY . .
 
 RUN rustup target add wasm32-unknown-unknown
 RUN cargo install --locked trunk
-
-# TODO: 本番はこちら不要
-# RUN cargo install wasm-bindgen-cli --version 0.2.87
+RUN cargo install wasm-bindgen-cli --version 0.2.87
 
 RUN cargo build --release
 RUN make ssr_build
 
-RUN ls -al /tmp/target/release
-RUN ls -al /tmp/target/release
-
 # Runtime Stage
 FROM debian:bullseye-slim
-RUN apt-get update && apt-get install -y libgcc1 libstdc++6 bash
+# for local dev
+# RUN apt-get update && apt-get install -y libgcc1 libstdc++6 bash ca-certificates
+# for prod
+RUN apt-get update && apt-get install -y libgcc1 libstdc++6
 
 EXPOSE 8080
 COPY --from=builder /usr/ssr_server/dist/ /dist/
