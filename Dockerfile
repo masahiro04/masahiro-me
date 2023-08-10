@@ -21,7 +21,7 @@
 
 # ----------------------------------------------
 
-FROM rust:1.69.0 as builder
+FROM rust:1.70.0 as builder
 
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 RUN apt-get update && apt-get install -y make nodejs g++ binaryen
@@ -35,6 +35,10 @@ COPY . .
 
 RUN rustup target add wasm32-unknown-unknown
 RUN cargo install --locked trunk
+
+# TODO: 本番はこちら不要
+# RUN cargo install wasm-bindgen-cli --version 0.2.87
+
 RUN cargo build --release
 RUN make ssr_build
 
@@ -42,12 +46,12 @@ RUN ls -al /tmp/target/release
 RUN ls -al /tmp/target/release
 
 # Runtime Stage
-FROM alpine:latest
-RUN apk add --no-cache libgcc libstdc++  # Rustのバイナリ実行に必要なライブラリをインストール
+FROM debian:bullseye-slim
+RUN apt-get update && apt-get install -y libgcc1 libstdc++6 bash
 
 EXPOSE 8080
 COPY --from=builder /usr/ssr_server/dist/ /dist/
-# COPY --from=builder /tmp/target/release/simple_ssr_server /usr/local/bin/simple_ssr_server
 COPY --from=builder /tmp/target/release/simple_ssr_server /simple_ssr_server
+
 ENTRYPOINT ["./simple_ssr_server"]
 CMD ["--dir", "dist"]
