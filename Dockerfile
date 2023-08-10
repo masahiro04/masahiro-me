@@ -33,28 +33,17 @@ ENV CARGO_BUILD_TARGET_DIR=/tmp/target
 WORKDIR /usr
 COPY . .
 
-RUN ls -al /usr
-RUN ls -al /usr
-RUN ls -al /usr
-RUN pwd
-RUN pwd
-RUN pwd
-
 RUN rustup target add wasm32-unknown-unknown
 RUN cargo install --locked trunk
 RUN cargo build --release
 RUN make ssr_build
-RUN ls -al /usr/ssr_server  # 追加: ディレクトリの内容を出力
-RUN ls -al /usr/ssr_server  # 追加: ディレクトリの内容を出力
-RUN ls -al /usr/ssr_server  # 追加: ディレクトリの内容を出力
 
-RUN ls -al /tmp/target/release/
-RUN ls -al /tmp/target/release/
-RUN ls -al /tmp/target/release/
+# Runtime Stage
+FROM alpine:latest
+RUN apk add --no-cache libgcc libstdc++  # Rustのバイナリ実行に必要なライブラリをインストール
 
-FROM scratch
 EXPOSE 8080
 COPY --from=builder /usr/ssr_server/dist/ /dist/
 COPY --from=builder /tmp/target/release/simple_ssr_server /usr/local/bin/simple_ssr_server
 # COPY --from=builder /usr/local/cargo/bin/simple_ssr_server /usr/local/bin/simple_ssr_server
-CMD ["./simple_ssr_server", "--dir", "dist"]
+CMD ["simple_ssr_server", "--dir", "dist"]
