@@ -46,7 +46,7 @@ FROM debian:bullseye-slim
 # for local dev
 # RUN apt-get update && apt-get install -y libgcc1 libstdc++6 bash ca-certificates
 # for prod
-RUN apt-get update && apt-get install -y libgcc1 libstdc++6
+RUN apt-get update && apt-get install -y libgcc1 libstdc++6 ca-certificates
 
 EXPOSE 8080
 COPY --from=builder /usr/ssr_server/dist/ /dist/
