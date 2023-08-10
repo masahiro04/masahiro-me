@@ -58,4 +58,7 @@ RUN ls -al /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/simple_ssr_server
 # COPY --from=builder /usr/local/cargo/bin/simple_ssr_server /usr/local/bin/simple_ssr_server
-CMD ["simple_ssr_server", "--dir", "dist"]
+# CMD ["simple_ssr_server", "--dir", "dist"]
+
+ENTRYPOINT ["simple_ssr_server"]
+CMD ["--dir", "dist"]
