@@ -40,7 +40,6 @@ RUN make ssr_build
 
 RUN ls -al /tmp/target/release
 RUN ls -al /tmp/target/release
-RUN ls -al /tmp/target/release
 
 # Runtime Stage
 FROM alpine:latest
@@ -50,5 +49,5 @@ EXPOSE 8080
 COPY --from=builder /usr/ssr_server/dist/ /dist/
 # COPY --from=builder /tmp/target/release/simple_ssr_server /usr/local/bin/simple_ssr_server
 COPY --from=builder /tmp/target/release/simple_ssr_server /simple_ssr_server
-ENTRYPOINT ["/simple_ssr_server"]
+ENTRYPOINT ["./simple_ssr_server"]
 CMD ["--dir", "dist"]
