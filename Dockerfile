@@ -1,10 +1,19 @@
-FROM rust:1.69-alpine as builder
+FROM rust:1.69.0-alpine as builder
 
-RUN apk add --no-cache make g++ binaryen bash
-
-RUN apk update && apk add --no-cache musl-dev make binaryen bash
+RUN apk add --no-cache \
+        make \
+        g++ \
+        binaryen \
+        bash \
+        musl-dev \
+        openssl-dev \
+        pkgconfig
 # https://qiita.com/yagince/items/077d209ecca644398ea3 を参考に実装
 ENV CARGO_BUILD_TARGET_DIR=/tmp/target
+
+ENV OPENSSL_STATIC=true \
+    OPENSSL_LIB_DIR=/usr/lib \
+    OPENSSL_INCLUDE_DIR=/usr/include
 
 WORKDIR /usr
 COPY . .
