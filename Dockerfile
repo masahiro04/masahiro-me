@@ -6,6 +6,7 @@ RUN apk add --no-cache \
         binaryen \
         bash \
         musl-dev \
+        musl-tools \
         openssl-dev \
         pkgconfig
 # https://qiita.com/yagince/items/077d209ecca644398ea3 を参考に実装
