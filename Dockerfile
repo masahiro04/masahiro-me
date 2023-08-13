@@ -36,11 +36,13 @@
 # CMD ["--dir", "dist"]
 
 
-# FROM rust:1.69.0-alpine as builder
-#
-# WORKDIR /usr/src/app
-# RUN apk update && apk add --no-cache musl-dev bash
-#
+FROM rust:1.69.0-alpine as builder
+
+WORKDIR /usr/src/app
+RUN apk update && apk add --no-cache musl-dev bash
+
+COPY . .
+
 # COPY ./Cargo.lock ./Cargo.lock
 # COPY ./crates/app/Cargo.toml ./crates/app/Cargo.toml
 # COPY ./crates/ssr_server/Cargo.toml ./crates/ssr_server/Cargo.toml
@@ -48,45 +50,17 @@
 # RUN touch ./crates/app/src/lib.rs
 # RUN mkdir ./crates/ssr_server/src/
 # RUN touch ./crates/ssr_server/src/lib.rs
-#
-# WORKDIR /usr/src/app/crates/ssr_server
-# RUN rustup target add x86_64-unknown-linux-musl
-# RUN rustup target add wasm32-unknown-unknown
-# # for local dev
-# # RUN cargo install wasm-bindgen-cli --version 0.2.87
-# RUN cargo build --release --target=x86_64-unknown-linux-musl
-# WORKDIR /usr/src/app
-# COPY . .
-# RUN cargo install --path ./crates/ssr_server --target=x86_64-unknown-linux-musl
-#
-# FROM scratch
-# ENV PORT=3002
-# COPY --from=builder /usr/local/cargo/bin/ssr_server /usr/local/bin/ssr_server
-#
-# ENTRYPOINT ["./simple_ssr_server"]
-# CMD ["--dir", "dist"]
 
-FROM rust:1.69.0-alpine as builder
-
-WORKDIR /usr/src/app
-
-# Alpineでのパッケージの更新とインストール
-RUN apk update && apk add --no-cache musl-dev bash
-
-# 全てのソースファイルをコピー
-# ターゲットの追加
+WORKDIR /usr/src/app/crates/ssr_server
 RUN rustup target add x86_64-unknown-linux-musl
 RUN rustup target add wasm32-unknown-unknown
-
-# ビルドの実行
-WORKDIR /usr/src/app/crates/ssr_server
+# for local dev
+# RUN cargo install wasm-bindgen-cli --version 0.2.87
 RUN cargo build --release --target=x86_64-unknown-linux-musl
-
-# ローカルのパッケージとしてインストール
 WORKDIR /usr/src/app
+# COPY . .
 RUN cargo install --path ./crates/ssr_server --target=x86_64-unknown-linux-musl
 
-# 実行用の軽量なコンテナイメージ
 FROM scratch
 ENV PORT=3002
 COPY --from=builder /usr/local/cargo/bin/ssr_server /usr/local/bin/ssr_server
