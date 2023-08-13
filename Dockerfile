@@ -56,10 +56,19 @@ RUN rustup target add x86_64-unknown-linux-musl
 RUN rustup target add wasm32-unknown-unknown
 # for local dev
 # RUN cargo install wasm-bindgen-cli --version 0.2.87
-RUN cargo build --release --target=x86_64-unknown-linux-musl
-WORKDIR /usr/src/app
+# RUN cargo build --release --target=x86_64-unknown-linux-musl
+# WORKDIR /usr/src/app
 # COPY . .
-RUN cargo install --path ./crates/ssr_server --target=x86_64-unknown-linux-musl
+# RUN cargo install --path ./crates/ssr_server --target=x86_64-unknown-linux-musl
+
+# RUN cargo build --release --target=x86_64-unknown-linux-musl
+
+WORKDIR /usr/src/app/crates/ssr_server
+
+RUN cargo install trunk
+RUN trunk build --release -d ./dist
+RUN cp robots.txt ./dist/robots.txt
+RUN cargo build --release --features=ssr --bin simple_ssr_server --
 
 FROM scratch
 ENV PORT=3002
