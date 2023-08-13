@@ -4,7 +4,6 @@ crates/app/node_modules
 crates/ssr_server/target
 crates/ssr_server/node_modules
 
-Cargo.lock
 dist/
 .env
 dist/
