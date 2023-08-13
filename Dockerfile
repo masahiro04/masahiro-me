@@ -53,7 +53,7 @@ WORKDIR /usr/src/app/crates/ssr_server
 RUN rustup target add x86_64-unknown-linux-musl
 RUN rustup target add wasm32-unknown-unknown
 # for local dev
-RUN cargo install wasm-bindgen-cli --version 0.2.87
+# RUN cargo install wasm-bindgen-cli --version 0.2.87
 RUN cargo build --release --target=x86_64-unknown-linux-musl
 WORKDIR /usr/src/app
 COPY . .
