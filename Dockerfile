@@ -39,7 +39,7 @@
 FROM rust:1.69.0-alpine as builder
 
 WORKDIR /usr/src/app
-RUN apk update && apk add --no-cache musl-dev bash
+RUN apk update && apk add --no-cache pkgconfig openssl openssl-dev musl-dev bash
 
 COPY . .
 
