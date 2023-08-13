@@ -38,7 +38,7 @@
 
 FROM rust:1.69.0-alpine as builder
 WORKDIR /usr/src/app
-RUN apk update && apk add --no-cache pkgconfig openssl openssl-dev musl-dev libssl-dev bash gcc g++ make
+RUN apk update && apk add --no-cache pkgconfig openssl openssl-dev musl-dev bash gcc g++ make
 COPY . .
 
 WORKDIR /usr/src/app/crates/ssr_server
