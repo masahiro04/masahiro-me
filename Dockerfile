@@ -37,31 +37,13 @@
 
 
 FROM rust:1.69.0-alpine as builder
-
 WORKDIR /usr/src/app
-RUN apk update && apk add --no-cache pkgconfig openssl openssl-dev musl-dev jemalloc-dev bash
-
+RUN apk update && apk add --no-cache pkgconfig openssl openssl-dev musl-dev libssl-dev bash gcc g++ make
 COPY . .
-
-# COPY ./Cargo.lock ./Cargo.lock
-# COPY ./crates/app/Cargo.toml ./crates/app/Cargo.toml
-# COPY ./crates/ssr_server/Cargo.toml ./crates/ssr_server/Cargo.toml
-# RUN mkdir ./crates/app/src/
-# RUN touch ./crates/app/src/lib.rs
-# RUN mkdir ./crates/ssr_server/src/
-# RUN touch ./crates/ssr_server/src/lib.rs
 
 WORKDIR /usr/src/app/crates/ssr_server
 RUN rustup target add x86_64-unknown-linux-musl
 RUN rustup target add wasm32-unknown-unknown
-# for local dev
-# RUN cargo install wasm-bindgen-cli --version 0.2.87
-# RUN cargo build --release --target=x86_64-unknown-linux-musl
-# WORKDIR /usr/src/app
-# COPY . .
-# RUN cargo install --path ./crates/ssr_server --target=x86_64-unknown-linux-musl
-
-# RUN cargo build --release --target=x86_64-unknown-linux-musl
 
 WORKDIR /usr/src/app/crates/ssr_server
 
