@@ -1,19 +1,9 @@
-<<<<<<< HEAD
 target
-app/target
-app/node_modules
-ssr_server/target
-ssr_server/node_modules
-middlewares/node_modules
+crates/app/target
+crates/app/node_modules
+crates/ssr_server/target
+crates/ssr_server/node_modules
 
-=======
-frontend/app/target
-frontend/runner/target
-frontend/ssr/target
-frontend/target
-frontend/app/node_modules
-frontend/runner/node_modules
->>>>>>> 91b7f6c (feat: added middleware)
 Cargo.lock
 dist/
 .env
