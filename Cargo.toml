@@ -1,9 +1,9 @@
 [workspace]
 members = ["crates/*"]
 
-# [profile.release]
-# strip = true
-# panic = 'abort'
-# codegen-units = 1
-# opt-level = 'z'
-# lto = true
+[profile.release]
+strip = true
+panic = 'abort'
+codegen-units = 1
+opt-level = 'z'
+lto = true
