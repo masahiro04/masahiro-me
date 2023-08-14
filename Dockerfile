@@ -1,7 +1,6 @@
 FROM rust:1.69.0 as builder
 
 RUN apt-get update && apt-get install -y make nodejs g++ binaryen
-# RUN apk update && apk add --no-cache pkgconfig openssl openssl-dev musl-dev bash gcc g++ make
 
 WORKDIR /usr/src/app
 COPY . .
@@ -16,6 +15,9 @@ RUN cargo install trunk
 RUN trunk build --release -d ./dist
 RUN cp robots.txt ./dist/robots.txt
 RUN cargo build --release --features=ssr --bin simple_ssr_server --
+
+RUN ldd /usr/src/app/target/release/simple_ssr_server
+RUN ldd /usr/src/app/target/release/simple_ssr_server
 
 RUN ls -l /usr/src/app/target/release/
 RUN ls -l /usr/src/app/target/release/
