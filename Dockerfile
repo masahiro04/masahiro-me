@@ -28,4 +28,4 @@ COPY --from=builder /usr/src/app/target/release/simple_ssr_server /simple_ssr_se
 # ENTRYPOINT ["/simple_ssr_server"]
 # CMD ["--dir", "dist"]
 
-CMD ["/simple_ssr_server", "--dir", "dist"]
+CMD ["./simple_ssr_server", "--dir", "dist"]
