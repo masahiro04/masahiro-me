@@ -19,14 +19,14 @@ RUN trunk build --release -d ./dist
 RUN cp robots.txt ./dist/robots.txt
 RUN cargo build --release --target=x86_64-unknown-linux-musl --features=ssr --bin simple_ssr_server --
 
-RUN ls -l /usr/src/app/target/
+RUN ls -l /usr/src/app/target/x86_64-unknown-linux-musl/
 RUN ls -l /usr/local/cargo/bin/
 RUN ls -l /usr/local/cargo/bin/
 RUN ls -l /usr/local/cargo/bin/
 
 FROM scratch
 ENV PORT=3002
-COPY --from=builder /usr/src/app/crates/ssr_server/target/x86_64-unknown-linux-musl/release/simple_ssr_server /usr/local/bin/simple_ssr_server
+COPY --from=builder /usr/src/app/target/x86_64-unknown-linux-musl/release/simple_ssr_server /usr/local/bin/simple_ssr_server
 # COPY --from=builder /usr/local/cargo/bin/ssr_server /usr/local/bin/ssr_server
 
 ENTRYPOINT ["simple_ssr_server"]
