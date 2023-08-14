@@ -15,8 +15,8 @@ RUN trunk build --release -d ./dist
 RUN cp robots.txt ./dist/robots.txt
 RUN cargo build --release --target=x86_64-unknown-linux-musl --features=ssr --bin simple_ssr_server --
 
-RUN ldd /usr/src/app/target/release/simple_ssr_server
-RUN ldd /usr/src/app/target/release/simple_ssr_server
+RUN ldd /usr/src/app/target/x86_64-unknown-linux-musl/release/simple_ssr_server
+RUN ldd /usr/src/app/target/x86_64-unknown-linux-musl/release/simple_ssr_server
 
 RUN ls -l /usr/src/app/target/release/
 RUN ls -l /usr/src/app/target/release/
