@@ -23,16 +23,11 @@ RUN ls -l /usr/local/cargo/bin/
 RUN ls -l /usr/local/cargo/bin/
 
 FROM scratch
-ENV PORT=3002
+EXPOSE 8080
 COPY --from=builder /usr/src/app/crates/ssr_server/dist/ /dist/
 # COPY --from=builder /usr/src/app/target/x86_64-unknown-linux-musl/release/simple_ssr_server /simple_ssr_server
 # COPY --from=builder /usr/src/app/target/release/simple_ssr_server /usr/local/bin/simple_ssr_server
 COPY --from=builder /usr/src/app/target/release/simple_ssr_server /simple_ssr_server
-# RUN echo "Before listing root directory"
-RUN ls -l /
-RUN ls -l /
-RUN ls -l /
-# RUN echo "After listing root directory"
 
 ENTRYPOINT ["./simple_ssr_server"]
 CMD ["--dir", "dist"]
