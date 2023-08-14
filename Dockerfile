@@ -18,17 +18,17 @@ RUN cp robots.txt ./dist/robots.txt
 RUN cargo build --release --features=ssr --bin simple_ssr_server --
 
 # RUN ls -l /usr/src/app/target/x86_64-unknown-linux-musl/
-RUN ls -l /usr/local/cargo/bin/
-RUN ls -l /usr/local/cargo/bin/
-RUN ls -l /usr/local/cargo/bin/
+RUN ls -l /usr/src/app/target/release/
+RUN ls -l /usr/src/app/target/release/
+RUN ls -l /usr/src/app/target/release/
 
 FROM scratch
 EXPOSE 8080
 COPY --from=builder /usr/src/app/crates/ssr_server/dist/ /dist/
 # COPY --from=builder /usr/src/app/target/x86_64-unknown-linux-musl/release/simple_ssr_server /simple_ssr_server
 # COPY --from=builder /usr/src/app/target/release/simple_ssr_server /usr/local/bin/simple_ssr_server
-COPY --from=builder /usr/src/app/target/release/simple_ssr_server /simple_ssr_server
+COPY --from=builder /usr/src/app/target/release/simple_ssr_server /usr/local/bin/simple_ssr_server
 
-ENTRYPOINT ["./simple_ssr_server"]
+ENTRYPOINT ["simple_ssr_server"]
 CMD ["--dir", "dist"]
 
