@@ -17,9 +17,13 @@ RUN trunk build --release -d ./dist
 RUN cp robots.txt ./dist/robots.txt
 RUN cargo build --release --target=x86_64-unknown-linux-musl --features=ssr --bin simple_ssr_server --
 
-RUN ls -l /usr/src/app/crates/ssr_server/target/x86_64-unknown-linux-musl/release/
-RUN ls -l /usr/src/app/crates/ssr_server/target/x86_64-unknown-linux-musl/release/
-RUN ls -l /usr/src/app/crates/ssr_server/target/x86_64-unknown-linux-musl/release/
+RUN ls -l /usr/src/app/crates/ssr_server/target/
+RUN ls -l /usr/src/app/crates/ssr_server/target/
+RUN ls -l /usr/src/app/crates/ssr_server/target/
+RUN ls -l /usr/src/app/target/
+RUN ls -l /usr/src/app/target/
+RUN ls -l /usr/src/app/target/
+
 RUN ls -l /usr/local/cargo/bin/
 RUN ls -l /usr/local/cargo/bin/
 RUN ls -l /usr/local/cargo/bin/
