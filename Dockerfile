@@ -10,9 +10,6 @@ RUN rustup target add x86_64-unknown-linux-musl
 RUN rustup target add wasm32-unknown-unknown
 RUN cargo install trunk
 
-# WORKDIR /usr/src/app/crates/ssr_server
-
-
 # for local dev
 # RUN cargo install wasm-bindgen-cli --version 0.2.87
 RUN trunk build --release -d ./dist
