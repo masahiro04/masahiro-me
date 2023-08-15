@@ -32,13 +32,10 @@ env_logger = "0.10"
 clap = { version = "3.1.7", features = ["derive"] }
 hyper = { version = "0.14", features = ["server", "http1"] }
 jemallocator = "0.5"
-reqwest = "0.11"
+# reqwest = "0.11"
+reqwest = { version = "0.11", default-features = false, features = ["rustls-tls"] }
 
 [features]
 hydration = ["yew/hydration"]
 ssr = ["yew/ssr"]
 
-# [profile.release]
-# lto = true
-# opt-level = 'z'
-# codegen-units = 1
