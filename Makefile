@@ -1,5 +1,5 @@
 dev:
-	cd app && \
+	cd crates/app && \
 	yarn install && \
 	yarn build:tailwind && \
 	trunk serve
