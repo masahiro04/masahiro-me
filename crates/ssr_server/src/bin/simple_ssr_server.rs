@@ -3,7 +3,8 @@ use pages::about::index::about_meta_tags;
 use pages::posts::detail::post_meta_tags;
 use pages::posts::index::posts_meta_tags;
 use pages::projects::index::projects_meta_tags;
-use pages::route::{Route, ServerApp, ServerAppProps};
+use pages::route;
+// use pages::route::{Route, ServerApp, ServerAppProps};
 use reqwest::Client;
 use std::collections::HashMap;
 use std::future::Future;
@@ -50,11 +51,11 @@ async fn render(
     let url = url.to_string();
     let (index_html_top, index_html_head) = index_html_before.split_once("<head>").unwrap();
     let mut index_html_top = index_html_top.to_owned();
-    let route = Route::from_str(&url).unwrap();
+    let route = route::Route::from_str(&url).unwrap();
 
     let meta = match route {
-        Route::PostIndex { page } => posts_meta_tags(),
-        Route::PostDetail { slug } => {
+        route::Route::PostIndex { page } => posts_meta_tags(),
+        route::Route::PostDetail { slug } => {
             log::debug!("Posts OGP Setting {}", slug);
             let meta_future = tokio::spawn(async move {
                 let api_response = fetch_data_from_api(&slug).await;
@@ -76,8 +77,8 @@ async fn render(
             });
             meta_future.await.unwrap_or_else(|_| "".to_string())
         }
-        Route::Projects => projects_meta_tags(),
-        Route::AboutIndex => about_meta_tags(),
+        route::Route::Projects => projects_meta_tags(),
+        route::Route::AboutIndex => about_meta_tags(),
         _ => "".to_string(),
     };
 
@@ -85,10 +86,11 @@ async fn render(
         index_html_top.push_str(&meta);
     }
 
-    let renderer = yew::ServerRenderer::<ServerApp>::with_props(move || ServerAppProps {
-        url: url.into(),
-        queries,
-    });
+    let renderer =
+        yew::ServerRenderer::<route::ServerApp>::with_props(move || route::ServerAppProps {
+            url: url.into(),
+            queries,
+        });
 
     let index_html_before = format!("{}{}", index_html_top, index_html_head);
 
