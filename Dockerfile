@@ -23,7 +23,7 @@ FROM debian:bullseye-slim
 RUN apt-get update && apt-get install -y libgcc1 libstdc++6 ca-certificates
 
 EXPOSE 8080
-COPY --from=builder /usr/ssr_server/dist/ /dist/
+COPY --from=builder /usr/crates/ssr_server/dist/ /dist/
 COPY --from=builder /tmp/target/release/simple_ssr_server /simple_ssr_server
 
 ENTRYPOINT ["./simple_ssr_server"]
