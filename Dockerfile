@@ -1,11 +1,14 @@
 FROM rust:1.69.0-alpine as builder
 
 # 必要なツールやライブラリをインストール
-RUN apk add --no-cache build-base npm binaryen
+# RUN apk add --no-cache build-base npm binaryen
+RUN apk add --no-cache build-base npm binaryen pkgconfig openssl-dev
 # RUN npm install -g yarn
 
 # https://qiita.com/yagince/items/077d209ecca644398ea3 を参考に実装
 ENV CARGO_BUILD_TARGET_DIR=/tmp/target
+
+# ENV OPENSSL_STATIC=yes
 
 WORKDIR /usr
 COPY . .
