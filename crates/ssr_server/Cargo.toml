@@ -1,0 +1,44 @@
+[package]
+name = "ssr_server"
+version = "0.1.0"
+authors = ["masahiro <stmhamachiii@gmail.com>"]
+edition = "2021"
+
+[[bin]]
+name = "simple_ssr_hydrate"
+required-features = ["hydration"]
+
+[[bin]]
+name = "simple_ssr_server"
+required-features = ["ssr"]
+
+[dependencies]
+yew = { version = "0.20", features = ["ssr", "hydration"] }
+futures = { version = "0.3", features = ["std"], default-features = false }
+log = "0.4"
+app = { path = "../app" }
+async-trait = "0.1.68"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+wasm-bindgen-futures = "0.4"
+wasm-logger = "0.2.0"
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+tokio = { version = "1.27.0", features = ["full"] }
+axum = "0.6"
+tower = { version = "0.4", features = ["make"] }
+tower-http = { version = "0.3", features = ["fs"] }
+env_logger = "0.10"
+clap = { version = "3.1.7", features = ["derive"] }
+hyper = { version = "0.14", features = ["server", "http1"] }
+jemallocator = "0.5"
+reqwest = "0.11"
+
+[features]
+hydration = ["yew/hydration"]
+ssr = ["yew/ssr"]
+
+# [profile.release]
+# lto = true
+# opt-level = 'z'
+# codegen-units = 1
