@@ -1,0 +1,16 @@
+[package]
+name = "use_case"
+version = "0.1.0"
+authors = ["masahiro <stmhamachiii@gmail.com>"]
+edition = "2021"
+
+[dependencies]
+yew = { version = "0.20", features = ["csr"] }
+yew-router = "0.17.0"
+serde = "=1.0.126"
+reqwest = { version = "0.11", features = ["json"] }
+async-trait = "0.1.68"
+url = { version = "2", features = ["serde"] }
+anyhow = { version = "1.0" }
+domain = { path = "../domain" }
+infrastructure = { path = "../infrastructure" }

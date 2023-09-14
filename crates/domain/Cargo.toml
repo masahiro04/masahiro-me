@@ -1,0 +1,8 @@
+[package]
+name = "domain"
+version = "0.0.0"
+edition = "2021"
+
+[dependencies]
+serde = "=1.0.126"
+async-trait = "0.1.68"

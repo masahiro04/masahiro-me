@@ -1,8 +1,5 @@
 [workspace]
-members = [
-    "app",
-    "ssr_server",
-]
+members = ["crates/*"]
 
 [profile.release]
 strip = true
