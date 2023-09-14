@@ -1,10 +1,10 @@
-use app::infrastructure::repositories::post_repository::PostFromApi;
-use app::pages::about::index::about_meta_tags;
-use app::pages::posts::detail::post_meta_tags;
-use app::pages::posts::index::posts_meta_tags;
-use app::pages::projects::index::projects_meta_tags;
-use app::routes::{Route, ServerApp, ServerAppProps};
+use infrastructure::repositories::post_repository::PostFromApi;
+use pages::about::index::about_meta_tags;
+use pages::posts::detail::post_meta_tags;
+use pages::posts::index::posts_meta_tags;
+use pages::projects::index::projects_meta_tags;
 use reqwest::Client;
+use route::{Route, ServerApp, ServerAppProps};
 use std::collections::HashMap;
 use std::future::Future;
 use std::path::PathBuf;

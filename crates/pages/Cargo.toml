@@ -1,12 +1,8 @@
 [package]
-name = "app"
+name = "pages"
 version = "0.1.0"
 authors = ["masahiro <stmhamachiii@gmail.com>"]
 edition = "2021"
-
-[[bin]]
-name = "function_router"
-required-features = ["yew/csr"]
 
 [dependencies]
 yew = { version = "0.20", features = ["csr"] }
@@ -15,14 +11,9 @@ serde = "=1.0.126"
 reqwest = { version = "0.11", features = ["json"] }
 async-trait = "0.1.68"
 log = "0.4"
-wee_alloc = "0.4.5"
 domain = { path = "../domain" }
 infrastructure = { path = "../infrastructure" }
 use_case = { path = "../use_case" }
-pages = { path = "../pages" }
 url = { version = "2", features = ["serde"] }
 anyhow = { version = "1.0" }
 
-[target.'cfg(target_arch = "wasm32")'.dependencies]
-wasm-bindgen = "0.2.85"
-wasm-logger = "0.2.0"

@@ -34,6 +34,11 @@ hyper = { version = "0.14", features = ["server", "http1"] }
 jemallocator = "0.5"
 reqwest = "0.11"
 
+domain = { path = "../domain" }
+infrastructure = { path = "../infrastructure" }
+use_case = { path = "../use_case" }
+pages = { path = "../pages" }
+
 [features]
 hydration = ["yew/hydration"]
 ssr = ["yew/ssr"]
