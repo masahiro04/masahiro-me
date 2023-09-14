@@ -20,7 +20,7 @@ RUN cargo build --release --target x86_64-unknown-linux-musl
 # RUN make ssr_build
 
 WORKDIR /usr/crates/ssr_server
-RUN cargo run --release --target x86_64-unknown-linux-musl --features=ssr --bin simple_ssr_server -- --dir dist
+RUN cargo build --release --target x86_64-unknown-linux-musl --features=ssr --bin simple_ssr_server --
 
 # # lddコマンドで動的リンクを検証
 RUN ldd /tmp/target/release/simple_ssr_server
