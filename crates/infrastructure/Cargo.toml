@@ -7,6 +7,6 @@ edition = "2021"
 [dependencies]
 anyhow = { version = "1.0" }
 async-trait = "0.1.68"
-domain = { path = "../domain" }
 serde = "=1.0.126"
-reqwest = { version = "0.11", features = ["json"] }
+reqwest = { version = "0.11", default-features = false, features = ["rustls-tls", "json"] }
+domain = { path = "../domain" }

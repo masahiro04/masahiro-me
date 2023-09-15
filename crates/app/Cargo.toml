@@ -12,16 +12,16 @@ required-features = ["yew/csr"]
 yew = { version = "0.20", features = ["csr"] }
 yew-router = "0.17.0"
 serde = "=1.0.126"
-reqwest = { version = "0.11", features = ["json"] }
+reqwest = { version = "0.11", default-features = false, features = ["rustls-tls", "json"] }
 async-trait = "0.1.68"
 log = "0.4"
 wee_alloc = "0.4.5"
+url = { version = "2", features = ["serde"] }
+anyhow = { version = "1.0" }
 domain = { path = "../domain" }
 infrastructure = { path = "../infrastructure" }
 use_case = { path = "../use_case" }
 pages = { path = "../pages" }
-url = { version = "2", features = ["serde"] }
-anyhow = { version = "1.0" }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 wasm-bindgen = "0.2.85"
