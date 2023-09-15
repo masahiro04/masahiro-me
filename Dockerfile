@@ -1,6 +1,6 @@
 FROM rust:1.69.0-alpine as builder
 
-RUN apk add --no-cache build-base npm binaryen pkgconfig openssl-dev
+RUN apk add --no-cache build-base npm binaryen
 
 WORKDIR /usr
 COPY . .
