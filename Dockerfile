@@ -20,14 +20,25 @@ RUN cargo build --release --target x86_64-unknown-linux-musl --features=ssr --bi
 # RUN ls -la
 # RUN ldd /usr/target/x86_64-unknown-linux-musl/release/simple_ssr_server
 
+# ----
 # # Runtime Stage
-FROM alpine:latest
+# FROM alpine:latest
+# #
+# RUN apk add --no-cache libgcc libstdc++ ca-certificates
 #
-RUN apk add --no-cache libgcc libstdc++ ca-certificates
+# EXPOSE 8080
+# COPY --from=builder /usr/crates/ssr_server/dist/ /dist/
+# COPY --from=builder /usr/target/x86_64-unknown-linux-musl/release/simple_ssr_server /simple_ssr_server
+#
+# ENTRYPOINT ["./simple_ssr_server"]
+# CMD ["--dir", "dist"]
+# ----
+
+FROM scratch
 
 EXPOSE 8080
 COPY --from=builder /usr/crates/ssr_server/dist/ /dist/
 COPY --from=builder /usr/target/x86_64-unknown-linux-musl/release/simple_ssr_server /simple_ssr_server
 
-ENTRYPOINT ["./simple_ssr_server"]
+ENTRYPOINT ["/simple_ssr_server"]
 CMD ["--dir", "dist"]
