@@ -47,7 +47,8 @@
 FROM rust:1.69.0 as builder
 
 # Debian-based systems use apt for package management
-RUN apt-get update && apt-get install -y build-essential npm binaryen && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && apt-get install -y build-essential npm binaryen && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y build-essential binaryen musl-tools && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr
 COPY . .
