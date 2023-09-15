@@ -21,6 +21,9 @@ RUN cargo build --release --target x86_64-unknown-linux-musl --features=ssr --bi
 # # lddコマンドで動的リンクを検証
 # RUN ldd /usr/src/app/target/x86_64-unknown-linux-musl/release/simple_ssr_server
 # RUN ldd /usr/src/app/target/x86_64-unknown-linux-musl/release/simple_ssr_server
+RUN ls -la
+RUN ls -la
+RUN ls -la
 
 RUN ldd /usr/target/x86_64-unknown-linux-musl/release/simple_ssr_server
 
