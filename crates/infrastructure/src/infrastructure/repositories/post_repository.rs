@@ -22,33 +22,17 @@ impl IPostRepository for PostRepository {
             "{}/posts?per_page={}&offset={}",
             &self.api_url, per_page, offset
         );
-        let response = reqwest::Client::new()
-            .get(url)
-            .send()
-            .await
-            .map_err(|e| anyhow::anyhow!(e.to_string()))?;
-        let posts_from_api = response
-            .json::<Vec<PostFromApi>>()
-            .await
-            .map_err(|e| anyhow::anyhow!(e.to_string()))?;
-        let posts = posts_from_api
+        let response = reqwest::Client::new().get(url).send().await?;
+        let posts_from_api = response.json::<Vec<PostFromApi>>().await?;
+        Ok(posts_from_api
             .into_iter()
             .map(|post_from_api| post_from_api.into_post().unwrap())
-            .collect::<Vec<Post>>();
-        Ok(posts)
+            .collect::<Vec<Post>>())
     }
-
     async fn find_related_posts(&self, category_ids: &str) -> anyhow::Result<Vec<Post>> {
         let url = format!("{}/posts?category_ids={}", &self.api_url, category_ids);
-        let response = reqwest::Client::new()
-            .get(url)
-            .send()
-            .await
-            .map_err(|e| anyhow::anyhow!(e.to_string()))?;
-        let posts_from_api = response
-            .json::<Vec<PostFromApi>>()
-            .await
-            .map_err(|e| anyhow::anyhow!(e.to_string()))?;
+        let response = reqwest::Client::new().get(url).send().await?;
+        let posts_from_api = response.json::<Vec<PostFromApi>>().await?;
         let posts = posts_from_api
             .into_iter()
             .map(|post_from_api| post_from_api.into_post().unwrap())
@@ -59,18 +43,10 @@ impl IPostRepository for PostRepository {
         let posts = posts[0..3].to_vec();
         Ok(posts)
     }
-
     async fn find_post(&self, slug: String) -> anyhow::Result<Option<Post>> {
         let url = format!("{}/posts/{}", self.api_url, slug);
-        let response = reqwest::Client::new()
-            .get(url)
-            .send()
-            .await
-            .map_err(|e| anyhow::anyhow!(e.to_string()))?;
-        let post_from_api = response
-            .json::<PostFromApi>()
-            .await
-            .map_err(|e| anyhow::anyhow!(e.to_string()))?;
+        let response = reqwest::Client::new().get(url).send().await?;
+        let post_from_api = response.json::<PostFromApi>().await?;
         let post = post_from_api
             .into_post()
             .map_err(|e| anyhow::anyhow!(e.to_string()))?;
@@ -87,16 +63,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_find_all() -> anyhow::Result<()> {
-        let posts_from_api = vec![PostFromApi {
-            title: "title".to_string(),
-            slug: "slug".to_string(),
-            date: "date".to_string(),
-            excerpt: "excerpt".to_string(),
-            content: "content".to_string(),
-            categories: vec![],
-            tags: vec![],
-            featured_media: "featured_media".to_string(),
-        }];
+        let posts_from_api = make_posts_from_api();
         let posts = posts_from_api
             .clone()
             .into_iter()
@@ -107,6 +74,53 @@ mod tests {
         let repository = PostRepository::new(mock.0.url());
 
         assert_eq!(repository.find_posts(1, 1).await?, posts);
+        mock.1.assert();
+        mock.1.remove();
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_find_related_posts() -> anyhow::Result<()> {
+        let category_id = 1;
+        let posts_from_api = make_posts_from_api();
+        let posts = posts_from_api
+            .clone()
+            .into_iter()
+            .map(|post_from_api| post_from_api.into_post().unwrap())
+            .collect::<Vec<Post>>();
+        let json_string = serde_json::to_string(&posts_from_api).unwrap();
+        let mock = create_mock_server(
+            format!("/posts?category_ids={}", category_id),
+            json_string,
+            200,
+        );
+        let repository = PostRepository::new(mock.0.url());
+
+        assert_eq!(
+            repository
+                .find_related_posts(category_id.to_string().as_str())
+                .await?,
+            posts
+        );
+        mock.1.assert();
+        mock.1.remove();
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_find_post() -> anyhow::Result<()> {
+        let slug = "slug";
+        let posts_from_api = make_posts_from_api();
+        if posts_from_api.is_empty() {
+            panic!("posts_from_api is empty");
+        }
+        let post_from_api = &posts_from_api[0];
+        let post = post_from_api.into_post()?;
+        let json_string = serde_json::to_string(post_from_api).unwrap();
+        let mock = create_mock_server(format!("/posts/{}", slug), json_string, 200);
+        let repository = PostRepository::new(mock.0.url());
+
+        assert_eq!(repository.find_post(slug.to_string()).await?, Some(post));
         mock.1.assert();
         mock.1.remove();
         Ok(())
@@ -125,5 +139,18 @@ mod tests {
             .with_body(json_string)
             .create();
         (server, mock)
+    }
+
+    fn make_posts_from_api() -> Vec<PostFromApi> {
+        vec![PostFromApi {
+            title: "title".to_string(),
+            slug: "slug".to_string(),
+            date: "date".to_string(),
+            excerpt: "excerpt".to_string(),
+            content: "content".to_string(),
+            categories: vec![],
+            tags: vec![],
+            featured_media: "featured_media".to_string(),
+        }]
     }
 }

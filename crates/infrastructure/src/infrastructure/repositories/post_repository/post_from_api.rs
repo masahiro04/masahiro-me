@@ -15,7 +15,7 @@ pub struct PostFromApi {
 }
 
 impl PostFromApi {
-    pub fn into_post(self) -> anyhow::Result<Post> {
+    pub fn into_post(&self) -> anyhow::Result<Post> {
         let categories_from_api = self.categories.clone();
         let categories = categories_from_api
             .into_iter()
