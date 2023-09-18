@@ -103,7 +103,7 @@ mod tests {
             .map(|post_from_api| post_from_api.into_post().unwrap())
             .collect::<Vec<Post>>();
         let json_string = serde_json::to_string(&posts_from_api).unwrap();
-        let mock = create_mock_server("/posts?per_page=1&offset=1".to_string(), json_string, None);
+        let mock = create_mock_server("/posts?per_page=1&offset=1".to_string(), json_string, 200);
         let repository = PostRepository::new(mock.0.url());
 
         assert_eq!(repository.find_posts(1, 1).await?, posts);
@@ -115,9 +115,8 @@ mod tests {
     fn create_mock_server(
         path: String,
         json_string: String,
-        status_code: Option<usize>,
+        status_code: usize,
     ) -> (mockito::ServerGuard, mockito::Mock) {
-        let status_code = status_code.unwrap_or(200);
         let mut server = mockito::Server::new();
         let mock = server
             .mock("GET", path.as_str())

@@ -31,23 +31,24 @@ impl FromStr for Route {
             return Ok(Self::NotFound);
         };
         let path_segments = path_segments.collect::<Vec<_>>();
-        if let Some(&"about") = path_segments.get(0) {
+        let first = path_segments.first();
+        if let Some(&"about") = first {
             return Ok(Self::AboutIndex {});
         }
-        if let Some(&"projects") = path_segments.get(0) {
+        if let Some(&"projects") = first {
             return Ok(Self::Projects {});
         }
-        if let (Some(&"pages"), Some(page)) = (path_segments.get(0), path_segments.get(1)) {
+        if let (Some(&"pages"), Some(page)) = (first, path_segments.get(1)) {
             return Ok(Self::PostIndex {
                 page: page.to_string().parse().unwrap_or(1),
             });
         }
-        if let (Some(&"posts"), Some(slug)) = (path_segments.get(0), path_segments.get(1)) {
+        if let (Some(&"posts"), Some(slug)) = (first, path_segments.get(1)) {
             return Ok(Self::PostDetail {
                 slug: slug.to_string(),
             });
         }
-        if let Some(&"") = path_segments.get(0) {
+        if let Some(&"") = first {
             return Ok(Self::PostIndex { page: 1 });
         }
         Ok(Self::NotFound)
@@ -60,7 +61,7 @@ pub fn switch(routes: Route) -> Html {
             let fallback = html! {<loading_posts::LoadingPosts />};
             html! {
                 <Suspense {fallback}>
-                    <posts::index::PostIndex page={page.clone()} />
+                    <posts::index::PostIndex page={page} />
                 </Suspense>
             }
         }
@@ -68,7 +69,7 @@ pub fn switch(routes: Route) -> Html {
             let fallback = html! {<loading_post::LoadingPost />};
             html! {
                 <Suspense {fallback}>
-                    <posts::detail::PostDetail slug={slug.clone()} />
+                    <posts::detail::PostDetail slug={slug} />
                 </Suspense>
             }
         }
