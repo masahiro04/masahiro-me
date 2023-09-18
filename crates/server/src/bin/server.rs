@@ -1,10 +1,10 @@
-use infrastructure::repositories::post_repository::PostFromApi;
+// 参照よくなさそう
+use infrastructure::repositories::post_repository::post_from_api::PostFromApi;
 use pages::about::index::about_meta_tags;
 use pages::posts::detail::post_meta_tags;
 use pages::posts::index::posts_meta_tags;
 use pages::projects::index::projects_meta_tags;
 use pages::route;
-// use pages::route::{Route, ServerApp, ServerAppProps};
 use reqwest::Client;
 use std::collections::HashMap;
 use std::future::Future;
@@ -64,16 +64,19 @@ async fn render(
                     Err(err) => panic!("error: {}", err),
                 };
 
-                let title = post_from_api.title;
-                let description = post_from_api.excerpt;
-                let featured_media = post_from_api.featured_media;
-                let keywords = post_from_api
-                    .categories
-                    .iter()
-                    .map(|category| category.name.clone())
+                let post = post_from_api.into_post().unwrap();
+                let keywords = post
+                    .categories()
+                    .into_iter()
+                    .map(|category| category.name().to_string())
                     .collect::<Vec<String>>()
                     .join(",");
-                post_meta_tags(&title, &description, &keywords, &featured_media)
+                post_meta_tags(
+                    post.title(),
+                    post.excerpt(),
+                    &keywords,
+                    &post.featured_media(),
+                )
             });
             meta_future.await.unwrap_or_else(|_| "".to_string())
         }

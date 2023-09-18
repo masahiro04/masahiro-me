@@ -1,29 +1,9 @@
+mod category_from_api;
+pub mod post_from_api;
+use self::post_from_api::PostFromApi;
 use async_trait::async_trait;
-use domain::{
-    entities::{category::Category, post::Post},
-    repositories::post_repository::IPostRepository,
-};
-use serde::{Deserialize, Serialize};
+use domain::{entities::post::Post, repositories::post_repository::IPostRepository};
 use std::io::Result;
-extern crate reqwest;
-
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-pub struct CategoryFromApi {
-    pub id: i32,
-    pub name: String,
-}
-
-#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
-pub struct PostFromApi {
-    pub title: String,
-    pub slug: String,
-    pub date: String,
-    pub excerpt: String,
-    pub content: String,
-    pub categories: Vec<CategoryFromApi>,
-    pub tags: Vec<String>,
-    pub featured_media: String,
-}
 
 #[derive(Clone)]
 pub struct PostRepository {
@@ -50,27 +30,9 @@ impl IPostRepository for PostRepository {
             Err(_) => Vec::new(),
         };
         let posts = posts_from_api
-            .iter()
-            .map(|post_from_api| {
-                let categories_from_api = post_from_api.categories.clone();
-                let categories = categories_from_api
-                    .iter()
-                    .map(|category_from_api| {
-                        Category::reconstruct(category_from_api.id, category_from_api.name.clone())
-                    })
-                    .collect::<Vec<Category>>();
-                Post::reconstruct(
-                    post_from_api.title.clone(),
-                    post_from_api.slug.clone(),
-                    post_from_api.date.clone(),
-                    post_from_api.excerpt.clone(),
-                    post_from_api.content.clone(),
-                    categories,
-                    post_from_api.featured_media.clone(),
-                )
-            })
+            .into_iter()
+            .map(|post_from_api| post_from_api.into_post().unwrap())
             .collect::<Vec<Post>>();
-
         Ok(posts)
     }
 
@@ -83,28 +45,8 @@ impl IPostRepository for PostRepository {
             Err(_) => Vec::new(),
         };
         let posts = posts_from_api
-            .iter()
-            .map(|post_from_api| {
-                let categories_from_api = post_from_api.categories.clone();
-                let categories = categories_from_api
-                    .iter()
-                    .map(|category_from_api| {
-                        Category::reconstruct(
-                            category_from_api.id,
-                            category_from_api.name.to_string(),
-                        )
-                    })
-                    .collect::<Vec<Category>>();
-                Post::reconstruct(
-                    post_from_api.title.clone(),
-                    post_from_api.slug.clone(),
-                    post_from_api.date.clone(),
-                    post_from_api.excerpt.clone(),
-                    post_from_api.content.clone(),
-                    categories,
-                    post_from_api.featured_media.clone(),
-                )
-            })
+            .into_iter()
+            .map(|post_from_api| post_from_api.into_post().unwrap())
             .collect::<Vec<Post>>();
         if posts.len() < 3 {
             return Ok(posts);
@@ -122,22 +64,7 @@ impl IPostRepository for PostRepository {
                 return Ok(None);
             }
         };
-        let categories_from_api = post_from_api.categories.clone();
-        let categories = categories_from_api
-            .iter()
-            .map(|category_from_api| {
-                Category::reconstruct(category_from_api.id, category_from_api.name.to_string())
-            })
-            .collect::<Vec<Category>>();
-        let post = Post::reconstruct(
-            post_from_api.title,
-            post_from_api.slug,
-            post_from_api.date,
-            post_from_api.excerpt,
-            post_from_api.content,
-            categories,
-            post_from_api.featured_media,
-        );
+        let post = post_from_api.into_post().unwrap();
         Ok(Some(post))
     }
 }
