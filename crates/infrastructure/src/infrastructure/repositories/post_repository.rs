@@ -3,7 +3,6 @@ pub mod post_from_api;
 use self::post_from_api::PostFromApi;
 use async_trait::async_trait;
 use domain::{entities::post::Post, repositories::post_repository::IPostRepository};
-use std::io::Result;
 
 #[derive(Clone)]
 pub struct PostRepository {
@@ -18,17 +17,20 @@ impl PostRepository {
 
 #[async_trait(?Send)]
 impl IPostRepository for PostRepository {
-    async fn find_posts(&self, per_page: i32, offset: i32) -> Result<Vec<Post>> {
+    async fn find_posts(&self, per_page: i32, offset: i32) -> anyhow::Result<Vec<Post>> {
         let url = format!(
             "{}/posts?per_page={}&offset={}",
             &self.api_url, per_page, offset
         );
-        let client = reqwest::Client::new();
-        let response = client.get(url).send().await;
-        let posts_from_api: Vec<PostFromApi> = match response.unwrap().json().await {
-            Ok(posts) => posts,
-            Err(_) => Vec::new(),
-        };
+        let response = reqwest::Client::new()
+            .get(url)
+            .send()
+            .await
+            .map_err(|e| anyhow::anyhow!(e.to_string()))?;
+        let posts_from_api = response
+            .json::<Vec<PostFromApi>>()
+            .await
+            .map_err(|e| anyhow::anyhow!(e.to_string()))?;
         let posts = posts_from_api
             .into_iter()
             .map(|post_from_api| post_from_api.into_post().unwrap())
@@ -36,14 +38,17 @@ impl IPostRepository for PostRepository {
         Ok(posts)
     }
 
-    async fn find_related_posts(&self, category_ids: &str) -> Result<Vec<Post>> {
+    async fn find_related_posts(&self, category_ids: &str) -> anyhow::Result<Vec<Post>> {
         let url = format!("{}/posts?category_ids={}", &self.api_url, category_ids);
-        let client = reqwest::Client::new();
-        let response = client.get(url).send().await.unwrap();
-        let posts_from_api: Vec<PostFromApi> = match response.json().await {
-            Ok(posts) => posts,
-            Err(_) => Vec::new(),
-        };
+        let response = reqwest::Client::new()
+            .get(url)
+            .send()
+            .await
+            .map_err(|e| anyhow::anyhow!(e.to_string()))?;
+        let posts_from_api = response
+            .json::<Vec<PostFromApi>>()
+            .await
+            .map_err(|e| anyhow::anyhow!(e.to_string()))?;
         let posts = posts_from_api
             .into_iter()
             .map(|post_from_api| post_from_api.into_post().unwrap())
@@ -54,17 +59,21 @@ impl IPostRepository for PostRepository {
         let posts = posts[0..3].to_vec();
         Ok(posts)
     }
-    async fn find_post(&self, slug: String) -> Result<Option<Post>> {
+
+    async fn find_post(&self, slug: String) -> anyhow::Result<Option<Post>> {
         let url = format!("{}/posts/{}", self.api_url, slug);
-        let client = reqwest::Client::new();
-        let response = client.get(url).send().await.unwrap();
-        let post_from_api: PostFromApi = match response.json().await {
-            Ok(post) => post,
-            Err(_) => {
-                return Ok(None);
-            }
-        };
-        let post = post_from_api.into_post().unwrap();
+        let response = reqwest::Client::new()
+            .get(url)
+            .send()
+            .await
+            .map_err(|e| anyhow::anyhow!(e.to_string()))?;
+        let post_from_api = response
+            .json::<PostFromApi>()
+            .await
+            .map_err(|e| anyhow::anyhow!(e.to_string()))?;
+        let post = post_from_api
+            .into_post()
+            .map_err(|e| anyhow::anyhow!(e.to_string()))?;
         Ok(Some(post))
     }
 }
