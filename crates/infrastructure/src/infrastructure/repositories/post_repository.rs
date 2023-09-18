@@ -56,17 +56,17 @@ impl IPostRepository for PostRepository {
                 let categories = categories_from_api
                     .iter()
                     .map(|category_from_api| {
-                        Category::reconstruct(category_from_api.id, &category_from_api.name)
+                        Category::reconstruct(category_from_api.id, category_from_api.name.clone())
                     })
                     .collect::<Vec<Category>>();
                 Post::reconstruct(
-                    &post_from_api.title,
-                    &post_from_api.slug,
-                    &post_from_api.date,
-                    &post_from_api.excerpt,
-                    &post_from_api.content,
+                    post_from_api.title.clone(),
+                    post_from_api.slug.clone(),
+                    post_from_api.date.clone(),
+                    post_from_api.excerpt.clone(),
+                    post_from_api.content.clone(),
                     categories,
-                    &post_from_api.featured_media,
+                    post_from_api.featured_media.clone(),
                 )
             })
             .collect::<Vec<Post>>();
@@ -89,17 +89,20 @@ impl IPostRepository for PostRepository {
                 let categories = categories_from_api
                     .iter()
                     .map(|category_from_api| {
-                        Category::reconstruct(category_from_api.id, &category_from_api.name)
+                        Category::reconstruct(
+                            category_from_api.id,
+                            category_from_api.name.to_string(),
+                        )
                     })
                     .collect::<Vec<Category>>();
                 Post::reconstruct(
-                    &post_from_api.title,
-                    &post_from_api.slug,
-                    &post_from_api.date,
-                    &post_from_api.excerpt,
-                    &post_from_api.content,
+                    post_from_api.title.clone(),
+                    post_from_api.slug.clone(),
+                    post_from_api.date.clone(),
+                    post_from_api.excerpt.clone(),
+                    post_from_api.content.clone(),
                     categories,
-                    &post_from_api.featured_media,
+                    post_from_api.featured_media.clone(),
                 )
             })
             .collect::<Vec<Post>>();
@@ -123,17 +126,17 @@ impl IPostRepository for PostRepository {
         let categories = categories_from_api
             .iter()
             .map(|category_from_api| {
-                Category::reconstruct(category_from_api.id, &category_from_api.name)
+                Category::reconstruct(category_from_api.id, category_from_api.name.to_string())
             })
             .collect::<Vec<Category>>();
         let post = Post::reconstruct(
-            &post_from_api.title,
-            &post_from_api.slug,
-            &post_from_api.date,
-            &post_from_api.excerpt,
-            &post_from_api.content,
+            post_from_api.title,
+            post_from_api.slug,
+            post_from_api.date,
+            post_from_api.excerpt,
+            post_from_api.content,
             categories,
-            &post_from_api.featured_media,
+            post_from_api.featured_media,
         );
         Ok(Some(post))
     }

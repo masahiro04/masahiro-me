@@ -35,3 +35,30 @@ impl Project {
         &self.kind
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::domain::entities::project::{Project, ProjectKind};
+
+    #[test]
+    fn test() -> anyhow::Result<()> {
+        let name = "name".to_string();
+        let technologies = "technologies".to_string();
+        let url = "url".to_string();
+        let kind = ProjectKind::Work;
+
+        // reconstruct
+        let project = Project::reconstruct(
+            name.clone(),
+            technologies.clone(),
+            url.clone(),
+            kind.clone(),
+        );
+
+        assert_eq!(project.name(), &name);
+        assert_eq!(project.technologies(), &technologies);
+        assert_eq!(project.url(), &url);
+        assert_eq!(project.kind(), &kind);
+        Ok(())
+    }
+}
