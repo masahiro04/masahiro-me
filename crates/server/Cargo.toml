@@ -1,23 +1,27 @@
 [package]
-name = "ssr_server"
-version = "0.1.0"
+name = "server"
+version = "0.2.0"
 authors = ["masahiro <stmhamachiii@gmail.com>"]
 edition = "2021"
 
+[features]
+hydration = ["yew/hydration"]
+ssr = ["yew/ssr"]
+
 [[bin]]
-name = "simple_ssr_hydrate"
+name = "hydrate"
 required-features = ["hydration"]
 
 [[bin]]
-name = "simple_ssr_server"
+name = "server"
 required-features = ["ssr"]
 
 [dependencies]
 yew = { version = "0.20", features = ["ssr", "hydration"] }
 futures = { version = "0.3", features = ["std"], default-features = false }
 log = "0.4"
-app = { path = "../app" }
 async-trait = "0.1.68"
+app = { path = "../app" }
 domain = { path = "../domain" }
 infrastructure = { path = "../infrastructure" }
 use_case = { path = "../use_case" }
@@ -37,10 +41,6 @@ clap = { version = "3.1.7", features = ["derive"] }
 hyper = { version = "0.14", features = ["server", "http1"] }
 jemallocator = "0.5"
 reqwest = { version = "0.11", default-features = false, features = ["rustls-tls", "json"] }
-
-[features]
-hydration = ["yew/hydration"]
-ssr = ["yew/ssr"]
 
 [profile.release]
 lto = true

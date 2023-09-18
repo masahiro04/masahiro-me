@@ -4,12 +4,12 @@ dev:
 	yarn build:tailwind && \
 	trunk serve
 
-ssr_build:
-	cd crates/ssr_server && \
+build:
+	cd crates/server && \
 	trunk build --release -d ./dist && \
 	cp robots.txt ./dist/robots.txt && \
-	cargo build --release --features=ssr --bin simple_ssr_server --
+	cargo build --release --features=ssr --bin server --
 
-ssr_run:
-	cd crates/ssr_server && \
-	cargo run --release --features=ssr --bin simple_ssr_server -- --dir dist
+run:
+	cd crates/server && \
+	cargo run --release --features=ssr --bin server -- --dir dist
