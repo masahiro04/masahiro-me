@@ -1,6 +1,4 @@
-use std::fmt::Error;
 #[derive(Clone, Debug, PartialEq)]
-
 pub enum ProjectKind {
     Work,
     Advisory,
@@ -16,18 +14,13 @@ pub struct Project {
 }
 
 impl Project {
-    pub fn new(
-        name: String,
-        technologies: String,
-        url: String,
-        kind: ProjectKind,
-    ) -> Result<Self, Error> {
-        Ok(Project {
+    pub fn reconstruct(name: String, technologies: String, url: String, kind: ProjectKind) -> Self {
+        Self {
             name,
             technologies,
             url,
             kind,
-        })
+        }
     }
     pub fn name(&self) -> &str {
         &self.name

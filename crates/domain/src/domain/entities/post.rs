@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
 
 use crate::domain::entities::category::Category;
-use std::fmt::Error;
 
 #[derive(PartialEq, Clone, Debug, Serialize, Deserialize)]
 pub struct Post {
@@ -15,7 +14,7 @@ pub struct Post {
 }
 
 impl Post {
-    pub fn new(
+    pub fn reconstruct(
         title: &str,
         slug: &str,
         date: &str,
@@ -23,8 +22,8 @@ impl Post {
         content: &str,
         categories: Vec<Category>,
         featured_media: &str,
-    ) -> Result<Self, Error> {
-        Ok(Post {
+    ) -> Self {
+        Self {
             title: title.to_string(),
             slug: slug.to_string(),
             date: date.to_string(),
@@ -32,7 +31,7 @@ impl Post {
             content: content.to_string(),
             categories,
             featured_media: featured_media.to_string(),
-        })
+        }
     }
     pub fn title(&self) -> &str {
         &self.title

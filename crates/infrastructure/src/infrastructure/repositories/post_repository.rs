@@ -56,10 +56,10 @@ impl IPostRepository for PostRepository {
                 let categories = categories_from_api
                     .iter()
                     .map(|category_from_api| {
-                        Category::new(category_from_api.id, &category_from_api.name).unwrap()
+                        Category::reconstruct(category_from_api.id, &category_from_api.name)
                     })
                     .collect::<Vec<Category>>();
-                Post::new(
+                Post::reconstruct(
                     &post_from_api.title,
                     &post_from_api.slug,
                     &post_from_api.date,
@@ -68,7 +68,6 @@ impl IPostRepository for PostRepository {
                     categories,
                     &post_from_api.featured_media,
                 )
-                .unwrap()
             })
             .collect::<Vec<Post>>();
 
@@ -90,10 +89,10 @@ impl IPostRepository for PostRepository {
                 let categories = categories_from_api
                     .iter()
                     .map(|category_from_api| {
-                        Category::new(category_from_api.id, &category_from_api.name).unwrap()
+                        Category::reconstruct(category_from_api.id, &category_from_api.name)
                     })
                     .collect::<Vec<Category>>();
-                Post::new(
+                Post::reconstruct(
                     &post_from_api.title,
                     &post_from_api.slug,
                     &post_from_api.date,
@@ -102,7 +101,6 @@ impl IPostRepository for PostRepository {
                     categories,
                     &post_from_api.featured_media,
                 )
-                .unwrap()
             })
             .collect::<Vec<Post>>();
         if posts.len() < 3 {
@@ -125,10 +123,10 @@ impl IPostRepository for PostRepository {
         let categories = categories_from_api
             .iter()
             .map(|category_from_api| {
-                Category::new(category_from_api.id, &category_from_api.name).unwrap()
+                Category::reconstruct(category_from_api.id, &category_from_api.name)
             })
             .collect::<Vec<Category>>();
-        let post = Post::new(
+        let post = Post::reconstruct(
             &post_from_api.title,
             &post_from_api.slug,
             &post_from_api.date,
@@ -136,8 +134,7 @@ impl IPostRepository for PostRepository {
             &post_from_api.content,
             categories,
             &post_from_api.featured_media,
-        )
-        .unwrap();
+        );
         Ok(Some(post))
     }
 }

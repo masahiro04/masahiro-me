@@ -31,17 +31,17 @@ pub async fn fetch_post_usecase(slug: String) -> Result<Option<Post>> {
     let usecase = FetchPostUsecase::new(repo);
     usecase.execute(slug).await
 }
-pub fn fetch_work_projects_usecase() -> Result<Vec<Project>> {
+pub fn fetch_work_projects_usecase() -> Vec<Project> {
     let repo = ProjectRepository::new();
     let usecase = FetchWorkProjectsUsecase::new(repo);
     usecase.execute()
 }
-pub fn fetch_past_work_projects_usecase() -> Result<Vec<Project>> {
+pub fn fetch_past_work_projects_usecase() -> Vec<Project> {
     let repo = ProjectRepository::new();
     let usecase = FetchPastWorkProjectsUsecase::new(repo);
     usecase.execute()
 }
-pub fn fetch_advisory_projects_usecase() -> Result<Vec<Project>> {
+pub fn fetch_advisory_projects_usecase() -> Vec<Project> {
     let repo = ProjectRepository::new();
     let usecase = FetchAdvisoryProjectsUsecase::new(repo);
     usecase.execute()

@@ -2,7 +2,6 @@ use super::{
     hook::{post::use_post, related_posts::use_related_posts},
     shared::{categories, post_body, post_item},
 };
-
 use crate::shared::back_button;
 use yew::prelude::*;
 
@@ -40,7 +39,7 @@ pub fn post_detail(props: &PostProps) -> HtmlResult {
                     </div>
                 </div>
             </div>
-            {if related_posts.len() != 0 {
+            {if !related_posts.is_empty() {
                 html! {
                     <div class="mt-5 mx-auto space-y-2 sm:space-y-3 sm:mt-10">
                         <div class="text-gray-700 text-xl font-semibold">{"Featured"}</div>

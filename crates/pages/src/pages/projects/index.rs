@@ -9,9 +9,9 @@ use {
 
 #[function_component(Projects)]
 pub fn projects() -> Html {
-    let works = fetch_work_projects_usecase().unwrap();
-    let past_works = fetch_past_work_projects_usecase().unwrap();
-    let advidories = fetch_advisory_projects_usecase().unwrap();
+    let works = fetch_work_projects_usecase();
+    let past_works = fetch_past_work_projects_usecase();
+    let advidories = fetch_advisory_projects_usecase();
 
     let render_works = || -> Html {
         works

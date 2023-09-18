@@ -1,5 +1,3 @@
-use std::fmt::Error;
-
 use serde::{Deserialize, Serialize};
 
 #[derive(PartialEq, Clone, Debug, Serialize, Deserialize)]
@@ -9,11 +7,11 @@ pub struct Category {
 }
 
 impl Category {
-    pub fn new(id: i32, name: &str) -> Result<Self, Error> {
-        Ok(Category {
+    pub fn reconstruct(id: i32, name: &str) -> Self {
+        Self {
             id,
             name: name.to_string(),
-        })
+        }
     }
 
     pub fn id(&self) -> &i32 {
