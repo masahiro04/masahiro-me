@@ -14,7 +14,13 @@ pub struct ImageProps {
 }
 #[function_component(Image)]
 pub fn image(props: &ImageProps) -> Html {
-    let ImageProps { source, class, alt, height, width } = props;
+    let ImageProps {
+        source,
+        class,
+        alt,
+        height,
+        width,
+    } = props;
     html! {
         <img
             src={format!("https://assets.masahiro.me/{}", source.to_string())}

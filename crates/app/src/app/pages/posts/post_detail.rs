@@ -1,8 +1,6 @@
-use super::{
-    hook::{post::use_post, related_posts::use_related_posts},
-    shared::{categories, post_body, post_item},
-};
-use crate::shared::back_button;
+use super::hooks;
+use super::post_components::{categories, post_body, post_item};
+use crate::pages::components::back_button;
 use yew::prelude::*;
 
 #[derive(Properties, Clone, PartialEq)]
@@ -12,14 +10,14 @@ pub struct PostProps {
 
 #[function_component(PostDetail)]
 pub fn post_detail(props: &PostProps) -> HtmlResult {
-    let post = use_post(props.slug.clone())?;
+    let post = hooks::post::use_post(props.slug.clone())?;
     let category_ids = post
         .categories()
         .iter()
         .map(|category| format!("{}", category.id()))
         .collect::<Vec<String>>()
         .join(",");
-    let related_posts = use_related_posts(category_ids)?;
+    let related_posts = hooks::related_posts::use_related_posts(category_ids)?;
 
     Ok(html! {
         <div>

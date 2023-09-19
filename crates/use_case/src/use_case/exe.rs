@@ -14,20 +14,23 @@ use {
 };
 
 pub async fn fetch_posts_usecase(per_page: i32, offset: i32) -> Result<Vec<Post>> {
+    let client = reqwest::Client::new();
     let api_url = format!("{}", "https://api.masahiro.me/api");
-    let repo = PostRepository::new(api_url);
+    let repo = PostRepository::new(api_url, client);
     let usecase = FetchPostsUsecase::new(repo);
     usecase.execute(per_page, offset).await
 }
 pub async fn fetch_related_posts_usecase(category_ids: &str) -> Result<Vec<Post>> {
+    let client = reqwest::Client::new();
     let api_url = format!("{}", "https://api.masahiro.me/api");
-    let repo = PostRepository::new(api_url);
+    let repo = PostRepository::new(api_url, client);
     let usecase = FetchRelatedPostsUsecase::new(repo);
     usecase.execute(category_ids).await
 }
 pub async fn fetch_post_usecase(slug: String) -> Result<Option<Post>> {
+    let client = reqwest::Client::new();
     let api_url = format!("{}", "https://api.masahiro.me/api");
-    let repo = PostRepository::new(api_url);
+    let repo = PostRepository::new(api_url, client);
     let usecase = FetchPostUsecase::new(repo);
     usecase.execute(slug).await
 }

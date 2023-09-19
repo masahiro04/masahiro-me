@@ -1,5 +1,11 @@
-use super::posts::shared::{loading_post, loading_posts};
-use super::{about, not_found, posts, projects, shared::layout};
+use super::pages::posts::post_components::{loading_post, loading_posts};
+use super::pages::{
+    about::about_index,
+    components::layout,
+    not_found,
+    posts::{post_detail, post_index},
+    projects::project_index,
+};
 use std::str::FromStr;
 use url::Url;
 use yew::prelude::*;
@@ -61,7 +67,7 @@ pub fn switch(routes: Route) -> Html {
             let fallback = html! {<loading_posts::LoadingPosts />};
             html! {
                 <Suspense {fallback}>
-                    <posts::index::PostIndex page={page} />
+                    <post_index::PostIndex page={page} />
                 </Suspense>
             }
         }
@@ -69,15 +75,15 @@ pub fn switch(routes: Route) -> Html {
             let fallback = html! {<loading_post::LoadingPost />};
             html! {
                 <Suspense {fallback}>
-                    <posts::detail::PostDetail slug={slug} />
+                    <post_detail::PostDetail slug={slug} />
                 </Suspense>
             }
         }
         Route::Projects => {
-            html! { <projects::index::Projects /> }
+            html! { <project_index::ProjectIndex /> }
         }
         Route::AboutIndex => {
-            html! { <about::index::AboutIndex /> }
+            html! { <about_index::AboutIndex /> }
         }
         Route::NotFound => html! { <not_found::NotFound />},
     }

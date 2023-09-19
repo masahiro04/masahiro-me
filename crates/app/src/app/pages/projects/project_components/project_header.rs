@@ -1,4 +1,4 @@
-use crate::pages::{projects::shared::bee, shared::image};
+use crate::pages::{components::image, projects::project_components::bee};
 use yew::prelude::*;
 
 #[function_component(ProjectHeader)]

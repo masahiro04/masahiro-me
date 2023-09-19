@@ -5,5 +5,5 @@ members = ["crates/*"]
 strip = true
 panic = 'abort'
 codegen-units = 1
-opt-level = 'z'
+opt-level = 's'
 lto = true

@@ -1,6 +1,7 @@
-use super::{hook::posts::use_posts, shared::pagination, shared::post_item};
 use yew::prelude::*;
 
+use crate::pages::posts::hooks;
+use crate::pages::posts::post_components::{pagination, post_item};
 const PER_PAGE: i32 = 10;
 
 #[derive(Properties, Clone, PartialEq)]
@@ -15,7 +16,7 @@ pub fn post_index(props: &HomeProps) -> HtmlResult {
     } else {
         PER_PAGE * (props.page - 1)
     };
-    let posts = use_posts(offset)?;
+    let posts = hooks::posts::use_posts(offset)?;
     let has_next_page = use_state(|| posts.clone().len() == PER_PAGE as usize);
 
     let set_has_next_page = has_next_page.clone();

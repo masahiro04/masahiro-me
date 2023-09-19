@@ -1,4 +1,4 @@
-use crate::shared::image;
+use crate::pages::components::image;
 use yew::prelude::*;
 
 #[function_component(Bee)]

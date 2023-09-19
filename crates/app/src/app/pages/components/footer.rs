@@ -1,4 +1,4 @@
-use crate::pages::shared::image::Image;
+use crate::pages::components::image::Image;
 use yew::prelude::*;
 
 #[derive(Clone, PartialEq)]

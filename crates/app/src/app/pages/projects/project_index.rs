@@ -1,14 +1,14 @@
 use yew::prelude::*;
 use {
-    super::shared::{project_header, project_item},
+    crate::pages::projects::project_components::{project_header, project_item},
     use_case::exe::{
         fetch_advisory_projects_usecase, fetch_past_work_projects_usecase,
         fetch_work_projects_usecase,
     },
 };
 
-#[function_component(Projects)]
-pub fn projects() -> Html {
+#[function_component(ProjectIndex)]
+pub fn project_index() -> Html {
     let works = fetch_work_projects_usecase();
     let past_works = fetch_past_work_projects_usecase();
     let advidories = fetch_advisory_projects_usecase();
