@@ -8,5 +8,10 @@ edition = "2021"
 anyhow = { version = "1.0" }
 async-trait = "0.1.68"
 serde = "=1.0.126"
+serde_json = "1.0"
 reqwest = { version = "0.11", default-features = false, features = ["rustls-tls", "json"] }
 domain = { path = "../domain" }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["full"] }
+mockito = "1.2"

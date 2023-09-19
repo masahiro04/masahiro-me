@@ -3,9 +3,9 @@ crates/app/target
 crates/app/node_modules
 crates/app/node_modules
 crates/app/dist
-crates/ssr_server/target
-crates/ssr_server/node_modules
-crates/ssr_server/dist
+crates/server/target
+crates/server/node_modules
+crates/server/dist
 
 Cargo.lock
 .env

@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
 
 use crate::domain::entities::category::Category;
-use std::fmt::Error;
 
 #[derive(PartialEq, Clone, Debug, Serialize, Deserialize)]
 pub struct Post {
@@ -15,24 +14,24 @@ pub struct Post {
 }
 
 impl Post {
-    pub fn new(
-        title: &str,
-        slug: &str,
-        date: &str,
-        excerpt: &str,
-        content: &str,
+    pub fn reconstruct(
+        title: String,
+        slug: String,
+        date: String,
+        excerpt: String,
+        content: String,
         categories: Vec<Category>,
-        featured_media: &str,
-    ) -> Result<Self, Error> {
-        Ok(Post {
-            title: title.to_string(),
-            slug: slug.to_string(),
-            date: date.to_string(),
-            excerpt: excerpt.to_string(),
-            content: content.to_string(),
+        featured_media: String,
+    ) -> Self {
+        Self {
+            title,
+            slug,
+            date,
+            excerpt,
+            content,
             categories,
-            featured_media: featured_media.to_string(),
-        })
+            featured_media,
+        }
     }
     pub fn title(&self) -> &str {
         &self.title
@@ -54,5 +53,41 @@ impl Post {
     }
     pub fn featured_media(&self) -> &str {
         &self.featured_media
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::domain::entities::post::Post;
+
+    #[test]
+    fn test() -> anyhow::Result<()> {
+        let title = "title".to_string();
+        let slug = "slug".to_string();
+        let date = "date".to_string();
+        let excerpt = "excerpt".to_string();
+        let content = "content".to_string();
+        let categories = vec![];
+        let featured_media = "featured_media".to_string();
+
+        // reconstruct
+        let post = Post::reconstruct(
+            title.clone(),
+            slug.clone(),
+            date.clone(),
+            excerpt.clone(),
+            content.clone(),
+            categories.clone(),
+            featured_media.clone(),
+        );
+
+        assert_eq!(post.title(), &title);
+        assert_eq!(post.slug(), &slug);
+        assert_eq!(post.date(), &date);
+        assert_eq!(post.excerpt(), &excerpt);
+        assert_eq!(post.content(), &content);
+        assert_eq!(post.categories(), &categories);
+        assert_eq!(post.featured_media(), &featured_media);
+        Ok(())
     }
 }
