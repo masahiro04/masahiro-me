@@ -1,3 +1,4 @@
+use domain::repositories::post_repository::{PostRepositoryInterface, WithPostRepository};
 use std::io::Result;
 use use_case::{
     fetch_advisory_projects_usecase::FetchAdvisoryProjectsUsecase,
@@ -20,13 +21,21 @@ fn client() -> reqwest::Client {
 // usecaseの中身をダミーに変更したところ、413kになった
 // post系のrepoを1つだけ有効化したら785kになったので
 // 300k以上一気に増えることになる
-pub async fn fetch_posts_usecase(per_page: i32, offset: i32) -> Result<Vec<Post>> {
-    // let client = client();
-    // let api_url = format!("{}", "https://api.masahiro.me/api");
-    // let repo = PostRepository::new(api_url, client);
-    // let usecase = FetchPostsUsecase::new(repo);
-    // usecase.execute(per_page, offset).await
-    Ok(vec![])
+pub async fn fetch_posts_usecase(per_page: i32, offset: i32) -> anyhow::Result<Vec<Post>> {
+    let client = client();
+    let api_url = format!("{}", "https://api.masahiro.me/api");
+    struct FetchPostsUsecaseImpl {
+        repository: PostRepository,
+    }
+    impl WithPostRepository for FetchPostsUsecaseImpl {
+        type PostRepository = PostRepository;
+        fn post_repository(&self) -> &Self::PostRepository {
+            &self.repository
+        }
+    }
+    let repository = PostRepository::new(api_url, client);
+    let usecase = FetchPostsUsecaseImpl { repository };
+    usecase.post_repository().find_posts(per_page, offset).await
 }
 pub async fn fetch_related_posts_usecase(category_ids: &str) -> Result<Vec<Post>> {
     // let client = client();

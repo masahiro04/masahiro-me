@@ -2,7 +2,7 @@ mod category_from_api;
 pub mod post_from_api;
 use self::post_from_api::PostFromApi;
 use async_trait::async_trait;
-use domain::{entities::post::Post, repositories::post_repository::IPostRepository};
+use domain::{entities::post::Post, repositories::post_repository::PostRepositoryInterface};
 
 #[derive(Clone)]
 pub struct PostRepository {
@@ -17,7 +17,7 @@ impl PostRepository {
 }
 
 #[async_trait(?Send)]
-impl IPostRepository for PostRepository {
+impl PostRepositoryInterface for PostRepository {
     async fn find_posts(&self, per_page: i32, offset: i32) -> anyhow::Result<Vec<Post>> {
         let url = format!(
             "{}/posts?per_page={}&offset={}",
@@ -60,7 +60,7 @@ mod tests {
     use super::PostRepository;
     use crate::repositories::post_repository::post_from_api::PostFromApi;
     use domain::entities::post::Post;
-    use domain::repositories::post_repository::IPostRepository;
+    use domain::repositories::post_repository::PostRepositoryInterface;
 
     #[tokio::test]
     async fn test_find_all() -> anyhow::Result<()> {
