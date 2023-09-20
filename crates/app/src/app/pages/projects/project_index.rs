@@ -1,7 +1,7 @@
 use yew::prelude::*;
 use {
     crate::pages::projects::project_components::{project_header, project_item},
-    use_case::exe::{
+    crate::use_cases::{
         fetch_advisory_projects_usecase, fetch_past_work_projects_usecase,
         fetch_work_projects_usecase,
     },

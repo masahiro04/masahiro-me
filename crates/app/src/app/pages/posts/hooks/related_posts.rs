@@ -1,7 +1,7 @@
+use crate::use_cases::fetch_related_posts_usecase;
 use domain::entities::post::Post;
 use std::cell::RefCell;
 use std::rc::Rc;
-use use_case::exe::fetch_related_posts_usecase;
 use yew::{
     hook,
     platform::spawn_local,
