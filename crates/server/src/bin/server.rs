@@ -1,8 +1,8 @@
 // 参照よくなさそう
-use app::about::index::about_meta_tags;
-use app::posts::detail::post_meta_tags;
-use app::posts::index::posts_meta_tags;
-use app::projects::index::projects_meta_tags;
+use app::pages::about::about_index::about_meta_tags;
+use app::pages::posts::post_detail::post_meta_tags;
+use app::pages::posts::post_index::posts_meta_tags;
+use app::pages::projects::project_index::projects_meta_tags;
 use app::route;
 use infrastructure::repositories::post_repository::post_from_api::PostFromApi;
 use reqwest::Client;
