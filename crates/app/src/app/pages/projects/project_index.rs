@@ -72,7 +72,7 @@ pub fn projects_meta_tags() -> String {
     let keywords =
         "参加案件, ソフトウェアエンジニア, バックエンド, フロントエンド, TypeScript, Rust";
     let mut meta = String::new();
-    meta.push_str(&format!(r###"<title>{}</title>"###, title));
+    meta.push_str(&format!(r#"<title>{}</title>"#, title));
     meta.push_str(&format!(
         r#"<meta name="description" content="{}">"#,
         description
@@ -89,7 +89,7 @@ pub fn projects_meta_tags() -> String {
         description
     ));
 
-    meta.push_str(r###"<meta name="twitter:card" content="summary_large_image">"###);
+    meta.push_str(r#"<meta name="twitter:card" content="summary_large_image">"#);
     meta.push_str(
         r#"<meta property="og:image" content="https://assets.masahiro.me/kyuri.png">
         "#,
