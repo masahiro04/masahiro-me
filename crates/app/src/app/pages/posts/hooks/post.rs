@@ -22,14 +22,20 @@ impl PostState {
             let value = value.clone();
             spawn_local(async move {
                 {
+                    // let post = match fetch_post_usecase(slug).await {
+                    //     Ok(post) => post,
+                    //     Err(_e) => None,
+                    // };
+                    // {
+                    //     let mut value = value.borrow_mut();
+                    //     *value = post;
+                    // }
+                    let mut value = value.borrow_mut();
                     let post = match fetch_post_usecase(slug).await {
                         Ok(post) => post,
                         Err(_e) => None,
                     };
-                    {
-                        let mut value = value.borrow_mut();
-                        *value = post;
-                    };
+                    *value = post;
                 }
                 handle.resume();
             });

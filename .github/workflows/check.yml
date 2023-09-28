@@ -1,6 +1,6 @@
-on: [push, pull_request]
+on: [push]
 
-name: Run test
+name: Check
 
 jobs:
   clippy:
@@ -20,12 +20,11 @@ jobs:
 
       - name: Run cargo clippy
         uses: actions-rs/cargo@v1
-        continue-on-error: true # WARNING: only for this example, remove it!
         with:
           command: clippy
           args: -- -D warnings
 
-  fmt:
+  format:
     name: Format
     runs-on: ubuntu-latest
     steps:
@@ -42,7 +41,6 @@ jobs:
 
       - name: Run cargo fmt
         uses: actions-rs/cargo@v1
-        continue-on-error: true # WARNING: only for this example, remove it!
         with:
           command: fmt
           args: --all
@@ -64,7 +62,6 @@ jobs:
 
       - name: Run cargo test
         uses: actions-rs/cargo@v1
-        continue-on-error: true # WARNING: only for this example, remove it!
         with:
           command: test
           args: --all -- --check
