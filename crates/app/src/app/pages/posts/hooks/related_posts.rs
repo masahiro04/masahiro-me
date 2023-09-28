@@ -22,12 +22,14 @@ impl RelatedPostsState {
             let value = value.clone();
             spawn_local(async move {
                 {
-                    let mut value = value.borrow_mut();
                     let posts = match fetch_related_posts_usecase(&category_ids).await {
                         Ok(posts) => posts,
                         Err(_) => vec![],
                     };
-                    *value = Some(posts);
+                    {
+                        let mut value = value.borrow_mut();
+                        *value = Some(posts);
+                    }
                 }
                 handle.resume();
             });

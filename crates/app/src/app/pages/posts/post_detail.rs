@@ -84,23 +84,23 @@ pub fn post_meta_tags(
         "###,
         description
     ));
-    meta.push_str(&format!(
+    meta.push_str(
         r###"<meta property="og:site_name" content="Masahiro's tech note">
         "###,
-    ));
+    );
     meta.push_str(&format!(
         r###"<meta property="og:image" content="{}">
         "###,
         featured_media
     ));
-    meta.push_str(&format!(
+    meta.push_str(
         r###"<meta name="twitter:creator" content="@masa_okubo">
         "###,
-    ));
-    meta.push_str(&format!(
+    );
+    meta.push_str(
         r###"<meta name="twitter:card" content="summary_large_image">
         "###,
-    ));
+    );
 
     meta
 }

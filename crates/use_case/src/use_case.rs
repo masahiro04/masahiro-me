@@ -1,4 +1,3 @@
-pub mod exe;
 pub mod fetch_advisory_projects_usecase;
 pub mod fetch_past_work_projects_usecase;
 pub mod fetch_post_usecase;

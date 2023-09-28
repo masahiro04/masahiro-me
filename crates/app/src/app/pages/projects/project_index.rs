@@ -91,22 +91,20 @@ pub fn projects_meta_tags() -> String {
         "###,
         description
     ));
-    meta.push_str(&format!(
-        r###"<meta property="og:site_name" content="Masahiro's tech note">
-        "###,
-    ));
-    meta.push_str(&format!(
+
+    meta.push_str(r###"<meta name="twitter:card" content="summary_large_image">"###);
+    meta.push_str(
         r###"<meta property="og:image" content="https://assets.masahiro.me/kyuri.png">
         "###,
-    ));
-    meta.push_str(&format!(
+    );
+    meta.push_str(
         r###"<meta name="twitter:creator" content="@masa_okubo">
         "###,
-    ));
-    meta.push_str(&format!(
+    );
+    meta.push_str(
         r###"<meta name="twitter:card" content="summary_large_image">
         "###,
-    ));
+    );
 
     meta
 }

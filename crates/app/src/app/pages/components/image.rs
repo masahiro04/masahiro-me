@@ -23,7 +23,7 @@ pub fn image(props: &ImageProps) -> Html {
     } = props;
     html! {
         <img
-            src={format!("https://assets.masahiro.me/{}", source.to_string())}
+            src={format!("https://assets.masahiro.me/{}", source)}
             class={class.to_string()}
             alt={alt.to_string()}
             height={height.to_string()}

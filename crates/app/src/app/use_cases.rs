@@ -3,8 +3,7 @@ use std::io::Result;
 use use_case::{
     fetch_advisory_projects_usecase::FetchAdvisoryProjectsUsecase,
     fetch_past_work_projects_usecase::FetchPastWorkProjectsUsecase,
-    fetch_post_usecase::FetchPostUsecase, fetch_posts_usecase::FetchPostsUsecase,
-    fetch_related_posts_usecase::FetchRelatedPostsUsecase,
+    fetch_post_usecase::FetchPostUsecase, fetch_related_posts_usecase::FetchRelatedPostsUsecase,
     fetch_work_projects_usecase::FetchWorkProjectsUsecase,
 };
 use {
@@ -23,7 +22,7 @@ fn client() -> reqwest::Client {
 // 300k以上一気に増えることになる
 pub async fn fetch_posts_usecase(per_page: i32, offset: i32) -> anyhow::Result<Vec<Post>> {
     let client = client();
-    let api_url = format!("{}", "https://api.masahiro.me/api");
+    let api_url = "https://api.masahiro.me/api".to_string();
     struct FetchPostsUsecaseImpl {
         repository: PostRepository,
     }
@@ -38,16 +37,16 @@ pub async fn fetch_posts_usecase(per_page: i32, offset: i32) -> anyhow::Result<V
     usecase.post_repository().find_posts(per_page, offset).await
 }
 pub async fn fetch_related_posts_usecase(category_ids: &str) -> Result<Vec<Post>> {
-    // let client = client();
-    // let api_url = format!("{}", "https://api.masahiro.me/api");
-    // let repo = PostRepository::new(api_url, client);
-    // let usecase = FetchRelatedPostsUsecase::new(repo);
-    // usecase.execute(category_ids).await
-    Ok(vec![])
+    let client = client();
+    let api_url = "https://api.masahiro.me/api".to_string();
+    let repo = PostRepository::new(api_url, client);
+    let usecase = FetchRelatedPostsUsecase::new(repo);
+    usecase.execute(category_ids).await
+    //     Ok(vec![])
 }
 pub async fn fetch_post_usecase(slug: String) -> Result<Option<Post>> {
     let client = client();
-    let api_url = format!("{}", "https://api.masahiro.me/api");
+    let api_url = "https://api.masahiro.me/api".to_string();
     let repo = PostRepository::new(api_url, client);
     let usecase = FetchPostUsecase::new(repo);
     usecase.execute(slug).await

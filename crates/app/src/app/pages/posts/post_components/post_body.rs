@@ -23,10 +23,9 @@ pub fn post_body(props: &PostBodyProps) -> Html {
         },
         props.clone(),
     );
-    let body = if let Some(node) = &*node {
+    if let Some(node) = &*node {
         node.clone()
     } else {
         html! { <div></div> }
-    };
-    body
+    }
 }
