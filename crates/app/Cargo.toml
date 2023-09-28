@@ -21,7 +21,6 @@ anyhow = { version = "1.0" }
 domain = { path = "../domain" }
 infrastructure = { path = "../infrastructure" }
 use_case = { path = "../use_case" }
-pages = { path = "../pages" }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 wasm-bindgen = "0.2.85"

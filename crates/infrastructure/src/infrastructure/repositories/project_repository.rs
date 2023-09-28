@@ -11,6 +11,11 @@ impl ProjectRepository {
         ProjectRepository {}
     }
 }
+impl Default for ProjectRepository {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 impl IProjectRepository for ProjectRepository {
     fn find_all(&self) -> Vec<Project> {

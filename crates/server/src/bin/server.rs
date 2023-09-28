@@ -1,10 +1,10 @@
 // 参照よくなさそう
+use app::pages::about::about_index::about_meta_tags;
+use app::pages::posts::post_detail::post_meta_tags;
+use app::pages::posts::post_index::posts_meta_tags;
+use app::pages::projects::project_index::projects_meta_tags;
+use app::route;
 use infrastructure::repositories::post_repository::post_from_api::PostFromApi;
-use pages::about::index::about_meta_tags;
-use pages::posts::detail::post_meta_tags;
-use pages::posts::index::posts_meta_tags;
-use pages::projects::index::projects_meta_tags;
-use pages::route;
 use reqwest::Client;
 use std::collections::HashMap;
 use std::future::Future;

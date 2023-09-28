@@ -1,11 +1,11 @@
-use domain::{entities::post::Post, repositories::post_repository::IPostRepository};
+use domain::{entities::post::Post, repositories::post_repository::PostRepositoryInterface};
 use infrastructure::repositories::post_repository::PostRepository;
 use std::io::Result;
 
 #[derive(Clone, Debug)]
 pub struct FetchRelatedPostsUsecase<Repo>
 where
-    Repo: IPostRepository,
+    Repo: PostRepositoryInterface,
 {
     repo: Repo,
 }

@@ -8,7 +8,7 @@ pub struct CategoryFromApi {
 }
 
 impl CategoryFromApi {
-    pub fn into_category(&self) -> anyhow::Result<Category> {
+    pub fn into_category(self) -> anyhow::Result<Category> {
         Ok(Category::reconstruct(self.id, self.name.clone()))
     }
 }
