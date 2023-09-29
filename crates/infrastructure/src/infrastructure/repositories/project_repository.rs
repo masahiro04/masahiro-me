@@ -1,6 +1,6 @@
 use domain::{
     entities::project::{Project, ProjectKind},
-    repositories::project_repository::IProjectRepository,
+    repositories::project_repository::ProjectRepositoryInterface,
 };
 
 #[derive(Clone)]
@@ -17,7 +17,7 @@ impl Default for ProjectRepository {
     }
 }
 
-impl IProjectRepository for ProjectRepository {
+impl ProjectRepositoryInterface for ProjectRepository {
     fn find_all(&self) -> Vec<Project> {
         vec![
             Project::reconstruct(
@@ -79,7 +79,7 @@ impl IProjectRepository for ProjectRepository {
 #[cfg(test)]
 mod tests {
     use super::ProjectRepository;
-    use domain::repositories::project_repository::IProjectRepository;
+    use domain::repositories::project_repository::ProjectRepositoryInterface;
 
     #[test]
     fn test_find_all() -> anyhow::Result<()> {

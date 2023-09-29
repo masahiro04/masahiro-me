@@ -1,11 +1,11 @@
 use domain::entities::project::Project;
-use domain::repositories::project_repository::IProjectRepository;
+use domain::repositories::project_repository::ProjectRepositoryInterface;
 use infrastructure::repositories::project_repository::ProjectRepository;
 
 #[derive(Clone, Debug)]
 pub struct FetchPastWorkProjectsUsecase<Repo>
 where
-    Repo: IProjectRepository,
+    Repo: ProjectRepositoryInterface,
 {
     repo: Repo,
 }

@@ -1,7 +1,9 @@
-use domain::repositories::post_repository::{PostRepositoryInterface, WithPostRepository};
+use domain::repositories::{
+    post_repository::{PostRepositoryInterface, WithPostRepository},
+    project_repository::{ProjectRepositoryInterface, WithProjectRepository},
+};
 use std::io::Result;
 use use_case::{
-    fetch_advisory_projects_usecase::FetchAdvisoryProjectsUsecase,
     fetch_past_work_projects_usecase::FetchPastWorkProjectsUsecase,
     fetch_post_usecase::FetchPostUsecase, fetch_related_posts_usecase::FetchRelatedPostsUsecase,
     fetch_work_projects_usecase::FetchWorkProjectsUsecase,
@@ -65,8 +67,16 @@ pub fn fetch_past_work_projects_usecase() -> Vec<Project> {
     // vec![]
 }
 pub fn fetch_advisory_projects_usecase() -> Vec<Project> {
-    let repo = ProjectRepository::new();
-    let usecase = FetchAdvisoryProjectsUsecase::new(repo);
-    usecase.execute()
-    // vec![]
+    struct FetchAdvisoryProjectsUsecaseImpl {
+        repository: ProjectRepository,
+    }
+    impl WithProjectRepository for FetchAdvisoryProjectsUsecaseImpl {
+        type ProjectRepository = ProjectRepository;
+        fn project_repository(&self) -> &Self::ProjectRepository {
+            &self.repository
+        }
+    }
+    let repository = ProjectRepository::new();
+    let usecase = FetchAdvisoryProjectsUsecaseImpl { repository };
+    usecase.project_repository().find_advisories()
 }

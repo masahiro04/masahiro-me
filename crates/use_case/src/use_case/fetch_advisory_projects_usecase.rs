@@ -1,19 +1,12 @@
 use domain::entities::project::Project;
-use domain::repositories::project_repository::IProjectRepository;
-use infrastructure::repositories::project_repository::ProjectRepository;
+use domain::repositories::project_repository::{ProjectRepositoryInterface, WithProjectRepository};
 
-#[derive(Clone, Debug)]
-pub struct FetchAdvisoryProjectsUsecase<Repo>
-where
-    Repo: IProjectRepository,
-{
-    repo: Repo,
+pub trait FetchAdvisoryProjectsUsecase: WithProjectRepository {
+    fn execute(&self) -> Vec<Project> {
+        self.project_repository().find_all()
+    }
 }
-impl FetchAdvisoryProjectsUsecase<ProjectRepository> {
-    pub fn new(repo: ProjectRepository) -> Self {
-        Self { repo }
-    }
-    pub fn execute(&self) -> Vec<Project> {
-        self.repo.find_advisories()
-    }
+pub trait HasFetchAdvisoryProjectsUsecase {
+    type FetchAdvisoryProjectsUsecase: FetchAdvisoryProjectsUsecase;
+    fn find_advisories(&self) -> &Self::FetchAdvisoryProjectsUsecase;
 }
