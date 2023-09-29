@@ -40,7 +40,7 @@ impl IProjectRepository for ProjectRepository {
             ),
             Project::reconstruct(
                 "Everyplus".to_string(),
-                "Management / Ruby / React /Ruby on Rails / Heroku / AWS".to_string(),
+                "Management / Rust / Ruby / TypeScript / React /Ruby on Rails / Heroku / AWS".to_string(),
                 "https://recreation.everyplus.jp/".to_string(),
                 ProjectKind::Advisory,
             ),
@@ -73,5 +73,43 @@ impl IProjectRepository for ProjectRepository {
             .into_iter()
             .filter(|project| *project.kind() == ProjectKind::Advisory)
             .collect()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::ProjectRepository;
+    use domain::repositories::project_repository::IProjectRepository;
+
+    #[test]
+    fn test_find_all() -> anyhow::Result<()> {
+        let repo = ProjectRepository::new();
+        let projects = repo.find_all();
+        assert_eq!(projects.len(), 5);
+        Ok(())
+    }
+
+    #[test]
+    fn test_find_works() -> anyhow::Result<()> {
+        let repo = ProjectRepository::new();
+        let projects = repo.find_works();
+        assert_eq!(projects.len(), 1);
+        Ok(())
+    }
+
+    #[test]
+    fn test_find_past_works() -> anyhow::Result<()> {
+        let repo = ProjectRepository::new();
+        let projects = repo.find_past_works();
+        assert_eq!(projects.len(), 2);
+        Ok(())
+    }
+
+    #[test]
+    fn test_find_advisories() -> anyhow::Result<()> {
+        let repo = ProjectRepository::new();
+        let projects = repo.find_advisories();
+        assert_eq!(projects.len(), 2);
+        Ok(())
     }
 }
