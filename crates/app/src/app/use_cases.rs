@@ -2,10 +2,6 @@ use domain::repositories::{
     post_repository::{PostRepositoryInterface, WithPostRepository},
     project_repository::{ProjectRepositoryInterface, WithProjectRepository},
 };
-use std::io::Result;
-use use_case::{
-    fetch_post_usecase::FetchPostUsecase, fetch_related_posts_usecase::FetchRelatedPostsUsecase,
-};
 use {
     domain::entities::{post::Post, project::Project},
     infrastructure::repositories::{
@@ -36,22 +32,42 @@ pub async fn fetch_posts_usecase(per_page: i32, offset: i32) -> anyhow::Result<V
     let usecase = FetchPostsUsecaseImpl { repository };
     usecase.post_repository().find_all(per_page, offset).await
 }
-pub async fn fetch_related_posts_usecase(category_ids: &str) -> Result<Vec<Post>> {
+pub async fn fetch_posts_by_category_ids_usecase(category_ids: &str) -> anyhow::Result<Vec<Post>> {
     let client = client();
     let api_url = "https://api.masahiro.me/api".to_string();
-    let repo = PostRepository::new(api_url, client);
-    let usecase = FetchRelatedPostsUsecase::new(repo);
-    usecase.execute(category_ids).await
-    //     Ok(vec![])
+    struct FetchPostsByCategoryIdsUsecaseImpl {
+        repository: PostRepository,
+    }
+    impl WithPostRepository for FetchPostsByCategoryIdsUsecaseImpl {
+        type PostRepository = PostRepository;
+        fn post_repository(&self) -> &Self::PostRepository {
+            &self.repository
+        }
+    }
+    let repository = PostRepository::new(api_url, client);
+    let usecase = FetchPostsByCategoryIdsUsecaseImpl { repository };
+    usecase
+        .post_repository()
+        .find_by_category_ids(category_ids)
+        .await
 }
-pub async fn fetch_post_usecase(slug: String) -> Result<Option<Post>> {
+pub async fn fetch_post_usecase(slug: String) -> anyhow::Result<Option<Post>> {
     let client = client();
     let api_url = "https://api.masahiro.me/api".to_string();
-    let repo = PostRepository::new(api_url, client);
-    let usecase = FetchPostUsecase::new(repo);
-    usecase.execute(slug).await
-    // Ok(None)
+    struct FetchPostUsecaseImpl {
+        repository: PostRepository,
+    }
+    impl WithPostRepository for FetchPostUsecaseImpl {
+        type PostRepository = PostRepository;
+        fn post_repository(&self) -> &Self::PostRepository {
+            &self.repository
+        }
+    }
+    let repository = PostRepository::new(api_url, client);
+    let usecase = FetchPostUsecaseImpl { repository };
+    usecase.post_repository().find_one(slug).await
 }
+
 pub fn fetch_work_projects_usecase() -> Vec<Project> {
     struct FetchWorkProjectsUsecaseImpl {
         repository: ProjectRepository,

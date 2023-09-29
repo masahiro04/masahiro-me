@@ -1,22 +1,19 @@
+use domain::repositories::post_repository::WithPostRepository;
 use domain::{entities::post::Post, repositories::post_repository::PostRepositoryInterface};
-use infrastructure::repositories::post_repository::PostRepository;
-use std::io::Result;
 
-#[derive(Clone, Debug)]
-pub struct FetchRelatedPostsUsecase<Repo>
-where
-    Repo: PostRepositoryInterface,
-{
-    repo: Repo,
+#[async_trait::async_trait(?Send)]
+pub trait FetchPostsByCategoryIdsUsecase: WithPostRepository {
+    async fn execute(&self, category_ids: &str) -> anyhow::Result<Vec<Post>> {
+        self.post_repository()
+            .find_by_category_ids(category_ids)
+            .await
+    }
 }
-impl FetchRelatedPostsUsecase<PostRepository> {
-    pub fn new(repo: PostRepository) -> Self {
-        Self { repo }
-    }
-    pub async fn execute(&self, category_ids: &str) -> Result<Vec<Post>> {
-        match self.repo.find_by_category_ids(category_ids).await {
-            Ok(posts) => Ok(posts),
-            Err(_) => Ok(Vec::new()),
-        }
-    }
+#[async_trait::async_trait(?Send)]
+pub trait HasFetchPostsByCategoryIdsUsecase {
+    type FetchPostsByCategoryIdsUsecase: FetchPostsByCategoryIdsUsecase + Sync;
+    async fn fetch_posts_by_category_ids(
+        &self,
+        category_ids: &str,
+    ) -> &Self::FetchPostsByCategoryIdsUsecase;
 }

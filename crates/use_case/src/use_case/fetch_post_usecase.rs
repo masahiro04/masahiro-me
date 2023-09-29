@@ -1,22 +1,14 @@
+use domain::repositories::post_repository::WithPostRepository;
 use domain::{entities::post::Post, repositories::post_repository::PostRepositoryInterface};
-use infrastructure::repositories::post_repository::PostRepository;
-use std::io::Result;
 
-#[derive(Clone, Debug)]
-pub struct FetchPostUsecase<Repo>
-where
-    Repo: PostRepositoryInterface,
-{
-    repo: Repo,
+#[async_trait::async_trait(?Send)]
+pub trait FetchPostUsecase: WithPostRepository {
+    async fn execute(&self, slug: String) -> anyhow::Result<Option<Post>> {
+        self.post_repository().find_one(slug).await
+    }
 }
-impl FetchPostUsecase<PostRepository> {
-    pub fn new(repo: PostRepository) -> Self {
-        Self { repo }
-    }
-    pub async fn execute(&self, slug: String) -> Result<Option<Post>> {
-        match self.repo.find_one(slug).await {
-            Ok(post) => Ok(post),
-            Err(_) => Ok(None),
-        }
-    }
+#[async_trait::async_trait(?Send)]
+pub trait HasFetchPostUsecase {
+    type FetchPostUsecase: FetchPostUsecase + Sync;
+    async fn fetch_one(&self, slug: String) -> &Self::FetchPostUsecase;
 }
