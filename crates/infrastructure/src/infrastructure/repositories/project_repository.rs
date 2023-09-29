@@ -53,21 +53,21 @@ impl IProjectRepository for ProjectRepository {
             )
         ]
     }
-    fn find_work_projects(&self) -> Vec<Project> {
+    fn find_works(&self) -> Vec<Project> {
         self.find_all()
             .clone()
             .into_iter()
             .filter(|project| *project.kind() == ProjectKind::Work)
             .collect::<Vec<Project>>()
     }
-    fn find_past_work_projects(&self) -> Vec<Project> {
+    fn find_past_works(&self) -> Vec<Project> {
         self.find_all()
             .clone()
             .into_iter()
             .filter(|project| *project.kind() == ProjectKind::PastWork)
             .collect()
     }
-    fn find_advisory_projects(&self) -> Vec<Project> {
+    fn find_advisories(&self) -> Vec<Project> {
         self.find_all()
             .clone()
             .into_iter()

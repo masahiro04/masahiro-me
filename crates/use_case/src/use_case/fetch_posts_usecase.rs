@@ -4,7 +4,7 @@ use domain::{entities::post::Post, repositories::post_repository::PostRepository
 #[async_trait::async_trait(?Send)]
 pub trait FetchPostsUsecase: WithPostRepository {
     async fn execute(&self, per_page: i32, offset: i32) -> anyhow::Result<Vec<Post>> {
-        self.post_repository().find_posts(per_page, offset).await
+        self.post_repository().find_all(per_page, offset).await
     }
 }
 #[async_trait::async_trait(?Send)]

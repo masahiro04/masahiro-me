@@ -14,7 +14,7 @@ impl FetchPostUsecase<PostRepository> {
         Self { repo }
     }
     pub async fn execute(&self, slug: String) -> Result<Option<Post>> {
-        match self.repo.find_post(slug).await {
+        match self.repo.find_one(slug).await {
             Ok(post) => Ok(post),
             Err(_) => Ok(None),
         }

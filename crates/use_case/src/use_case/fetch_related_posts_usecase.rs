@@ -14,7 +14,7 @@ impl FetchRelatedPostsUsecase<PostRepository> {
         Self { repo }
     }
     pub async fn execute(&self, category_ids: &str) -> Result<Vec<Post>> {
-        match self.repo.find_related_posts(category_ids).await {
+        match self.repo.find_by_category_ids(category_ids).await {
             Ok(posts) => Ok(posts),
             Err(_) => Ok(Vec::new()),
         }

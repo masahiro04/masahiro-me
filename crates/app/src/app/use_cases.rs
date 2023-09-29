@@ -34,7 +34,7 @@ pub async fn fetch_posts_usecase(per_page: i32, offset: i32) -> anyhow::Result<V
     }
     let repository = PostRepository::new(api_url, client);
     let usecase = FetchPostsUsecaseImpl { repository };
-    usecase.post_repository().find_posts(per_page, offset).await
+    usecase.post_repository().find_all(per_page, offset).await
 }
 pub async fn fetch_related_posts_usecase(category_ids: &str) -> Result<Vec<Post>> {
     let client = client();

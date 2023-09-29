@@ -14,6 +14,6 @@ impl FetchPastWorkProjectsUsecase<ProjectRepository> {
         Self { repo }
     }
     pub fn execute(&self) -> Vec<Project> {
-        self.repo.find_past_work_projects()
+        self.repo.find_past_works()
     }
 }
