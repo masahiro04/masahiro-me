@@ -4,9 +4,7 @@ use domain::repositories::{
 };
 use std::io::Result;
 use use_case::{
-    fetch_past_work_projects_usecase::FetchPastWorkProjectsUsecase,
     fetch_post_usecase::FetchPostUsecase, fetch_related_posts_usecase::FetchRelatedPostsUsecase,
-    fetch_work_projects_usecase::FetchWorkProjectsUsecase,
 };
 use {
     domain::entities::{post::Post, project::Project},
@@ -55,16 +53,32 @@ pub async fn fetch_post_usecase(slug: String) -> Result<Option<Post>> {
     // Ok(None)
 }
 pub fn fetch_work_projects_usecase() -> Vec<Project> {
-    let repo = ProjectRepository::new();
-    let usecase = FetchWorkProjectsUsecase::new(repo);
-    usecase.execute()
-    // vec![]
+    struct FetchWorkProjectsUsecaseImpl {
+        repository: ProjectRepository,
+    }
+    impl WithProjectRepository for FetchWorkProjectsUsecaseImpl {
+        type ProjectRepository = ProjectRepository;
+        fn project_repository(&self) -> &Self::ProjectRepository {
+            &self.repository
+        }
+    }
+    let repository = ProjectRepository::new();
+    let usecase = FetchWorkProjectsUsecaseImpl { repository };
+    usecase.project_repository().find_works()
 }
 pub fn fetch_past_work_projects_usecase() -> Vec<Project> {
-    let repo = ProjectRepository::new();
-    let usecase = FetchPastWorkProjectsUsecase::new(repo);
-    usecase.execute()
-    // vec![]
+    struct FetchPastWorkProjectsUsecaseImpl {
+        repository: ProjectRepository,
+    }
+    impl WithProjectRepository for FetchPastWorkProjectsUsecaseImpl {
+        type ProjectRepository = ProjectRepository;
+        fn project_repository(&self) -> &Self::ProjectRepository {
+            &self.repository
+        }
+    }
+    let repository = ProjectRepository::new();
+    let usecase = FetchPastWorkProjectsUsecaseImpl { repository };
+    usecase.project_repository().find_past_works()
 }
 pub fn fetch_advisory_projects_usecase() -> Vec<Project> {
     struct FetchAdvisoryProjectsUsecaseImpl {

@@ -1,19 +1,12 @@
 use domain::entities::project::Project;
-use domain::repositories::project_repository::ProjectRepositoryInterface;
-use infrastructure::repositories::project_repository::ProjectRepository;
+use domain::repositories::project_repository::{ProjectRepositoryInterface, WithProjectRepository};
 
-#[derive(Clone, Debug)]
-pub struct FetchPastWorkProjectsUsecase<Repo>
-where
-    Repo: ProjectRepositoryInterface,
-{
-    repo: Repo,
+pub trait FetchPastWorkProjectsUsecase: WithProjectRepository {
+    fn execute(&self) -> Vec<Project> {
+        self.project_repository().find_past_works()
+    }
 }
-impl FetchPastWorkProjectsUsecase<ProjectRepository> {
-    pub fn new(repo: ProjectRepository) -> Self {
-        Self { repo }
-    }
-    pub fn execute(&self) -> Vec<Project> {
-        self.repo.find_past_works()
-    }
+pub trait HasFetchPastWorkProjectsUsecase {
+    type FetchPastWorkProjectsUsecase: FetchPastWorkProjectsUsecase;
+    fn find_past_works(&self) -> &Self::FetchPastWorkProjectsUsecase;
 }

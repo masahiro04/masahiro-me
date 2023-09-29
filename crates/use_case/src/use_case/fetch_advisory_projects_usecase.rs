@@ -3,7 +3,7 @@ use domain::repositories::project_repository::{ProjectRepositoryInterface, WithP
 
 pub trait FetchAdvisoryProjectsUsecase: WithProjectRepository {
     fn execute(&self) -> Vec<Project> {
-        self.project_repository().find_all()
+        self.project_repository().find_advisories()
     }
 }
 pub trait HasFetchAdvisoryProjectsUsecase {
