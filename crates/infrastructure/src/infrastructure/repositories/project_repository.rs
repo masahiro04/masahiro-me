@@ -1,6 +1,6 @@
 use domain::{
     entities::project::{Project, ProjectKind},
-    repositories::project_repository::IProjectRepository,
+    repositories::project_repository::ProjectRepositoryInterface,
 };
 
 #[derive(Clone)]
@@ -17,7 +17,7 @@ impl Default for ProjectRepository {
     }
 }
 
-impl IProjectRepository for ProjectRepository {
+impl ProjectRepositoryInterface for ProjectRepository {
     fn find_all(&self) -> Vec<Project> {
         vec![
             Project::reconstruct(
@@ -40,7 +40,7 @@ impl IProjectRepository for ProjectRepository {
             ),
             Project::reconstruct(
                 "Everyplus".to_string(),
-                "Management / Ruby / React /Ruby on Rails / Heroku / AWS".to_string(),
+                "Management / Rust / Ruby / TypeScript / React /Ruby on Rails / Heroku / AWS".to_string(),
                 "https://recreation.everyplus.jp/".to_string(),
                 ProjectKind::Advisory,
             ),
@@ -53,25 +53,63 @@ impl IProjectRepository for ProjectRepository {
             )
         ]
     }
-    fn find_work_projects(&self) -> Vec<Project> {
+    fn find_works(&self) -> Vec<Project> {
         self.find_all()
             .clone()
             .into_iter()
             .filter(|project| *project.kind() == ProjectKind::Work)
             .collect::<Vec<Project>>()
     }
-    fn find_past_work_projects(&self) -> Vec<Project> {
+    fn find_past_works(&self) -> Vec<Project> {
         self.find_all()
             .clone()
             .into_iter()
             .filter(|project| *project.kind() == ProjectKind::PastWork)
             .collect()
     }
-    fn find_advisory_projects(&self) -> Vec<Project> {
+    fn find_advisories(&self) -> Vec<Project> {
         self.find_all()
             .clone()
             .into_iter()
             .filter(|project| *project.kind() == ProjectKind::Advisory)
             .collect()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::ProjectRepository;
+    use domain::repositories::project_repository::ProjectRepositoryInterface;
+
+    #[test]
+    fn test_find_all() -> anyhow::Result<()> {
+        let repo = ProjectRepository::new();
+        let projects = repo.find_all();
+        assert_eq!(projects.len(), 5);
+        Ok(())
+    }
+
+    #[test]
+    fn test_find_works() -> anyhow::Result<()> {
+        let repo = ProjectRepository::new();
+        let projects = repo.find_works();
+        assert_eq!(projects.len(), 1);
+        Ok(())
+    }
+
+    #[test]
+    fn test_find_past_works() -> anyhow::Result<()> {
+        let repo = ProjectRepository::new();
+        let projects = repo.find_past_works();
+        assert_eq!(projects.len(), 2);
+        Ok(())
+    }
+
+    #[test]
+    fn test_find_advisories() -> anyhow::Result<()> {
+        let repo = ProjectRepository::new();
+        let projects = repo.find_advisories();
+        assert_eq!(projects.len(), 2);
+        Ok(())
     }
 }

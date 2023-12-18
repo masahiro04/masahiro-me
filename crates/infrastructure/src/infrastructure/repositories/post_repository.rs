@@ -18,7 +18,7 @@ impl PostRepository {
 
 #[async_trait(?Send)]
 impl PostRepositoryInterface for PostRepository {
-    async fn find_posts(&self, per_page: i32, offset: i32) -> anyhow::Result<Vec<Post>> {
+    async fn find_all(&self, per_page: i32, offset: i32) -> anyhow::Result<Vec<Post>> {
         let url = format!(
             "{}/posts?per_page={}&offset={}",
             &self.api_url, per_page, offset
@@ -33,7 +33,7 @@ impl PostRepositoryInterface for PostRepository {
             .map(|post_from_api| post_from_api.into_post().unwrap())
             .collect::<Vec<Post>>())
     }
-    async fn find_related_posts(&self, category_ids: &str) -> anyhow::Result<Vec<Post>> {
+    async fn find_by_category_ids(&self, category_ids: &str) -> anyhow::Result<Vec<Post>> {
         let url = format!("{}/posts?category_ids={}", &self.api_url, category_ids);
         let response = self.client.get(url).send().await?;
         let posts_from_api = response.json::<Vec<PostFromApi>>().await?;
@@ -47,7 +47,7 @@ impl PostRepositoryInterface for PostRepository {
         let posts = posts[0..3].to_vec();
         Ok(posts)
     }
-    async fn find_post(&self, slug: String) -> anyhow::Result<Option<Post>> {
+    async fn find_one(&self, slug: String) -> anyhow::Result<Option<Post>> {
         let url = format!("{}/posts/{}", self.api_url, slug);
         let response = self.client.get(url).send().await?;
         let post_from_api = response.json::<PostFromApi>().await?;
@@ -79,7 +79,7 @@ mod tests {
         let client = reqwest::Client::new();
         let repository = PostRepository::new(mock.0.url(), client);
 
-        assert_eq!(repository.find_posts(1, 1).await?, posts);
+        assert_eq!(repository.find_all(1, 1).await?, posts);
         mock.1.assert();
         mock.1.remove();
         Ok(())
@@ -105,7 +105,7 @@ mod tests {
 
         assert_eq!(
             repository
-                .find_related_posts(category_id.to_string().as_str())
+                .find_by_category_ids(category_id.to_string().as_str())
                 .await?,
             posts
         );
@@ -128,7 +128,7 @@ mod tests {
         let client = reqwest::Client::new();
         let repository = PostRepository::new(mock.0.url(), client);
 
-        assert_eq!(repository.find_post(slug.to_string()).await?, Some(post));
+        assert_eq!(repository.find_one(slug.to_string()).await?, Some(post));
         mock.1.assert();
         mock.1.remove();
         Ok(())

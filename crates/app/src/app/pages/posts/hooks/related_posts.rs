@@ -1,4 +1,3 @@
-use crate::use_cases::fetch_related_posts_usecase;
 use domain::entities::post::Post;
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -8,6 +7,8 @@ use yew::{
     suspense::{Suspension, SuspensionResult},
     use_state,
 };
+
+use crate::use_cases::fetch_posts_by_category_ids_usecase;
 
 pub struct RelatedPostsState {
     susp: Suspension,
@@ -22,7 +23,7 @@ impl RelatedPostsState {
             let value = value.clone();
             spawn_local(async move {
                 {
-                    let posts = match fetch_related_posts_usecase(&category_ids).await {
+                    let posts = match fetch_posts_by_category_ids_usecase(&category_ids).await {
                         Ok(posts) => posts,
                         Err(_) => vec![],
                     };
