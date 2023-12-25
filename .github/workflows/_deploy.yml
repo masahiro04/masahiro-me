@@ -12,7 +12,7 @@ env:
   WORKLOAD_SERVICE_ACCOUNT_NAME: github-action-masahiro-me
   SERVICE: masahiro-me
   SERVICE_ACCOUNT_NAME: masahiro-me
-  REGION: asia-northeast1
+  # REGION: asia-northeast1
 
 jobs:
   deploy:
@@ -39,7 +39,7 @@ jobs:
         run: |-
           gcloud run deploy ${{ env.SERVICE }} \
             --source . \
-            --region ${{ env.REGION }} \
+            # --region ${{ env.REGION }} \
             --no-use-http2 \
             --service-account ${{ env.SERVICE_ACCOUNT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com \
             --project ${{ vars.PROJECT_ID }} \
