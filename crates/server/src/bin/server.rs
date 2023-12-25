@@ -31,7 +31,9 @@ static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
 #[derive(Parser, Debug)]
 struct Opt {
     /// the "dist" created by trunk directory to be served for hydration.
-    #[clap(short, long, parse(from_os_str))]
+
+    #[clap(short, long, value_parser = clap::value_parser!(PathBuf))]
+    // #[clap(short, long, parse(from_os_str))]
     dir: PathBuf,
 }
 
