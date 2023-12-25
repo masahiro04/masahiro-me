@@ -12,7 +12,7 @@ env:
   WORKLOAD_SERVICE_ACCOUNT_NAME: github-action-masahiro-me
   SERVICE: masahiro-me
   SERVICE_ACCOUNT_NAME: masahiro-me
-  REGION: asia-northeast2
+  REGION: asia-northeast1
 
 jobs:
   deploy:
