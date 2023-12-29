@@ -1,3 +1,4 @@
+# FROM rust:1.70.0 as builder
 FROM rust:1.69.0 as builder
 
 RUN apt-get update && apt-get install -y binaryen musl-tools && rm -rf /var/lib/apt/lists/*
@@ -7,7 +8,9 @@ COPY . .
 
 RUN rustup target add x86_64-unknown-linux-musl
 RUN rustup target add wasm32-unknown-unknown
-RUN cargo install --locked trunk
+RUN cargo install trunk --version 0.17.5 --locked
+
+# RUN cargo install cargo-wasi
 
 RUN cargo build --release --target x86_64-unknown-linux-musl
 
