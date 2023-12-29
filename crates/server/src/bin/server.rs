@@ -49,7 +49,10 @@ async fn render(
     State((index_html_before, index_html_after)): State<(String, String)>,
 ) -> impl IntoResponse {
     let url = url.to_string();
-    let (index_html_top, index_html_head) = index_html_before.split_once("<head>").unwrap();
+    let (index_html_top, index_html_head) = match index_html_before.split_once("<head>") {
+        Some((top, head)) => (top.to_string(), head.to_string()),
+        None => (index_html_before, "".to_string()),
+    };
     let mut index_html_top = index_html_top.to_owned();
     let route = route::Route::from_str(&url).unwrap();
 
