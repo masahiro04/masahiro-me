@@ -31,7 +31,8 @@ static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
 #[derive(Parser, Debug)]
 struct Opt {
     /// the "dist" created by trunk directory to be served for hydration.
-    #[clap(short, long, value_parser = clap::value_parser!(PathBuf))]
+    // #[clap(short, long, value_parser = clap::value_parser!(PathBuf))]
+    #[clap(short, long, parse(from_os_str))]
     dir: PathBuf,
 }
 
@@ -57,7 +58,7 @@ async fn render(
     let route = route::Route::from_str(&url).unwrap();
 
     let meta = match route {
-        route::Route::PostIndex { page } => posts_meta_tags(),
+        route::Route::PostIndex { page: _ } => posts_meta_tags(),
         route::Route::PostDetail { slug } => {
             log::debug!("Posts OGP Setting {}", slug);
             let meta_future = tokio::spawn(async move {
