@@ -2,11 +2,11 @@
 members = ["crates/*"]
 
 [profile.release]
-strip = true      # ここは問題なさそう
-panic = 'abort'
-codegen-units = 1
-opt-level = 'z'
+strip = true # ここは問題なさそう
+# panic = 'abort'
+# codegen-units = 1
+# opt-level = 'z'
 # opt-level = 's'
-lto = true
+# lto = true
 
 # wasm-opt = false
