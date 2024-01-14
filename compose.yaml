@@ -1,16 +1,10 @@
 version: "3"
 services:
-  ssr_server:
-    tty: true
-    build:
-      context: .
-      # dockerfile: Dockerfile
-    ports:
-      - "8000:8080"
-    # tty: true
+  web:
+    build: ./dockers/web/
     env_file: .env
+    ports:
+      - "8080:8080"
+    tty: true
     volumes:
-      - .:/usr/src/target
-      # - .:/usr/src/app/node_modules
-      # - .:/usr/src/ssr_server/node_modules
-# volumesにtargetなども入れないときつそう
+      - .:/usr/src/app
