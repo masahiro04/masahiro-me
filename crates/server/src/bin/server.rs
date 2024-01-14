@@ -30,9 +30,7 @@ static GLOBAL: jemallocator::Jemalloc = jemallocator::Jemalloc;
 
 #[derive(Parser, Debug)]
 struct Opt {
-    /// the "dist" created by trunk directory to be served for hydration.
-    // #[clap(short, long, value_parser = clap::value_parser!(PathBuf))]
-    #[clap(short, long, parse(from_os_str))]
+    #[clap(short, long, value_parser = clap::value_parser!(PathBuf))]
     dir: PathBuf,
 }
 
@@ -58,7 +56,7 @@ async fn render(
     let route = route::Route::from_str(&url).unwrap();
 
     let meta = match route {
-        route::Route::PostIndex { page: _ } => posts_meta_tags(),
+        route::Route::PostIndex { page } => posts_meta_tags(),
         route::Route::PostDetail { slug } => {
             log::debug!("Posts OGP Setting {}", slug);
             let meta_future = tokio::spawn(async move {
@@ -146,7 +144,7 @@ async fn redirect_to_sitemap(_: ()) -> impl IntoResponse {
 
 #[tokio::main]
 async fn main() {
-    let exec = Executor::default();
+    Executor::default();
 
     env_logger::init();
 
@@ -190,7 +188,7 @@ async fn main() {
         Err(_) => 8080,
     };
 
-    let addr = ([0, 0, 0, 0], 8080).into();
+    let addr = ([0, 0, 0, 0], port).into();
 
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
