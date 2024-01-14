@@ -3,7 +3,6 @@ name = "infrastructure"
 version = "0.0.0"
 edition = "2021"
 
-
 [dependencies]
 anyhow = { version = "1.0.79" }
 async-trait = "0.1.77"

@@ -2,11 +2,9 @@
 members = ["crates/*"]
 
 [profile.release]
-strip = true # ここは問題なさそう
-# panic = 'abort'
-# codegen-units = 1
-# opt-level = 'z'
-# opt-level = 's'
-# lto = true
-
-# wasm-opt = false
+strip = 'debuginfo'
+panic = 'abort'     # 大丈夫
+debug = false       # debug情報なしの設定
+codegen-units = 1
+opt-level = 'z'     # optレベル最高
+lto = true
