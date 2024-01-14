@@ -1,0 +1,15 @@
+steps:
+  # Docker Build
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "$LOCATION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/masahiro-me",
+        ".",
+      ]
+
+  # Docker Push
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      ["push", "$LOCATION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/masahiro-me"]

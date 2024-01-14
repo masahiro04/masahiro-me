@@ -35,12 +35,9 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
 
-      - name: Deploy to Cloud Run
+      - name: Build dokcer image
         run: |-
-          gcloud run deploy ${{ env.SERVICE }} \
-            --source . \
+          gcloud builds submit \
+            --tag gcr.io/${{ vars.PROJECT_ID }}/masahiro-me \
             --region ${{ env.REGION }} \
-            --no-use-http2 \
-            --service-account ${{ env.SERVICE_ACCOUNT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com \
-            --project ${{ vars.PROJECT_ID }} \
             --async
