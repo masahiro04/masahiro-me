@@ -22,7 +22,7 @@ fn client() -> reqwest::Client {
 // 300k以上一気に増えることになる
 pub async fn fetch_posts_usecase(per_page: i32, offset: i32) -> anyhow::Result<Vec<Post>> {
     let client = client();
-    let api_url = "https://api.masahiro.me/api".to_string();
+    let api_url = "https://masahiro-me-api-p2h6pos6wq-an.a.run.app/api/v1".to_string();
     struct FetchPostsUsecaseImpl {
         repository: PostRepository,
     }
@@ -38,7 +38,7 @@ pub async fn fetch_posts_usecase(per_page: i32, offset: i32) -> anyhow::Result<V
 }
 pub async fn fetch_related_posts_usecase(category_ids: &str) -> Result<Vec<Post>> {
     let client = client();
-    let api_url = "https://api.masahiro.me/api".to_string();
+    let api_url = "https://masahiro-me-api-p2h6pos6wq-an.a.run.app/api/v1".to_string();
     let repo = PostRepository::new(api_url, client);
     let usecase = FetchRelatedPostsUsecase::new(repo);
     usecase.execute(category_ids).await
@@ -46,7 +46,7 @@ pub async fn fetch_related_posts_usecase(category_ids: &str) -> Result<Vec<Post>
 }
 pub async fn fetch_post_usecase(slug: String) -> Result<Option<Post>> {
     let client = client();
-    let api_url = "https://api.masahiro.me/api".to_string();
+    let api_url = "https://masahiro-me-api-p2h6pos6wq-an.a.run.app/api/v1".to_string();
     let repo = PostRepository::new(api_url, client);
     let usecase = FetchPostUsecase::new(repo);
     usecase.execute(slug).await
