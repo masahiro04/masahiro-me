@@ -1,0 +1,43 @@
+name: Deploy (reusing-workflow)
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+
+env:
+  WORKLOAD_IDENTITY_POOL_NAME: github-action-pool
+  WORKLOAD_IDENTITY_PROVIDER_NAME: github-action-provider
+  WORKLOAD_SERVICE_ACCOUNT_NAME: github-action-masahiro-me
+  SERVICE: masahiro-me
+  SERVICE_ACCOUNT_NAME: masahiro-me
+  REGION: asia-northeast1
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    permissions:
+      contents: "read"
+      id-token: "write"
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v1"
+        with:
+          workload_identity_provider: "projects/${{ vars.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/${{ env.WORKLOAD_IDENTITY_POOL_NAME }}/providers/${{ env.WORKLOAD_IDENTITY_PROVIDER_NAME }}"
+          service_account: "${{ env.WORKLOAD_SERVICE_ACCOUNT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com"
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+
+      - name: Build dokcer image
+        run: |-
+          gcloud builds submit \
+            --tag gcr.io/${{ vars.PROJECT_ID }}/masahiro-me \
+            --region ${{ env.REGION }} \
+            --async
