@@ -23,11 +23,9 @@ impl PostRepositoryInterface for PostRepository {
             "{}/posts?per_page={}&offset={}",
             &self.api_url, per_page, offset
         );
-
         let response = self.client.get(url).send().await?;
         let posts_from_api = response.json::<Vec<PostFromApi>>().await?;
 
-        log::info!("posts_from_api len: {}", posts_from_api.len());
         Ok(posts_from_api
             .into_iter()
             .map(|post_from_api| post_from_api.into_post().unwrap())
@@ -157,8 +155,7 @@ mod tests {
             excerpt: "excerpt".to_string(),
             content: "content".to_string(),
             categories: vec![],
-            tags: vec![],
-            featured_media: "featured_media".to_string(),
+            featured_media_url: "featured_media".to_string(),
         }]
     }
 }
