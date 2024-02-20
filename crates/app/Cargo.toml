@@ -11,7 +11,7 @@ required-features = ["yew/csr"]
 [dependencies]
 yew = { version = "0.20", features = ["csr"] }
 yew-router = "0.17.0"
-serde = "=1.0.196"
+serde = "=1.0.197"
 reqwest = { version = "0.11", default-features = false, features = [
   "rustls-tls",
   "json",
