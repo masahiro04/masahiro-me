@@ -146,7 +146,7 @@ async fn redirect_to_sitemap(_: ()) -> impl IntoResponse {
 async fn main() {
     Executor::default();
 
-    env_logger::init();
+    // env_logger::init();
 
     let opts = Opt::parse();
 
