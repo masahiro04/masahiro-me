@@ -46,9 +46,9 @@ jobs:
           file: ./Dockerfile.Run
           context: .
           push: true
-          tags: ${{ env.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/oncall-earth/oncall-earth:latest
-          cache-from: type=registry,ref=${{ env.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/oncall-earth/oncall-earth:cache
-          cache-to: type=registry,ref=${{ env.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/oncall-earth/oncall-earth:cache,mode=max
+          tags: ${{ env.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/masahiro-me/masahiro-me:latest
+          cache-from: type=registry,ref=${{ env.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/masahiro-me/masahiro-me:cache
+          cache-to: type=registry,ref=${{ env.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/masahiro-me/masahiro-me:cache,mode=max
 
       - name: Deploy to Cloud Run
         run: |-
@@ -56,4 +56,4 @@ jobs:
             --region ${{ env.REGION }} \
             --no-use-http2 \
             --project ${{ vars.PROJECT_ID }} \
-            --image=${{ env.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/oncall-earth/oncall-earth:latest
+            --image=${{ env.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/masahiro-me/masahiro-me:latest
