@@ -88,6 +88,26 @@ pub fn about_index() -> Html {
                             class="flex justify-center py-3 bg-white rounded-md max-w-full px-6 bg-opacity-60 text-gray-400 shadow-sm space-x-1 text-sm sm:text-base sm:space-x-2"
                         >
                             <div class="text-gray-800 text-center">
+                                { "URL" }
+                            </div>
+                        </div>
+                        <div
+                            class="absolute inset-0 text-sm text-gray-500 -translate-y-6 sm:translate-y-0 sm:left-2 md:left-3 sm:top-0 md:top-1"
+                        >
+                            { "Resume :" }
+                        </div>
+                        <a
+                            class="absolute inset-0"
+                            href="https://docs.google.com/spreadsheets/d/1C1CzxOHPP5AAAzX24_7uZLdw3i12fhgU/edit#gid=1253626078"
+                            target="_blank"
+                            rel="noreferrer"
+                        />
+                    </div>
+                    <div class="relative group cursor-pointer">
+                        <div
+                            class="flex justify-center py-3 bg-white rounded-md max-w-full px-6 bg-opacity-60 text-gray-400 shadow-sm space-x-1 text-sm sm:text-base sm:space-x-2"
+                        >
+                            <div class="text-gray-800 text-center">
                                 { "Contact me on Google Form" }
                             </div>
                         </div>
