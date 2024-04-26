@@ -124,7 +124,7 @@ mod tests {
         let json_string = serde_json::to_string(post_from_api).unwrap();
         // let mock = create_mock_server(format!("/posts/{}", slug), json_string, 200);
 
-        let mut server = mockito::Server::new();
+        let mut server = mockito::Server::new_async().await;
 
         let mock = server
             .mock("GET", format!("/posts/{}", slug).as_str())
