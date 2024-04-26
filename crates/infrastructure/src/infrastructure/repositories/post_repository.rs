@@ -72,14 +72,15 @@ mod tests {
             .map(|post_from_api| post_from_api.into_post().unwrap())
             .collect::<Vec<Post>>();
         let json_string = serde_json::to_string(&posts_from_api).unwrap();
-        let mock = create_mock_server("/posts?per_page=1&offset=1".to_string(), json_string, 200);
+        let mock =
+            create_mock_server("/posts?per_page=1&offset=1".to_string(), json_string, 200).await;
 
         let client = reqwest::Client::new();
         let repository = PostRepository::new(mock.0.url(), client);
 
         assert_eq!(repository.find_posts(1, 1).await?, posts);
-        mock.1.assert();
-        mock.1.remove();
+        mock.1.assert_async().await;
+        mock.1.remove_async().await;
         Ok(())
     }
 
@@ -97,7 +98,8 @@ mod tests {
             format!("/posts?category_ids={}", category_id),
             json_string,
             200,
-        );
+        )
+        .await;
         let client = reqwest::Client::new();
         let repository = PostRepository::new(mock.0.url(), client);
 
@@ -107,8 +109,8 @@ mod tests {
                 .await?,
             posts
         );
-        mock.1.assert();
-        mock.1.remove();
+        mock.1.assert_async().await;
+        mock.1.remove_async().await;
         Ok(())
     }
 
@@ -122,28 +124,30 @@ mod tests {
         let post_from_api = &posts_from_api[0];
         let post = post_from_api.into_post()?;
         let json_string = serde_json::to_string(post_from_api).unwrap();
-        let mock = create_mock_server(format!("/posts/{}", slug), json_string, 200);
+        let mock = create_mock_server(format!("/posts/{}", slug), json_string, 200).await;
+
         let client = reqwest::Client::new();
         let repository = PostRepository::new(mock.0.url(), client);
 
         assert_eq!(repository.find_post(slug.to_string()).await?, Some(post));
-        mock.1.assert();
-        mock.1.remove();
+        mock.1.assert_async().await;
+        mock.1.remove_async().await;
         Ok(())
     }
 
-    fn create_mock_server(
+    async fn create_mock_server(
         path: String,
         json_string: String,
         status_code: usize,
     ) -> (mockito::ServerGuard, mockito::Mock) {
-        let mut server = mockito::Server::new();
+        let mut server = mockito::Server::new_async().await;
         let mock = server
             .mock("GET", path.as_str())
             .with_status(status_code)
             .with_header("content-type", "application/json")
             .with_body(json_string)
-            .create();
+            .create_async()
+            .await;
         (server, mock)
     }
 
