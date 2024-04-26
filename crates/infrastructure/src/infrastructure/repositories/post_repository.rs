@@ -131,13 +131,14 @@ mod tests {
             .with_status(200)
             .with_header("content-type", "application/json")
             .with_body(json_string)
-            .create();
+            .create_async()
+            .await;
 
         let client = reqwest::Client::new();
         let repository = PostRepository::new(server.url(), client);
 
-        assert_eq!(repository.find_post(slug.to_string()).await?, Some(post));
         mock.assert();
+        assert_eq!(repository.find_post(slug.to_string()).await?, Some(post));
         mock.remove();
         Ok(())
     }
