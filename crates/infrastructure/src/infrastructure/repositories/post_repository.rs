@@ -137,7 +137,7 @@ mod tests {
         let client = reqwest::Client::new();
         let repository = PostRepository::new(server.url(), client);
 
-        mock.assert();
+        mock.assert_async();
         assert_eq!(repository.find_post(slug.to_string()).await?, Some(post));
         mock.remove();
         Ok(())
