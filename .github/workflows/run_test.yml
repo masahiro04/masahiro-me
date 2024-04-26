@@ -1,10 +1,9 @@
 on:
-  workflow_dispatch:
-  push:
+  pull_request:
     branches:
       - main
 
-name: Test
+name: Run test
 
 jobs:
   test:
