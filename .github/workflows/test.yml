@@ -1,0 +1,20 @@
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+name: Test
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
+
+      - name: Install nightly toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - run: cargo test --all-features
