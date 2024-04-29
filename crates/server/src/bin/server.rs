@@ -35,7 +35,10 @@ struct Opt {
 }
 
 pub async fn fetch_data_from_api(slug: &str) -> Result<PostFromApi, reqwest::Error> {
-    let url = format!("https://api.masahiro.me/api/posts/{}", slug);
+    let url = format!(
+        "https://masahiro-me-api-p2h6pos6wq-an.a.run.app/api/v1/posts/{}",
+        slug
+    );
     let client = Client::new();
     let response = client.get(&url).send().await?;
     let body = response.json::<PostFromApi>().await?;
