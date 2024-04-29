@@ -4,6 +4,7 @@ use app::pages::posts::post_detail::post_meta_tags;
 use app::pages::posts::post_index::posts_meta_tags;
 use app::pages::projects::project_index::projects_meta_tags;
 use app::route;
+use core::panic;
 use infrastructure::repositories::post_repository::post_from_api::PostFromApi;
 use reqwest::Client;
 use std::collections::HashMap;
@@ -35,7 +36,8 @@ struct Opt {
 }
 
 pub async fn fetch_data_from_api(slug: &str) -> Result<PostFromApi, reqwest::Error> {
-    let url = format!("https://api.masahiro.me/api/posts/{}", slug);
+    let api_url = std::env::var("API_URL").expect("API_URL must be set");
+    let url = format!("{}/api/v1/posts/{}", api_url, slug);
     let client = Client::new();
     let response = client.get(&url).send().await?;
     let body = response.json::<PostFromApi>().await?;
@@ -80,6 +82,7 @@ async fn render(
                     &post.featured_media(),
                 )
             });
+
             meta_future.await.unwrap_or_else(|_| "".to_string())
         }
         route::Route::Projects => projects_meta_tags(),
@@ -145,6 +148,7 @@ async fn redirect_to_sitemap(_: ()) -> impl IntoResponse {
 #[tokio::main]
 async fn main() {
     Executor::default();
+    dotenv::dotenv().ok();
 
     env_logger::init();
 
@@ -181,12 +185,12 @@ async fn main() {
             handle_error,
         ));
 
-    println!("You can view the website at: http://0.0.0.0:8080/");
-
     let port = match std::env::var("PORT") {
         Ok(port) => port.parse::<u16>().unwrap(),
         Err(_) => 8080,
     };
+
+    println!("You can view the website at: http://0.0.0.0:{}/", port);
 
     let addr = ([0, 0, 0, 0], port).into();
 

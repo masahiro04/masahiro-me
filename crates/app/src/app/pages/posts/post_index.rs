@@ -17,14 +17,18 @@ pub fn post_index(props: &HomeProps) -> HtmlResult {
         PER_PAGE * (props.page - 1)
     };
     let posts = hooks::posts::use_posts(offset)?;
+
     let has_next_page = use_state(|| posts.clone().len() == PER_PAGE as usize);
 
     let set_has_next_page = has_next_page.clone();
     let posts_len = posts.len();
-    use_effect_with(posts_len,move |_| {
-        set_has_next_page.set(posts_len == PER_PAGE as usize);
-        || ()
-    });
+    use_effect_with_deps(
+        move |_| {
+            set_has_next_page.set(posts_len == PER_PAGE as usize);
+            || ()
+        },
+        posts_len,
+    );
 
     Ok(html! {
         <>
