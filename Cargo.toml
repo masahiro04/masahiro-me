@@ -2,15 +2,15 @@
 members = ["crates/*"]
 
 [workspace.dependencies]
-anyhow = "1.0.72"
-serde = { version = "=1.0.198", default-features = false }
-serde_json = { version = "1.0", default-features = false }
-reqwest = { version = "0.12", default-features = false, features = [
+anyhow = "1.0.82"
+serde = { version = "=1.0.199", default-features = false }
+serde_json = { version = "1.0.116", default-features = false }
+reqwest = { version = "0.12.4", default-features = false, features = [
   "rustls-tls",
   "json",
 ] }
-async-trait = "0.1.77"
-log = "0.4.20"
+async-trait = "0.1.80"
+log = "0.4.21"
 
 [profile.release]
 strip = 'debuginfo'
