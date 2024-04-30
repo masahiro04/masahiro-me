@@ -155,7 +155,7 @@ mod tests {
             excerpt: "excerpt".to_string(),
             content: "content".to_string(),
             categories: vec![],
-            featured_media_url: "featured_media".to_string(),
+            featured_media: "featured_media".to_string(),
         }]
     }
 }
