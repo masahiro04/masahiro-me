@@ -1,7 +1,7 @@
 version: "3"
 services:
   web:
-    build: ./dockers/web/
+    build: .
     env_file: .env
     ports:
       - "8080:8080"
