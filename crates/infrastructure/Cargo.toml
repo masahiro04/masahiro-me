@@ -13,5 +13,5 @@ log = { workspace = true }
 domain = { path = "../domain" }
 
 [dev-dependencies]
-tokio = { version = "1.35.1", features = ["full"] }
-mockito = "1.2.0"
+tokio = { version = "1.37.0", features = ["full"] }
+mockito = "1.4.0"

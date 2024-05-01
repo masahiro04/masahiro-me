@@ -18,7 +18,7 @@ required-features = ["ssr"]
 
 [dependencies]
 yew = { version = "0.20", features = ["ssr", "hydration"] }
-futures = { version = "0.3", features = ["std"], default-features = false }
+futures = { version = "0.3.30", features = ["std"], default-features = false }
 log = { workspace = true }
 async-trait = { workspace = true }
 app = { path = "../app" }
@@ -27,11 +27,11 @@ infrastructure = { path = "../infrastructure" }
 use_case = { path = "../use_case" }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
-wasm-bindgen-futures = "0.4.39"
+wasm-bindgen-futures = "0.4.42"
 wasm-logger = "0.2.0"
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-tokio = { version = "1.35.1", features = ["full"] }
+tokio = { version = "1.37.0", features = ["full"] }
 # axum = "0.6.20"
 axum = "0.6"
 tower = { version = "0.4", features = ["make"] }
