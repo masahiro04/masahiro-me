@@ -17,7 +17,7 @@ name = "server"
 required-features = ["ssr"]
 
 [dependencies]
-yew = { version = "0.20", features = ["ssr", "hydration"] }
+yew = { version = "0.21.0", features = ["ssr", "hydration"] }
 futures = { version = "0.3.30", features = ["std"], default-features = false }
 log = { workspace = true }
 async-trait = { workspace = true }

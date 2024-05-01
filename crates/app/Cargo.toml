@@ -9,8 +9,8 @@ name = "function_router"
 required-features = ["yew/csr"]
 
 [dependencies]
-yew = { version = "0.20", features = ["csr"] }
-yew-router = "0.17.0"
+yew = { version = "0.21.0", features = ["csr"] }
+yew-router = "0.18.0"
 wee_alloc = "0.4.5"
 url = { version = "2.5.0", features = ["serde"] }
 serde = { workspace = true }
