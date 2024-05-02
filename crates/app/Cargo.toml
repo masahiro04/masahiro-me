@@ -11,13 +11,13 @@ required-features = ["yew/csr"]
 [dependencies]
 yew = { version = "0.21.0", features = ["csr"] }
 yew-router = "0.18.0"
+wee_alloc = "0.4.5"
+url = { version = "2.5.0", features = ["serde"] }
 serde = { workspace = true }
 reqwest = { workspace = true }
 async-trait = { workspace = true }
 log = { workspace = true }
 anyhow = { workspace = true }
-wee_alloc = "0.4.5"
-url = { version = "2.5.0", features = ["serde"] }
 domain = { path = "../domain" }
 infrastructure = { path = "../infrastructure" }
 use_case = { path = "../use_case" }

@@ -15,7 +15,7 @@ pub fn post_body(props: &PostBodyProps) -> Html {
     let node: UseStateHandle<Option<VNode>> = use_state(|| None);
     let content_clone = content.clone();
     let set_node = node.clone();
-    use_effect_with(props.clone(),move |_| {
+    use_effect_with(props.clone(), move |_| {
         let parsed = Html::from_html_unchecked(AttrValue::from(content_clone.clone()));
         set_node.set(Some(parsed));
         || ()
