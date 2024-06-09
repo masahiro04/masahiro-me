@@ -48,6 +48,11 @@ pub fn about_index() -> Html {
             title: "Languages".to_string(),
             elements: vec!["TypeScript".to_string(), "Rust".to_string()],
         };
+
+        let occupation = RenderItem {
+            title: "Occupation".to_string(),
+            elements: vec!["Entrepreneur".to_string(), "Software engineer".to_string()],
+        };
         let interests = RenderItem {
             title: "Interests".to_string(),
             elements: vec![
@@ -58,6 +63,7 @@ pub fn about_index() -> Html {
         };
         html! {
             <>
+                {render_item(occupation)}
                 {render_item(languages)}
                 {render_item(interests)}
             </>
@@ -78,8 +84,6 @@ pub fn about_index() -> Html {
                     <h3 class="text-xl font-semibold text-center text-gray-800">
                         { "Masahiro Okubo" }
                     </h3>
-                    <p class="mx-auto text-center text-gray-800">
-                        { "I'm a software engineer living in Japan, Nagoya." } </p>
                 </div>
                 <div class="mt-8 space-y-7 sm:mt-5 sm:space-y-3">
                     {render_items()}

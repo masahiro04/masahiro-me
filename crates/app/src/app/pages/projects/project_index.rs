@@ -59,8 +59,8 @@ pub fn project_index() -> Html {
     html! {
         <>
             <project_header::ProjectHeader />
+            {render_section("Investee companies / Member of the Board".to_string(), render_advisories())}
             {render_section("Currently working on".to_string(), render_works())}
-            {render_section("Member of the Board / Advidors".to_string(), render_advisories())}
             {render_section("Past works".to_string(), render_past_works())}
         </>
     }
