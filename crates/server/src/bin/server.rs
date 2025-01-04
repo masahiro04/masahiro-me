@@ -63,28 +63,29 @@ async fn render(
         route::Route::PostIndex { page } => posts_meta_tags(),
         route::Route::PostDetail { slug } => {
             log::debug!("Posts OGP Setting {}", slug);
-            let meta_future = tokio::spawn(async move {
-                let api_response = fetch_data_from_api(&slug).await;
-                let post_from_api = match api_response {
-                    Ok(body) => body,
-                    Err(err) => panic!("error: {}", err),
-                };
+            //let meta_future = tokio::spawn(async move {
+            //let api_response = fetch_data_from_api(&slug).await;
+            //let post_from_api = match api_response {
+            //    Ok(body) => body,
+            //    Err(err) => panic!("error: {}", err),
+            //};
 
-                let post = post_from_api.into_post().unwrap();
-                let keywords = post
-                    .categories()
-                    .into_iter()
-                    .map(|category| category.name().to_string())
-                    .collect::<Vec<String>>()
-                    .join(",");
-                post_meta_tags(
-                    post.title(),
-                    post.excerpt(),
-                    &keywords,
-                    &post.featured_media(),
-                )
-            });
-            meta_future.await.unwrap_or_else(|_| "".to_string())
+            //let post = post_from_api.into_post().unwrap();
+            //let keywords = post
+            //    .categories()
+            //    .into_iter()
+            //    .map(|category| category.name().to_string())
+            //    .collect::<Vec<String>>()
+            //    .join(",");
+            //post_meta_tags(
+            //    post.title(),
+            //    post.excerpt(),
+            //    &keywords,
+            //    &post.featured_media(),
+            //)
+            //});
+            //meta_future.await.unwrap_or_else(|_| "".to_string())
+            "".to_string()
         }
         route::Route::Projects => projects_meta_tags(),
         route::Route::AboutIndex => about_meta_tags(),
