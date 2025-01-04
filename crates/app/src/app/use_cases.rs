@@ -1,5 +1,5 @@
 use domain::repositories::post_repository::{PostRepositoryInterface, WithPostRepository};
-use std::io::Result;
+use std::{io::Result, sync::Arc};
 use use_case::{
     fetch_advisory_projects_usecase::FetchAdvisoryProjectsUsecase,
     fetch_past_work_projects_usecase::FetchPastWorkProjectsUsecase,
@@ -25,15 +25,17 @@ pub async fn fetch_posts_usecase(per_page: i32, offset: i32) -> anyhow::Result<V
     let api_url = "https://api.masahiro.me/api".to_string();
     // let api_url = "https://masahiro-me-api-p2h6pos6wq-an.a.run.app/api/v1".to_string();
     struct FetchPostsUsecaseImpl {
-        repository: PostRepository,
+        repository: Arc<PostRepository>,
     }
+
     impl WithPostRepository for FetchPostsUsecaseImpl {
-        type PostRepository = PostRepository;
-        fn post_repository(&self) -> &Self::PostRepository {
-            &self.repository
+        //type PostRepository = PostRepository;
+        fn post_repository(&self) -> Arc<dyn PostRepositoryInterface + Sync> {
+            self.repository.clone()
         }
     }
-    let repository = PostRepository::new(api_url, client);
+    //let repository = PostRepository::new(api_url, client);
+    let repository = Arc::new(PostRepository::new(api_url, client));
     let usecase = FetchPostsUsecaseImpl { repository };
     usecase.post_repository().find_posts(per_page, offset).await
 }
