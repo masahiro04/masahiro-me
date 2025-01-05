@@ -23,8 +23,14 @@ impl PostState {
             spawn_local(async move {
                 {
                     let post = match fetch_post_usecase(slug).await {
-                        Ok(post) => post,
-                        Err(_e) => None,
+                        Ok(post) => {
+                            log::debug!("post OK!!!!!l,{:?}", post);
+                            post
+                        }
+                        Err(e) => {
+                            log::debug!("post ERR!!!!!l, {}", e);
+                            None
+                        }
                     };
                     {
                         let mut value = value.borrow_mut();
@@ -39,11 +45,19 @@ impl PostState {
 }
 
 #[hook]
-pub fn use_post(slug: String) -> SuspensionResult<Post> {
-    let post_state = use_state(|| PostState::new(slug));
+pub fn use_post(slug: String) -> SuspensionResult<Option<Post>> {
+    let post_state = use_state(|| PostState::new(slug.clone()));
+    //let post_state = use_state(|| PostState::new(slug));
+    // Ok(*post_state.value.borrow())
     let result = match *post_state.value.borrow() {
-        Some(ref user) => Ok(user.clone()),
-        None => Err(post_state.susp.clone()),
+        Some(ref post) => {
+            log::debug!("hooks !!haittayo!!!!");
+            Ok(Some(post.clone()))
+        }
+        None => {
+            log::debug!("None!!!!!!!!!!!!!!!!");
+            Ok(None)
+        }
     };
     result
 }

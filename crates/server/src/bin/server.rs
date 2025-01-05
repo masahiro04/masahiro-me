@@ -36,6 +36,7 @@ struct Opt {
 
 pub async fn fetch_data_from_api(slug: &str) -> Result<PostFromApi, reqwest::Error> {
     let url = format!(
+        // FIXME: エラーを出すために追加
         "https://api.masahiro.me/api/posts/{}",
         // "https://masahiro-me-api-p2h6pos6wq-an.a.run.app/api/v1/posts/{}",
         slug
@@ -63,29 +64,39 @@ async fn render(
         route::Route::PostIndex { page } => posts_meta_tags(),
         route::Route::PostDetail { slug } => {
             log::debug!("Posts OGP Setting {}", slug);
-            //let meta_future = tokio::spawn(async move {
-            //let api_response = fetch_data_from_api(&slug).await;
-            //let post_from_api = match api_response {
-            //    Ok(body) => body,
-            //    Err(err) => panic!("error: {}", err),
-            //};
+            // TODO: 取得できない場合は、取得できませんでした、というメッセージの表示を行う
+            let meta_future = tokio::spawn(async move {
+                let api_response = fetch_data_from_api(&slug).await;
+                let post_from_api = match api_response {
+                    Ok(body) => body,
+                    Err(err) => {
+                        log::debug!("記事の取得に失敗しました {}", slug);
+                        return "".to_string();
+                    }
+                };
 
-            //let post = post_from_api.into_post().unwrap();
-            //let keywords = post
-            //    .categories()
-            //    .into_iter()
-            //    .map(|category| category.name().to_string())
-            //    .collect::<Vec<String>>()
-            //    .join(",");
-            //post_meta_tags(
-            //    post.title(),
-            //    post.excerpt(),
-            //    &keywords,
-            //    &post.featured_media(),
-            //)
-            //});
-            //meta_future.await.unwrap_or_else(|_| "".to_string())
-            "".to_string()
+                let post = match post_from_api.into_post() {
+                    Ok(post) => post,
+                    Err(_) => {
+                        log::debug!("failed post_from_api.into_post {}", slug);
+                        return "".to_string();
+                    }
+                };
+
+                let keywords = post
+                    .categories()
+                    .into_iter()
+                    .map(|category| category.name().to_string())
+                    .collect::<Vec<String>>()
+                    .join(",");
+                post_meta_tags(
+                    post.title(),
+                    post.excerpt(),
+                    &keywords,
+                    &post.featured_media(),
+                )
+            });
+            meta_future.await.unwrap_or_else(|_| "".to_string())
         }
         route::Route::Projects => projects_meta_tags(),
         route::Route::AboutIndex => about_meta_tags(),
