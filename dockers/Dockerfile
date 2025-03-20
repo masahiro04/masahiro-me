@@ -20,6 +20,8 @@ COPY . .
 
 # RUN rustup target add x86_64-unknown-linux-musl
 RUN rustup target add wasm32-unknown-unknown
+RUN rustup component add rustfmt
+RUN rustup component add clippy
 RUN cargo install trunk --version 0.17.5 --locked
 
 EXPOSE 8080

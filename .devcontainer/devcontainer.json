@@ -7,7 +7,9 @@
         "rust-lang.rust-analyzer",
         "fill-labs.dependi",
         "tamasfe.even-better-toml",
-        "saoudrizwan.claude-dev"
+        "saoudrizwan.claude-dev",
+        "techtheawesome.rust-yew",
+        "ms-vscode.makefile-tools"
       ],
       "settings": {
         "editor.formatOnSave": true,
