@@ -15,7 +15,7 @@ pub fn about_index() -> Html {
                     class="flex justify-center py-3 bg-white rounded-md max-w-full px-6 bg-opacity-60 text-gray-400 shadow-sm space-x-1 text-sm sm:text-base sm:space-x-2"
                 >
                     {
-                        item.elements
+                    item.elements
                             .iter()
                             .enumerate()
                             .map(|(index, element)| {
