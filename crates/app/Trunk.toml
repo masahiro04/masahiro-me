@@ -1,2 +1,11 @@
 [watch]
 watch = ["src/", "../", "./"]
+
+[serve]
+address = "0.0.0.0"
+port = 8080
+
+[[hooks]]
+stage = "build"
+command = "cp"
+command_arguments = ["-r", "assets", "dist/"]

@@ -55,7 +55,6 @@ pub async fn fetch_post_usecase(slug: String) -> Result<Option<Post>> {
     let repo = PostRepository::new(api_url, client);
     let usecase = FetchPostUsecase::new(repo);
     usecase.execute(slug).await
-    // Ok(None)
 }
 pub fn fetch_work_projects_usecase() -> Vec<Project> {
     let repo = ProjectRepository::new();

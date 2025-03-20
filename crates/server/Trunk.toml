@@ -1,2 +1,7 @@
 [watch]
 watch = ["src/", "../", "./"]
+
+[[hooks]]
+stage = "build"
+command = "cp"
+command_arguments = ["-r", "../app/assets", "dist/"]

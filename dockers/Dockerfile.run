@@ -1,8 +1,12 @@
-FROM rust:1.74.0 as builder
-# FROM rust:1.69.0 as builder
+# FROM rust:1.74.0 as builder
+FROM rust:1.81.0-bookworm as builder
 
-RUN apt-get update && apt-get install -y \
-binaryen musl-tools && rm -rf /var/lib/apt/lists/*
+# Install Node.js and yarn
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get update && apt-get install -y \
+    binaryen musl-tools nodejs \
+    && npm install -g yarn \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr
 COPY . .
@@ -17,8 +21,16 @@ RUN cargo build --release --target x86_64-unknown-linux-musl
 
 WORKDIR /usr/crates/server
 
+# Build tailwind CSS
+WORKDIR /usr/crates/app
+RUN yarn install && yarn build:tailwind
+
+# Build server
+WORKDIR /usr/crates/server
 RUN trunk build --release -d ./dist
 RUN cp robots.txt ./dist/robots.txt
+RUN cp /usr/crates/app/style.css ./dist/
+RUN cp -r /usr/crates/app/assets/images ./dist/
 RUN cargo build --release --target x86_64-unknown-linux-musl --features=ssr --bin server --
 
 # Runtime Stage

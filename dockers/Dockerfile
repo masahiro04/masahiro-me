@@ -1,5 +1,5 @@
 # FROM rust:1.70.0 as builder
-FROM rust:1.74.0-bookworm
+FROM rust:1.81.0-bookworm
 
 RUN apt-get update && apt-get install -y \
   binaryen \

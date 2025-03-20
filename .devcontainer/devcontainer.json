@@ -1,0 +1,24 @@
+{
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "GitHub.copilot",
+        "ms-azuretools.vscode-docker",
+        "rust-lang.rust-analyzer",
+        "fill-labs.dependi",
+        "tamasfe.even-better-toml",
+        "saoudrizwan.claude-dev"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "files.watcherExclude": {
+          "**/target/**": true
+        }
+      }
+    }
+  },
+  "dockerComposeFile": "../compose.yaml",
+  "name": "masahiro-me",
+  "service": "web",
+  "workspaceFolder": "/usr/src/app"
+}
