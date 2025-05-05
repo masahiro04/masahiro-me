@@ -9,7 +9,8 @@
         "tamasfe.even-better-toml",
         "saoudrizwan.claude-dev",
         "techtheawesome.rust-yew",
-        "ms-vscode.makefile-tools"
+        "ms-vscode.makefile-tools",
+        "saoudrizwan.claude-dev"
       ],
       "settings": {
         "editor.formatOnSave": true,
