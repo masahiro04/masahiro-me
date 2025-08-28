@@ -10,4 +10,5 @@ crates/server/dist
 Cargo.lock
 .env
 tailwind.css
+CLAUDE.local.md
 
