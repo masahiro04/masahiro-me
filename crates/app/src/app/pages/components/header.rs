@@ -18,10 +18,17 @@ struct Item {
 pub fn header() -> Html {
     let location = use_location();
     let items = vec![
+        // Item {
+        //     name: "Posts".to_string(),
+        //     active_paths: vec!["pages".to_string(), "posts".to_string()],
+        //     href: Route::PostIndex { page: 1 },
+        //     lp_class: "tracking-wider text-gray-700 text-base".to_string(),
+        //     sm_class: "tracking-wider text-gray-700 text-sm text-center".to_string(),
+        // },
         Item {
-            name: "Posts".to_string(),
-            active_paths: vec!["pages".to_string(), "posts".to_string()],
-            href: Route::PostIndex { page: 1 },
+            name: "About".to_string(),
+            active_paths: vec!["about".to_string()],
+            href: Route::AboutIndex,
             lp_class: "tracking-wider text-gray-700 text-base".to_string(),
             sm_class: "tracking-wider text-gray-700 text-sm text-center".to_string(),
         },
@@ -29,13 +36,6 @@ pub fn header() -> Html {
             name: "Projects".to_string(),
             active_paths: vec!["projects".to_string()],
             href: Route::Projects,
-            lp_class: "tracking-wider text-gray-700 text-base".to_string(),
-            sm_class: "tracking-wider text-gray-700 text-sm text-center".to_string(),
-        },
-        Item {
-            name: "About".to_string(),
-            active_paths: vec!["about".to_string()],
-            href: Route::AboutIndex,
             lp_class: "tracking-wider text-gray-700 text-base".to_string(),
             sm_class: "tracking-wider text-gray-700 text-sm text-center".to_string(),
         },
@@ -67,7 +67,7 @@ pub fn header() -> Html {
     html! {
         <nav class="py-3 bg-white rounded-md shadow-lg px-7 bg-opacity-60 mb-5 sm:mb-16">
             <div class="flex items-center justify-between">
-                <Link<Route> classes={"text-2xl font-semibold tracking-wide text-gray-700 whitespace-nowrap"} to={Route::PostIndex { page: 1 }} >
+                <Link<Route> classes={"text-2xl font-semibold tracking-wide text-gray-700 whitespace-nowrap"} to={Route::AboutIndex } >
                     { "Masahiro's tech note" }
                 </Link<Route>>
                 <div class="items-center hidden sm:flex sm:space-x-8 md:space-x-12">
