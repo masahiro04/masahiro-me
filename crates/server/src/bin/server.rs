@@ -150,8 +150,8 @@ where
 //
 // This increases performance in some environments (e.g.: in VM).
 // pub fn health() -> impl IntoResponse {
-async fn redirect_to_pages(_: ()) -> impl IntoResponse {
-    Redirect::to("/pages/1")
+async fn redirect_to_about_page(_: ()) -> impl IntoResponse {
+    Redirect::to("/about")
 }
 
 async fn redirect_to_sitemap(_: ()) -> impl IntoResponse {
@@ -183,7 +183,7 @@ async fn main() {
     };
 
     let app = Router::new()
-        .route("/", get(redirect_to_pages))
+        .route("/", get(redirect_to_about_page))
         .route("/sitemap", get(redirect_to_sitemap))
         .fallback_service(HandleError::new(
             ServeDir::new(opts.dir)
