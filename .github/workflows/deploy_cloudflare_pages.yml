@@ -5,7 +5,6 @@ on:
   # push:
   #   branches:
   #     - main
-
   pull_request:
     branches:
       - main
@@ -60,10 +59,10 @@ jobs:
           test -f crates/app/dist/_redirects || exit 1
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          projectName: masahiro-me-prod
+          projectName: masahiro-me-dev
           directory: crates/app/dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
