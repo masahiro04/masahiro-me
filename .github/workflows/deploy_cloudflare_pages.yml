@@ -68,4 +68,6 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           command: pages deploy crates/app/dist --project-name=masahiro-me-development
+          wranglerVersion: "3.90.0"
+          command: pages deploy crates/app/dist --project-name=masahiro-me-dev --commit-dirty=true
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
