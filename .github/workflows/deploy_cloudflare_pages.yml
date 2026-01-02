@@ -48,6 +48,10 @@ jobs:
         working-directory: crates/app
         run: yarn build:tailwind
 
+      - name: Install wrangler
+        working-directory: crates/app
+        run: yarn install wrangler
+
       - name: Build WASM application
         working-directory: crates/app
         run: trunk build --release
