@@ -10,6 +10,28 @@
     />
     <meta name="apple-mobile-web-app-capable" content="yes" />
 
+    <!-- SEO Meta Tags -->
+    <title>Masahiro's tech note</title>
+    <meta name="description" content="Software development articles and projects">
+    <meta name="keywords" content="software development, programming, web development, rust, typescript">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://masahiro.me/">
+    <meta property="og:title" content="Masahiro's Blog">
+    <meta property="og:description" content="Software development articles and projects">
+    <meta property="og:image" content="https://masahiro.me/images/og-default.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://masahiro.me/">
+    <meta property="twitter:title" content="Masahiro's Blog">
+    <meta property="twitter:description" content="Software development articles and projects">
+    <meta property="twitter:image" content="https://masahiro.me/images/og-default.png">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://masahiro.me/">
+
     <link rel="icon" href="/images/favicon.png" />
 
     <link data-trunk href="./style.css" rel="css" />
@@ -30,6 +52,9 @@
     </script>
 
     <link data-trunk rel="copy-dir" href="/assets/images" />
+    <link data-trunk rel="copy-file" href="assets/_redirects" />
+    <link data-trunk rel="copy-file" href="assets/_headers" />
+    <link data-trunk rel="copy-file" href="assets/robots.txt" />
     <link
       data-trunk
       href="Cargo.toml"
