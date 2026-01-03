@@ -9,10 +9,7 @@ use super::pages::{
 use std::str::FromStr;
 use url::Url;
 use yew::prelude::*;
-use yew_router::history::{AnyHistory, History, MemoryHistory};
 use yew_router::prelude::*;
-
-use std::collections::HashMap;
 
 #[derive(Clone, Routable, PartialEq, Debug)]
 pub enum Route {
@@ -86,28 +83,6 @@ pub fn switch(routes: Route) -> Html {
             html! { <about_index::AboutIndex /> }
         }
         Route::NotFound => html! { <not_found::NotFound />},
-    }
-}
-
-#[derive(Properties, PartialEq, Eq, Debug)]
-pub struct ServerAppProps {
-    pub url: AttrValue,
-    pub queries: HashMap<String, String>,
-}
-
-#[function_component(ServerApp)]
-pub fn server_app(props: &ServerAppProps) -> Html {
-    let history = AnyHistory::from(MemoryHistory::new());
-    history
-        .push_with_query(&*props.url, &props.queries)
-        .unwrap();
-
-    html! {
-        <Router history={history}>
-            <layout::Layout>
-                <Switch<Route> render={switch} />
-            </layout::Layout>
-        </Router>
     }
 }
 
