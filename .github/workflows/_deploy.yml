@@ -6,57 +6,6 @@ on:
         required: true
         type: string
 
-# env:
-#   WORKLOAD_IDENTITY_POOL_NAME: github-action-pool
-#   WORKLOAD_IDENTITY_PROVIDER_NAME: github-action-provider
-#   WORKLOAD_SERVICE_ACCOUNT_NAME: github-action-masahiro-me
-#   SERVICE: masahiro-me
-#   REGION: asia-northeast1
-
-# jobs:
-#   deploy:
-#     runs-on: ubuntu-latest
-#     environment: ${{ inputs.environment }}
-#     permissions:
-#       contents: read
-#       id-token: write
-
-#     steps:
-#       - uses: actions/checkout@v3
-
-#       - name: Set up Docker Buildx
-#         uses: docker/setup-buildx-action@v2
-
-#       - id: auth
-#         name: Authenticate to Google Cloud
-#         uses: google-github-actions/auth@v1
-#         with:
-#           workload_identity_provider: projects/${{ vars.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/${{ env.WORKLOAD_IDENTITY_POOL_NAME }}/providers/${{ env.WORKLOAD_IDENTITY_PROVIDER_NAME }}
-#           service_account: ${{ env.WORKLOAD_SERVICE_ACCOUNT_NAME }}@${{ vars.PROJECT_ID }}.iam.gserviceaccount.com
-
-#       - name: Set up Cloud SDK
-#         uses: google-github-actions/setup-gcloud@v1
-
-#       - name: Set up gcloud authorization helper
-#         run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
-
-#       - name: Build and push
-#         uses: docker/build-push-action@v4
-#         with:
-#           file: ./dockers/Dockerfile.run
-#           context: .
-#           push: true
-#           tags: ${{ env.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/masahiro-me/masahiro-me:latest
-#           cache-from: type=registry,ref=${{ env.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/masahiro-me/masahiro-me:cache
-#           cache-to: type=registry,ref=${{ env.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/masahiro-me/masahiro-me:cache,mode=max
-
-#       - name: Deploy to Cloud Run
-#         run: |-
-#           gcloud run deploy ${{ env.SERVICE }} \
-#             --region ${{ env.REGION }} \
-#             --no-use-http2 \
-#             --project ${{ vars.PROJECT_ID }} \
-#             --image=${{ env.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/masahiro-me/masahiro-me:latest
 
 jobs:
   deploy:
