@@ -11,6 +11,7 @@
 
 /*.css
   Cache-Control: public, max-age=31536000, immutable
+  Content-Type: text/css
 
 # Cache HTML briefly
 /
