@@ -65,6 +65,10 @@ jobs:
           ls -lah crates/app/dist/
           test -f crates/app/dist/index.html || exit 1
           test -f crates/app/dist/_redirects || exit 1
+          echo "=== Checking index.html for CSS references ==="
+          grep -n "stylesheet\|style.*css" crates/app/dist/index.html || echo "No CSS references found"
+          echo "=== Checking _redirects content ==="
+          cat crates/app/dist/_redirects
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
