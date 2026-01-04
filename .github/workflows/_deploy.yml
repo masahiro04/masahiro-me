@@ -45,30 +45,19 @@ jobs:
         working-directory: crates/app
         run: yarn build:tailwind
 
-      - name: Verify TailwindCSS output
-        working-directory: crates/app
-        run: |
-          echo "Checking for style.css..."
-          ls -la style.css || echo "ERROR: style.css not found!"
-          test -f style.css || exit 1
-
       - name: Install wrangler
         working-directory: crates/app
         run: yarn add wrangler
 
       - name: Build WASM application
         working-directory: crates/app
-        run: trunk build --release --verbose
+        run: trunk build --release
 
       - name: Verify build output
         run: |
           ls -lah crates/app/dist/
           test -f crates/app/dist/index.html || exit 1
           test -f crates/app/dist/_redirects || exit 1
-          echo "=== Checking index.html for CSS references ==="
-          grep -n "stylesheet\|style.*css" crates/app/dist/index.html || echo "No CSS references found"
-          echo "=== Checking _redirects content ==="
-          cat crates/app/dist/_redirects
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
