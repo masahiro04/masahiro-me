@@ -45,13 +45,20 @@ jobs:
         working-directory: crates/app
         run: yarn build:tailwind
 
+      - name: Verify TailwindCSS output
+        working-directory: crates/app
+        run: |
+          echo "Checking for style.css..."
+          ls -la style.css || echo "ERROR: style.css not found!"
+          test -f style.css || exit 1
+
       - name: Install wrangler
         working-directory: crates/app
         run: yarn add wrangler
 
       - name: Build WASM application
         working-directory: crates/app
-        run: trunk build --release
+        run: trunk build --release --verbose
 
       - name: Verify build output
         run: |
