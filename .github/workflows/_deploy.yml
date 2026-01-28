@@ -65,5 +65,5 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           wranglerVersion: "3.90.0"
-          command: pages deploy crates/app/dist --project-name=masahiro-me-${{ inputs.environment }} --commit-dirty=true
+          command: pages deploy crates/app/dist --project-name=masahiro-me-${{ inputs.environment }} --branch=${{ github.ref_name }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
