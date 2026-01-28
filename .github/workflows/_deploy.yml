@@ -12,6 +12,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     permissions:
       contents: read
       deployments: write
@@ -54,6 +55,8 @@ jobs:
 
       - name: Build WASM application
         working-directory: crates/app
+        env:
+          API_URL: ${{ vars.API_URL }}
         run: trunk build --release
 
       - name: Verify build output

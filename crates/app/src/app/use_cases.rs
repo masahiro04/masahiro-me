@@ -1,3 +1,4 @@
+use crate::app::config::Config;
 use domain::repositories::post_repository::{PostRepositoryInterface, WithPostRepository};
 use std::{io::Result, sync::Arc};
 use use_case::{
@@ -22,7 +23,7 @@ fn client() -> reqwest::Client {
 // 300k以上一気に増えることになる
 pub async fn fetch_posts_usecase(per_page: i32, offset: i32) -> anyhow::Result<Vec<Post>> {
     let client = client();
-    let api_url = "https://masahiro-me-api-dev.stmhamachiii6744.workers.dev/api/v1".to_string();
+    let api_url = Config::api_url();
     struct FetchPostsUsecaseImpl {
         repository: Arc<PostRepository>,
     }
@@ -40,7 +41,7 @@ pub async fn fetch_posts_usecase(per_page: i32, offset: i32) -> anyhow::Result<V
 }
 pub async fn fetch_related_posts_usecase(category_ids: &str) -> Result<Vec<Post>> {
     let client = client();
-    let api_url = "https://masahiro-me-api-dev.stmhamachiii6744.workers.dev/api/v1".to_string();
+    let api_url = Config::api_url();
     let repo = PostRepository::new(api_url, client);
     let usecase = FetchRelatedPostsUsecase::new(repo);
     usecase.execute(category_ids).await
@@ -48,7 +49,7 @@ pub async fn fetch_related_posts_usecase(category_ids: &str) -> Result<Vec<Post>
 }
 pub async fn fetch_post_usecase(slug: String) -> Result<Option<Post>> {
     let client = client();
-    let api_url = "https://masahiro-me-api-dev.stmhamachiii6744.workers.dev/api/v1".to_string();
+    let api_url = Config::api_url();
     let repo = PostRepository::new(api_url, client);
     let usecase = FetchPostUsecase::new(repo);
     usecase.execute(slug).await
