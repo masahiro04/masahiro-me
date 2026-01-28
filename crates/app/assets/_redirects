@@ -4,5 +4,8 @@
 # Sitemap redirect to API
 /sitemap https://api.masahiro.me/sitemap 301
 
-# SPA fallback - serve index.html for all routes (must be last)
-/* /index.html 200
+# SPA routes - serve index.html for application routes only
+/pages/* /index.html 200
+/posts/* /index.html 200
+/projects /index.html 200
+/about /index.html 200

@@ -8,13 +8,7 @@ build:
 	cd crates/app && \
 	yarn install && \
 	yarn build:tailwind && \
-	cd ../server && \
-	trunk build --release -d ./dist && \
-	cp robots.txt ./dist/robots.txt && \
-	cp -r ../app/assets ./dist/ && \
-	cp ../app/style.css ./dist/ && \
-	cargo build --release --features=ssr --bin server --
+	trunk build --release
 
-run:
-	cd crates/server && \
-	cargo run --release --features=ssr --bin server -- --dir dist
+preview:
+	cd crates/app && trunk serve --release

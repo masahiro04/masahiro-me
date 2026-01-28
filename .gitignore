@@ -12,3 +12,14 @@ Cargo.lock
 tailwind.css
 CLAUDE.local.md
 
+# Claude Code local settings
+.claude/settings.local.json
+.claude/*.local.*
+
+# Task tracking files
+task.md
+tasks.md
+
+# Yarn artifacts
+/node_modules/
+/.yarn-integrity
