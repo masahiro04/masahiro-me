@@ -63,6 +63,5 @@ jobs:
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          projectName: masahiro-me-dev
-          directory: crates/app/dist
+          command: pages deploy crates/app/dist --project-name=masahiro-me-development
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}

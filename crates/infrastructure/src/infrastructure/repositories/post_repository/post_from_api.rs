@@ -10,7 +10,7 @@ pub struct PostFromApi {
     pub excerpt: String,
     pub content: String,
     pub categories: Vec<CategoryFromApi>,
-    pub featured_media: String,
+    pub featured_media_url: String,
 }
 
 impl PostFromApi {
@@ -27,7 +27,7 @@ impl PostFromApi {
             self.excerpt.clone(),
             self.content.clone(),
             categories,
-            self.featured_media.clone(),
+            self.featured_media_url.clone(),
         ))
     }
 }

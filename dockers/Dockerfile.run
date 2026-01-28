@@ -1,5 +1,5 @@
 # FROM rust:1.74.0 as builder
-FROM rust:1.81.0-bookworm as builder
+FROM rust:1.85.0-bookworm as builder
 
 # Install Node.js and yarn
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
