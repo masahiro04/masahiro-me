@@ -17,7 +17,7 @@ struct Item {
 #[function_component(Header)]
 pub fn header() -> Html {
     let location = use_location();
-    let items = vec![
+    let items = [
         Item {
             name: "Posts".to_string(),
             active_paths: vec!["pages".to_string(), "posts".to_string()],

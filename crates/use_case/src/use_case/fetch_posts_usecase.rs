@@ -1,5 +1,5 @@
 use domain::repositories::post_repository::WithPostRepository;
-use domain::{entities::post::Post, repositories::post_repository::PostRepositoryInterface};
+use domain::entities::post::Post;
 
 #[async_trait::async_trait(?Send)]
 pub trait FetchPostsUsecase: WithPostRepository {
