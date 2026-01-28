@@ -7,4 +7,5 @@ jobs:
     uses: ./.github/workflows/_deploy.yml
     with:
       environment: development
+      pages_name: masahiro-me-dev
     secrets: inherit
