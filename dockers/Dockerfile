@@ -17,10 +17,6 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
   && apt-get install -y nodejs
 
-# Claude CLIのインストール
-RUN npm install -g @anthropic-ai/claude-code
-
-
 WORKDIR /usr/src/app
 COPY . .
 

@@ -19,6 +19,20 @@
       }
     }
   },
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "mounts": [
+    "source=claude-code-bashhistory-${devcontainerId},target=/commandhistory,type=volume",
+    "source=claude-code-config-${devcontainerId},target=/root/.claude,type=volume"
+  ],
+  "containerEnv": {
+    "CLAUDE_CONFIG_DIR": "/root/.claude",
+    "HISTFILE": "/commandhistory/.bash_history"
+  },
+  "postCreateCommand": "mkdir -p /commandhistory && touch /commandhistory/.bash_history && chmod 600 /commandhistory/.bash_history",
   "dockerComposeFile": "../compose.yaml",
   "name": "masahiro-me",
   "service": "web",
