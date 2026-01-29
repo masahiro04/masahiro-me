@@ -9,6 +9,8 @@ jobs:
   clippy:
     name: Clippy
     runs-on: ubuntu-latest
+    env:
+      API_URL: https://example.com
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2
