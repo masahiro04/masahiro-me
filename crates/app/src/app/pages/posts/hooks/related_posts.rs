@@ -23,14 +23,8 @@ impl RelatedPostsState {
             spawn_local(async move {
                 {
                     let posts = match category_ids {
-                        Some(ids) => match fetch_related_posts_usecase(&ids).await {
-                            Ok(posts) => posts,
-                            Err(_) => vec![],
-                        },
-                        None => {
-                            let result: Vec<Post> = Vec::new();
-                            result
-                        }
+                        Some(ids) => fetch_related_posts_usecase(&ids).await.unwrap_or_default(),
+                        None => Vec::new(),
                     };
                     {
                         let mut value = value.borrow_mut();

@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       RUST_BACKTRACE: 1
+      API_URL: https://example.com
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2

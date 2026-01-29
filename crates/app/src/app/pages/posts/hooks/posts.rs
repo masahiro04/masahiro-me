@@ -27,10 +27,7 @@ impl PostsState {
         {
             let value = value.clone();
             spawn_local(async move {
-                let posts = match fetch_posts_usecase(PER_PAGE, offset).await {
-                    Ok(posts) => posts,
-                    Err(_) => vec![],
-                };
+                let posts = fetch_posts_usecase(PER_PAGE, offset).await.unwrap_or_default();
                 {
                     let mut value = value.borrow_mut();
                     *value = Some(posts);

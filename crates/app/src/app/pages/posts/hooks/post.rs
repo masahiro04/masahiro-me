@@ -10,6 +10,7 @@ use yew::{
 };
 
 pub struct PostState {
+    #[allow(dead_code)]
     susp: Suspension,
     value: Rc<RefCell<Option<Post>>>,
 }

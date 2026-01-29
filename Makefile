@@ -1,3 +1,9 @@
+# Load environment variables from .env file
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+endif
+
 dev:
 	cd crates/app && \
 	yarn install && \

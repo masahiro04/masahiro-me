@@ -1,4 +1,4 @@
-use super::post_components::{categories, post_body, post_item};
+use super::post_components::{categories, post_body};
 use crate::pages::components::back_button;
 use crate::use_cases::fetch_post_usecase;
 use domain::entities::post::Post;
@@ -20,10 +20,7 @@ pub fn post_detail(props: &PostProps) -> HtmlResult {
         let post_state = post_state.clone();
         use_effect(move || {
             spawn_local(async move {
-                let post = match fetch_post_usecase(slug).await {
-                    Ok(post) => post,
-                    Err(e) => None,
-                };
+                let post = fetch_post_usecase(slug).await.unwrap_or_default();
                 post_state.set(post);
             });
             || ()
