@@ -455,13 +455,6 @@ yarn build:tailwind
 
 ---
 
-## 🚧 進行中の機能
-
-### WordPress API連携
-現在、WordPressとの連携機能を開発中です。
-
----
-
 ## 📄 ライセンス
 
 MIT
