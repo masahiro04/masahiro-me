@@ -57,7 +57,7 @@ pub fn use_post(slug: String) -> SuspensionResult<Option<Post>> {
         }
         None => {
             log::debug!("None!!!!!!!!!!!!!!!!");
-            Ok(None)
+            Err(post_state.susp.clone())
         }
     };
     result

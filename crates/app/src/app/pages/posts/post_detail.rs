@@ -1,8 +1,6 @@
 use super::post_components::{categories, post_body};
 use crate::pages::components::back_button;
-use crate::use_cases::fetch_post_usecase;
 use domain::entities::post::Post;
-use yew::platform::spawn_local;
 use yew::prelude::*;
 
 #[derive(Properties, Clone, PartialEq)]
@@ -12,20 +10,7 @@ pub struct PostProps {
 
 #[function_component(PostDetail)]
 pub fn post_detail(props: &PostProps) -> HtmlResult {
-    let post_state = use_state(|| None::<Post>);
-    //let post = hooks::post::use_post(props.slug.clone())?;
-
-    {
-        let slug = props.slug.clone();
-        let post_state = post_state.clone();
-        use_effect(move || {
-            spawn_local(async move {
-                let post = fetch_post_usecase(slug).await.unwrap_or_default();
-                post_state.set(post);
-            });
-            || ()
-        });
-    }
+    let post = super::hooks::post::use_post(props.slug.clone())?;
 
     // FIXME: APIから出力できるようにしたい
     //let category_ids = match post.clone() {
@@ -47,7 +32,7 @@ pub fn post_detail(props: &PostProps) -> HtmlResult {
     //    })
     //}
 
-    match &*post_state {
+    match post {
         Some(post) => Ok(html! {
             <div>
                 <back_button::BackButton />
@@ -83,7 +68,15 @@ pub fn post_detail(props: &PostProps) -> HtmlResult {
             </div>
         }),
         None => Ok(html! {
-            <div>{ "記事を取得できませんでした。" }</div>
+            <div class="text-center py-16">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">
+                    { "記事が見つかりませんでした" }
+                </h2>
+                <p class="text-gray-600 mb-8">
+                    { "お探しの記事は存在しないか、削除された可能性があります。" }
+                </p>
+                <back_button::BackButton />
+            </div>
         }),
     }
 }
