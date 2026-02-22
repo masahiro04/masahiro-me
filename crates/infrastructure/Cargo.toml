@@ -12,6 +12,7 @@ serde_json = { workspace = true }
 reqwest = { workspace = true }
 log = { workspace = true }
 domain = { path = "../domain" }
+use_case = { path = "../use_case" }
 
 [dev-dependencies]
 tokio = { version = "1.37.0", features = ["full"] }

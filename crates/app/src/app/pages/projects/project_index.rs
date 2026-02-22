@@ -9,12 +9,13 @@ use {
 
 #[function_component(ProjectIndex)]
 pub fn project_index() -> Html {
-    let works = fetch_work_projects_usecase();
-    let past_works = fetch_past_work_projects_usecase();
-    let advidories = fetch_advisory_projects_usecase();
+    let works = fetch_work_projects_usecase().unwrap_or_default();
+    let past_works = fetch_past_work_projects_usecase().unwrap_or_default();
+    let advidories = fetch_advisory_projects_usecase().unwrap_or_default();
 
     let render_works = || -> Html {
         works
+            .clone()
             .into_iter()
             .map(|project| {
                 html! {
@@ -25,6 +26,7 @@ pub fn project_index() -> Html {
     };
     let render_advisories = || -> Html {
         advidories
+            .clone()
             .into_iter()
             .map(|project| {
                 html! {
@@ -35,6 +37,7 @@ pub fn project_index() -> Html {
     };
     let render_past_works = || -> Html {
         past_works
+            .clone()
             .into_iter()
             .map(|project| {
                 html! {

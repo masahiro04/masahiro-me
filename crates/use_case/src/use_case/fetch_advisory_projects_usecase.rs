@@ -1,19 +1,13 @@
+use crate::port::project_repository::ProvideProjectRepository;
 use domain::entities::project::Project;
-use domain::repositories::project_repository::IProjectRepository;
-use infrastructure::repositories::project_repository::ProjectRepository;
 
-#[derive(Clone, Debug)]
-pub struct FetchAdvisoryProjectsUsecase<Repo>
-where
-    Repo: IProjectRepository,
-{
-    repo: Repo,
+pub trait FetchAdvisoryProjectsUseCase: ProvideProjectRepository {
+    fn fetch_advisory_projects(&self) -> crate::port::project_repository::Result<Vec<Project>> {
+        self.project_repository().find_advisory_projects()
+    }
 }
-impl FetchAdvisoryProjectsUsecase<ProjectRepository> {
-    pub fn new(repo: ProjectRepository) -> Self {
-        Self { repo }
-    }
-    pub fn execute(&self) -> Vec<Project> {
-        self.repo.find_advisory_projects()
-    }
+
+pub trait ProvideFetchAdvisoryProjectsUseCase {
+    type FetchAdvisoryProjectsUseCase: FetchAdvisoryProjectsUseCase + Send + Sync;
+    fn fetch_advisory_projects_usecase(&self) -> &Self::FetchAdvisoryProjectsUseCase;
 }

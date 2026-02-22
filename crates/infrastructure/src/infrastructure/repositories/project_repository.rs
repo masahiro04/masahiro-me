@@ -1,6 +1,6 @@
-use domain::{
-    entities::project::{Project, ProjectKind},
-    repositories::project_repository::IProjectRepository,
+use domain::entities::project::{Project, ProjectKind};
+use use_case::port::project_repository::{
+    ProjectRepository as ProjectRepositoryPort, Result,
 };
 
 #[derive(Clone)]
@@ -17,8 +17,35 @@ impl Default for ProjectRepository {
     }
 }
 
-impl IProjectRepository for ProjectRepository {
-    fn find_all(&self) -> Vec<Project> {
+impl ProjectRepositoryPort for ProjectRepository {
+    fn find_all(&self) -> Result<Vec<Project>> {
+        Ok(self.find_all_internal())
+    }
+    fn find_work_projects(&self) -> Result<Vec<Project>> {
+        Ok(self
+            .find_all_internal()
+            .into_iter()
+            .filter(|project| *project.kind() == ProjectKind::Work)
+            .collect::<Vec<Project>>())
+    }
+    fn find_past_work_projects(&self) -> Result<Vec<Project>> {
+        Ok(self
+            .find_all_internal()
+            .into_iter()
+            .filter(|project| *project.kind() == ProjectKind::PastWork)
+            .collect())
+    }
+    fn find_advisory_projects(&self) -> Result<Vec<Project>> {
+        Ok(self
+            .find_all_internal()
+            .into_iter()
+            .filter(|project| *project.kind() == ProjectKind::Advisory)
+            .collect())
+    }
+}
+
+impl ProjectRepository {
+    fn find_all_internal(&self) -> Vec<Project> {
         vec![
             Project::reconstruct(
                 "Doctormate".to_string(),
@@ -52,26 +79,5 @@ impl IProjectRepository for ProjectRepository {
                 ProjectKind::PastWork,
             )
         ]
-    }
-    fn find_work_projects(&self) -> Vec<Project> {
-        self.find_all()
-            .clone()
-            .into_iter()
-            .filter(|project| *project.kind() == ProjectKind::Work)
-            .collect::<Vec<Project>>()
-    }
-    fn find_past_work_projects(&self) -> Vec<Project> {
-        self.find_all()
-            .clone()
-            .into_iter()
-            .filter(|project| *project.kind() == ProjectKind::PastWork)
-            .collect()
-    }
-    fn find_advisory_projects(&self) -> Vec<Project> {
-        self.find_all()
-            .clone()
-            .into_iter()
-            .filter(|project| *project.kind() == ProjectKind::Advisory)
-            .collect()
     }
 }
