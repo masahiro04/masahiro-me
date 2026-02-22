@@ -1,6 +1,5 @@
 use super::post_components::{categories, post_body};
 use crate::pages::components::back_button;
-use domain::entities::post::Post;
 use yew::prelude::*;
 
 #[derive(Properties, Clone, PartialEq)]
