@@ -1,19 +1,13 @@
+use crate::port::project_repository::ProvideProjectRepository;
 use domain::entities::project::Project;
-use domain::repositories::project_repository::IProjectRepository;
-use infrastructure::repositories::project_repository::ProjectRepository;
 
-#[derive(Clone, Debug)]
-pub struct FetchPastWorkProjectsUsecase<Repo>
-where
-    Repo: IProjectRepository,
-{
-    repo: Repo,
+pub trait FetchPastWorkProjectsUseCase: ProvideProjectRepository {
+    fn fetch_past_work_projects(&self) -> crate::port::project_repository::Result<Vec<Project>> {
+        self.project_repository().find_past_work_projects()
+    }
 }
-impl FetchPastWorkProjectsUsecase<ProjectRepository> {
-    pub fn new(repo: ProjectRepository) -> Self {
-        Self { repo }
-    }
-    pub fn execute(&self) -> Vec<Project> {
-        self.repo.find_past_work_projects()
-    }
+
+pub trait ProvideFetchPastWorkProjectsUseCase {
+    type FetchPastWorkProjectsUseCase: FetchPastWorkProjectsUseCase + Send + Sync;
+    fn fetch_past_work_projects_usecase(&self) -> &Self::FetchPastWorkProjectsUseCase;
 }

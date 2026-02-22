@@ -8,5 +8,5 @@ edition = "2021"
 anyhow = { workspace = true }
 async-trait = { workspace = true }
 reqwest = { workspace = true }
+thiserror = "1.0"
 domain = { path = "../domain" }
-infrastructure = { path = "../infrastructure" }

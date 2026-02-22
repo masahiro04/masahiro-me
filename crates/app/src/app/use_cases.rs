@@ -1,74 +1,46 @@
-use crate::app::config::Config;
-use domain::repositories::post_repository::{PostRepositoryInterface, WithPostRepository};
-use std::{io::Result, sync::Arc};
+use crate::app::app_state::AppState;
+use domain::entities::{post::Post, project::Project};
+use use_case::port::{post_repository, project_repository};
 use use_case::{
-    fetch_advisory_projects_usecase::FetchAdvisoryProjectsUsecase,
-    fetch_past_work_projects_usecase::FetchPastWorkProjectsUsecase,
-    fetch_post_usecase::FetchPostUsecase, fetch_related_posts_usecase::FetchRelatedPostsUsecase,
-    fetch_work_projects_usecase::FetchWorkProjectsUsecase,
-};
-use {
-    domain::entities::{post::Post, project::Project},
-    infrastructure::repositories::{
-        post_repository::PostRepository, project_repository::ProjectRepository,
-    },
+    fetch_advisory_projects_usecase::FetchAdvisoryProjectsUseCase,
+    fetch_past_work_projects_usecase::FetchPastWorkProjectsUseCase,
+    fetch_post_usecase::FetchPostUseCase,
+    fetch_posts_usecase::FetchPostsUseCase,
+    fetch_related_posts_usecase::FetchRelatedPostsUseCase,
+    fetch_work_projects_usecase::FetchWorkProjectsUseCase,
 };
 
-fn client() -> reqwest::Client {
-    reqwest::Client::new()
+pub async fn fetch_posts_usecase(
+    per_page: i32,
+    offset: i32,
+) -> post_repository::Result<Vec<Post>> {
+    let app_state = AppState::from_config();
+    app_state.fetch_posts(per_page, offset).await
 }
 
-// usecaseの中身をダミーに変更したところ、413kになった
-// post系のrepoを1つだけ有効化したら785kになったので
-// 300k以上一気に増えることになる
-pub async fn fetch_posts_usecase(per_page: i32, offset: i32) -> anyhow::Result<Vec<Post>> {
-    let client = client();
-    let api_url = Config::api_url();
-    struct FetchPostsUsecaseImpl {
-        repository: Arc<PostRepository>,
-    }
+pub async fn fetch_related_posts_usecase(
+    category_ids: &str,
+) -> post_repository::Result<Vec<Post>> {
+    let app_state = AppState::from_config();
+    app_state.fetch_related_posts(category_ids).await
+}
 
-    impl WithPostRepository for FetchPostsUsecaseImpl {
-        //type PostRepository = PostRepository;
-        fn post_repository(&self) -> Arc<dyn PostRepositoryInterface + Sync> {
-            self.repository.clone()
-        }
-    }
-    //let repository = PostRepository::new(api_url, client);
-    let repository = Arc::new(PostRepository::new(api_url, client));
-    let usecase = FetchPostsUsecaseImpl { repository };
-    usecase.post_repository().find_posts(per_page, offset).await
+pub async fn fetch_post_usecase(slug: String) -> post_repository::Result<Option<Post>> {
+    let app_state = AppState::from_config();
+    app_state.fetch_post(slug).await
 }
-pub async fn fetch_related_posts_usecase(category_ids: &str) -> Result<Vec<Post>> {
-    let client = client();
-    let api_url = Config::api_url();
-    let repo = PostRepository::new(api_url, client);
-    let usecase = FetchRelatedPostsUsecase::new(repo);
-    usecase.execute(category_ids).await
-    //     Ok(vec![])
+
+pub fn fetch_work_projects_usecase() -> project_repository::Result<Vec<Project>> {
+    let app_state = AppState::from_config();
+    app_state.fetch_work_projects()
 }
-pub async fn fetch_post_usecase(slug: String) -> Result<Option<Post>> {
-    let client = client();
-    let api_url = Config::api_url();
-    let repo = PostRepository::new(api_url, client);
-    let usecase = FetchPostUsecase::new(repo);
-    usecase.execute(slug).await
+
+pub fn fetch_past_work_projects_usecase() -> project_repository::Result<Vec<Project>> {
+    let app_state = AppState::from_config();
+    app_state.fetch_past_work_projects()
 }
-pub fn fetch_work_projects_usecase() -> Vec<Project> {
-    let repo = ProjectRepository::new();
-    let usecase = FetchWorkProjectsUsecase::new(repo);
-    usecase.execute()
-    // vec![]
-}
-pub fn fetch_past_work_projects_usecase() -> Vec<Project> {
-    let repo = ProjectRepository::new();
-    let usecase = FetchPastWorkProjectsUsecase::new(repo);
-    usecase.execute()
-    // vec![]
-}
-pub fn fetch_advisory_projects_usecase() -> Vec<Project> {
-    let repo = ProjectRepository::new();
-    let usecase = FetchAdvisoryProjectsUsecase::new(repo);
-    usecase.execute()
-    // vec![]
+
+pub fn fetch_advisory_projects_usecase() -> project_repository::Result<Vec<Project>> {
+    let app_state = AppState::from_config();
+    app_state.fetch_advisory_projects()
 }
