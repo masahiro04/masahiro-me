@@ -1,9 +1,6 @@
 module.exports = {
-  purge: {
-    mode: "all",
-    content: ["./src/**/*.{rs, html, js}", "./index.html"],
-  },
-  darkMode: false,
+  content: ["./src/**/*.{rs,html,js}", "./index.html"],
+  darkMode: "media",
   theme: {
     extend: {
       colors: {
@@ -17,6 +14,5 @@ module.exports = {
       },
     },
   },
-  variants: { extend: {} },
   plugins: [require("@tailwindcss/typography")],
 };

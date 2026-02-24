@@ -1,10 +1,11 @@
 [workspace]
 members = ["crates/*"]
+resolver = "2"
 
 [workspace.dependencies]
 anyhow = "1.0.82"
 serde = { version = "=1.0.219", features = ["derive"] }
-serde_json = { version = "1.0.116", default-features = false }
+serde_json = { version = "1.0.116", default-features = false, features = ["std"] }
 reqwest = { version = "0.12.4", default-features = false, features = [
   "rustls-tls",
   "json",
@@ -19,3 +20,4 @@ debug = false       # debug情報なしの設定
 codegen-units = 1
 opt-level = 'z'     # optレベル最高
 lto = true
+split-debuginfo = "off"
