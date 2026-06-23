@@ -48,14 +48,14 @@ impl ProjectRepository {
     fn find_all_internal(&self) -> Vec<Project> {
         vec![
             Project::reconstruct(
-                "OKB Corporation".to_string(),
-                "Leading a company with the vision of bringing smiles through experiences.".to_string(),
+                "OKB corp.".to_string(),
+                "Importing and selling tropical plants including coffee trees, platycerium, and cacao.".to_string(),
                 "https://okbcorp.jp/".to_string(),
                 ProjectKind::Work,
             ),
             Project::reconstruct(
                 "Doctormate".to_string(),
-                "Rust / TypeScript / axum / Next.js / NestJS / React Native / Expo / GCP / Firebase".to_string(),
+                "Rust / TypeScript / Next.js / NestJS / React Native / GCP / Firebase / WebRTC / WebSocket / Genesys Cloud".to_string(),
                 "https://doctormate.co.jp/".to_string(),
                 ProjectKind::PastWork,
             ),
@@ -78,7 +78,7 @@ impl ProjectRepository {
                 ProjectKind::Advisory,
             ),
             Project::reconstruct(
-                "Flucle".to_string(),
+                "HRbase".to_string(),
                 "Golang / TypeScript / Terraform / Gin / React / Next.js / Heroku / AWS"
                     .to_string(),
                 "https://hrbase.jp/".to_string(),
