@@ -57,7 +57,7 @@ impl ProjectRepository {
                 "Doctormate".to_string(),
                 "Rust / TypeScript / axum / Next.js / NestJS / React Native / Expo / GCP / Firebase".to_string(),
                 "https://doctormate.co.jp/".to_string(),
-                ProjectKind::Work,
+                ProjectKind::PastWork,
             ),
             Project::reconstruct(
                 "Seibii".to_string(),
